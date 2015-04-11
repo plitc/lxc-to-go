@@ -68,6 +68,73 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
+if [ -z "$LXC" ]; then
+    echo "<--- --- --->"
+    echo "need lxc"
+    echo "<--- --- --->"
+    apt-get update
+    apt-get install lxc
+    echo "<--- --- --->"
+fi
+
+BRIDGEUTILS=$(/usr/bin/dpkg -l | grep bridge-utils | awk '{print $2}')
+if [ -z "$BRIDGEUTILS" ]; then
+    echo "<--- --- --->"
+    echo "need bridge-utils"
+    echo "<--- --- --->"
+    apt-get update
+    apt-get install bridge-utils
+    echo "<--- --- --->"
+fi
+
+sleep 1
+    echo ""
+    lxc-checkconfig
+    if [ $? -eq 0 ]
+    then
+       : # dummy
+    else
+       echo "[ERROR] lxc-checkconfig failed!"
+       exit 1
+    fi
+sleep 1
+
+## modify grub
+
+CHECKGRUB=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+if [ "$CHECKGRUB" = "1" ]; then
+    : # dummy
+else
+    cp -prfv /etc/default/grub /etc/default/grub_BACKUP_lxctogo
+    sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
+    sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+
+   ### grub update
+
+   echo "" # dummy
+   sleep 2
+   grub-mkconfig
+   echo "" # dummy
+   sleep 2
+   update-grub
+   if [ "$?" != "0" ]; then
+      echo "" # dummy
+      sleep 5
+      echo "[Error] something goes wrong let's restore the old configuration!" 1>&2
+      cp -prfv /etc/default/grub_BACKUP_lxctogo /etc/default/grub
+      echo "" # dummy
+      sleep 2
+      grub-mkconfig
+      echo "" # dummy
+      sleep 2
+      update-grub
+      exit 1
+   fi
+   echo ""
+   echo "Please Reboot your System immediately! and continue the bootstrap"
+   exit 0
+fi
 
 
 ### ### ### ### ### ### ### ### ###
