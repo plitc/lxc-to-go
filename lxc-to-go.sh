@@ -314,7 +314,7 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 LXCCONFIGMANAGED
 fi
 
-CHECKMANAGED1STATUS=$(screen -list | grep "managed")
+CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKMANAGED1" = "1" ]; then
    echo "... LXC Container ("$CHECKMANAGED1STATUS"): managed always running ..."
