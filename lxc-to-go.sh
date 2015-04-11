@@ -147,7 +147,27 @@ fi
 
 ### ### ###
 
+CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
+if [ "$CREATEBRIDGE0" = "1" ]; then
+    : # dummy
+else
+   brctl addbr vswitch0
 
+GETBRIDGEPORT0=$(grep 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
+
+   brctl addif vswitch0 "$GETBRIDGEPORT0"
+fi
+
+### ### ###
+sleep 2
+### ### ###
+
+CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
+if [ "$CHECKLXCMANAGED" = "1" ]; then
+    : # dummy
+else
+   lxc-create -n managed -t debian
+fi
 
 ### ### ### ### ### ### ### ### ###
 #
