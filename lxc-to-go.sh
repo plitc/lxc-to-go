@@ -206,7 +206,7 @@ fi
 #/ sleep 1; echo ""
 ### ### ###
 
-LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{print $4}')
+LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{print $4}' | head -n 1)
 if [ X"$LXCCONFIGFILEMANAGED" = X"lxc-to-go" ]; then
    echo "" # dummy
 else
