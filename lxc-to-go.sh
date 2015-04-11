@@ -153,9 +153,13 @@ if [ "$CREATEBRIDGE0" = "1" ]; then
 else
    brctl addbr vswitch0
 
-GETBRIDGEPORT0=$(grep 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
-
-   brctl addif vswitch0 "$GETBRIDGEPORT0"
+   UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
+   if [ -e $CONFIGCHECK ]; then
+      GETBRIDGEPORT0=$(grep 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
+      brctl addif vswitch0 "$GETBRIDGEPORT0"
+   else
+      brctl addif vswitch0 eth0
+   fi
 fi
 
 ### ### ###
