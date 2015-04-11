@@ -321,7 +321,7 @@ else
    echo "... starting LXC Container (screen session): managed ..."
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
-   screen -x | grep "managed"
+   screen -list | grep "managed"
 fi
 
 ### ### ### ### ### ### ### ### ###
