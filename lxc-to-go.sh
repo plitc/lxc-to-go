@@ -171,6 +171,11 @@ if [ "$CHECKLXCMANAGED" = "1" ]; then
     : # dummy
 else
    lxc-create -n managed -t debian
+   if [ "$?" != "0" ]; then
+      echo "" # dummy
+      echo '[ERROR] create "managed" lxc container failed'
+      exit 1
+   fi
 fi
 
 ### ### ### ### ### ### ### ### ###
