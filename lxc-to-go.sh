@@ -325,6 +325,12 @@ else
    screen -list | grep "managed"
 fi
 
+### ### ###
+sleep 15
+### ### ###
+
+lxc-attach -n managed -- apt-get update
+
 
 
 ### ### ### ### ### ### ### ### ###
