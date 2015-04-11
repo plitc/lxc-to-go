@@ -206,6 +206,104 @@ fi
 #/ sleep 1; echo ""
 ### ### ###
 
+LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{print $4}')
+if [ X"$LXCCONFIGFILEMANAGED" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat <<LXCCONFIGMANAGED > /var/lib/lxc/managed/config
+### ### ### lxc-to-go // ### ### ###
+
+lxc.utsname=managed
+
+# vswitch0 / untagged
+lxc.network.type=veth
+lxc.network.link=vswitch0
+lxc.network.name=eth0
+lxc.network.hwaddr=aa:bb:c0:0c:bb:aa
+lxc.network.veth.pair=managed
+lxc.network.flags=up
+
+# vswitch1 / intern
+lxc.network.type=veth
+lxc.network.link=vswitch1
+lxc.network.name=eth1
+lxc.network.veth.pair=managed1
+lxc.network.flags=up
+
+lxc.mount=/etc/lxc/fstab.empty
+lxc.rootfs=/var/lib/lxc/managed/rootfs
+
+# mounts point
+lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry = sysfs sys sysfs defaults  0 0
+
+#/ lxc.cgroup.memory.limit_in_bytes=268435456
+#/ lxc.cgroup.memory.memsw.limit_in_bytes=268435456
+
+### default ### lxc.cap.drop=audit_control audit_write mac_admin mac_override mknod setfcap setpcap sys_boot sys_module sys_pacct sys_rawio sys_resource sys_time sys_tty_config
+#/ lxc.cap.drop=audit_control audit_write mac_admin mac_override mknod setfcap setpcap sys_boot sys_module sys_pacct sys_rawio sys_resource sys_time sys_tty_config
+
+#
+### LXC - jessie/systemd hacks // ###
+lxc.autodev = 1
+lxc.kmsg = 0
+
+#!# lxc.cap.drop = sys_admin
+#!# lxc.cap.drop = mknod
+#!# lxc.cap.drop = audit_control
+#!# lxc.cap.drop = audit_write
+#!# lxc.cap.drop = setfcap
+#!# lxc.cap.drop = setpcap
+#!# lxc.cap.drop = sys_resource
+#
+lxc.cap.drop = sys_module
+lxc.cap.drop = mac_admin
+lxc.cap.drop = mac_override
+lxc.cap.drop = sys_time
+lxc.cap.drop = sys_boot
+lxc.cap.drop = sys_pacct
+lxc.cap.drop = sys_rawio
+lxc.cap.drop = sys_tty_config
+
+lxc.tty=2
+lxc.pts = 1024
+#/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
+### // LXC - jessie/systemd hacks ###
+#
+
+lxc.cgroup.devices.deny = a
+# tty
+lxc.cgroup.devices.allow = c 5:0 rwm
+lxc.cgroup.devices.allow = c 4:0 rwm
+lxc.cgroup.devices.allow = c 4:1 rwm
+# console
+lxc.cgroup.devices.allow = c 5:1 rwm
+# ptmx
+lxc.cgroup.devices.allow = c 5:2 rwm
+# pts/*
+lxc.cgroup.devices.allow = c 136:* rwm
+# null
+lxc.cgroup.devices.allow = c 1:3 rwm
+# zero
+lxc.cgroup.devices.allow = c 1:5 rwm
+# full
+lxc.cgroup.devices.allow = c 1:7 rwm
+# random
+lxc.cgroup.devices.allow = c 1:8 rwm
+# urandom
+lxc.cgroup.devices.allow = c 1:9 rwm
+# fuse
+lxc.cgroup.devices.allow = c 10:229 rwm
+# tun
+lxc.cgroup.devices.allow = c 10:200 rwm
+
+### ### ### // lxc-to-go ### ### ###
+# EOF
+LXCCONFIGMANAGED
+fi
+
+
+
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
