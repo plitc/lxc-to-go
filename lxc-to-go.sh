@@ -102,8 +102,8 @@ sleep 1
 
 ## modify grub
 
-CHECKGRUB=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
-if [ "$CHECKGRUB" = "1" ]; then
+CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+if [ "$CHECKGRUB1" = "1" ]; then
     : # dummy
 else
     cp -prfv /etc/default/grub /etc/default/grub_BACKUP_lxctogo
@@ -135,6 +135,18 @@ else
    echo "Please Reboot your System immediately! and continue the bootstrap"
    exit 0
 fi
+
+CHECKGRUB2=$(cat /proc/cmdline | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+if [ "$CHECKGRUB2" = "1" ]; then
+    : # dummy
+else
+   echo ""
+   echo "Please Reboot your System immediately! and continue the bootstrap"
+   exit 0
+fi
+
+### ### ###
+
 
 
 ### ### ### ### ### ### ### ### ###
