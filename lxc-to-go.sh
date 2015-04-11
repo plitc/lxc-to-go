@@ -169,7 +169,7 @@ else
 fi
 
 ### ### ###
-sleep 2
+sleep 1; echo ""
 ### ### ###
 
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
@@ -188,6 +188,23 @@ else
       exit 1
    fi
 fi
+
+### ### ###
+#/ sleep 1; echo ""
+### ### ###
+
+CREATEBRIDGE1=$(ip a | grep -c "vswitch1:")
+if [ "$CREATEBRIDGE1" = "1" ]; then
+    : # dummy
+else
+   brctl addbr vswitch1
+   sysctl -w net.ipv4.conf.vswitch1.forwarding=1
+   sysctl -w net.ipv6.conf.vswitch1.forwarding=1
+fi
+
+### ### ###
+#/ sleep 1; echo ""
+### ### ###
 
 ### ### ### ### ### ### ### ### ###
 #
