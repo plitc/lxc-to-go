@@ -68,6 +68,16 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+SCREEN=$(/usr/bin/which screen)
+if [ -z "$SCREEN" ]; then
+    echo "<--- --- --->"
+    echo "need screen"
+    echo "<--- --- --->"
+    apt-get update
+    apt-get install screen
+    echo "<--- --- --->"
+fi
+
 LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
 if [ -z "$LXC" ]; then
     echo "<--- --- --->"
@@ -302,7 +312,15 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 LXCCONFIGMANAGED
 fi
 
-
+CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
+if [ "$CHECKMANAGED1" = "1" ]; then
+   : # dummy
+else
+   echo "... starting LXC Container (screen session): managed ..."
+   screen -d -m -S managed -- lxc-start -n managed
+   sleep 1
+   screen -x | grep "managed"
+fi
 
 ### ### ### ### ### ### ### ### ###
 #
