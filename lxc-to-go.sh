@@ -51,7 +51,7 @@ if [ "$MYNAME" = "root" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You must be root to run this script"
+   echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
@@ -59,7 +59,7 @@ if [ "$DEBVERSION" = "8" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
 
@@ -121,7 +121,7 @@ else
    if [ "$?" != "0" ]; then
       echo "" # dummy
       sleep 5
-      echo "[Error] something goes wrong let's restore the old configuration!" 1>&2
+      echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
       cp -prfv /etc/default/grub_BACKUP_lxctogo /etc/default/grub
       echo "" # dummy
       sleep 2
@@ -174,6 +174,11 @@ else
    if [ "$?" != "0" ]; then
       echo "" # dummy
       echo '[ERROR] create "managed" lxc container failed'
+      echo ""
+         read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
+         if [ "$LXCMANAGEDREMOVE" = "y" ]; then
+            lxc-destroy -n managed
+         fi
       exit 1
    fi
 fi
@@ -190,7 +195,7 @@ fi
    # error 1
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] Plattform = unknown"
+   echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
 esac
@@ -211,7 +216,7 @@ if [ "$MYNAME" = "root" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You must be root to run this script"
+   echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
@@ -219,7 +224,7 @@ if [ "$DEBVERSION" = "8" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
 
@@ -242,7 +247,7 @@ fi
    # error 1
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] Plattform = unknown"
+   echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
 esac
@@ -263,7 +268,7 @@ if [ "$MYNAME" = "root" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You must be root to run this script"
+   echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
@@ -271,7 +276,7 @@ if [ "$DEBVERSION" = "8" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
 
@@ -294,7 +299,7 @@ fi
    # error 1
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] Plattform = unknown"
+   echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
 esac
@@ -315,7 +320,7 @@ if [ "$MYNAME" = "root" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You must be root to run this script"
+   echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
@@ -323,7 +328,7 @@ if [ "$DEBVERSION" = "8" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
 
@@ -346,7 +351,7 @@ fi
    # error 1
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] Plattform = unknown"
+   echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
 esac
@@ -367,7 +372,7 @@ if [ "$MYNAME" = "root" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You must be root to run this script"
+   echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
@@ -375,7 +380,7 @@ if [ "$DEBVERSION" = "8" ]; then
 else
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
 
@@ -398,7 +403,7 @@ fi
    # error 1
    echo "" # dummy
    echo "" # dummy
-   echo "[Error] Plattform = unknown"
+   echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
 esac
