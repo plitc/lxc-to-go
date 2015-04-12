@@ -498,7 +498,7 @@ sysctl net.ipv4.conf.eth0.forwarding=1
 ##/ echo "stage1"
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
 iptables -t nat -A PREROUTING -i eth0 -p udp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
-ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+# ip6tables -t nat -A POSTROUTING -o ipredator -j MASQUERADE
 
 ##/ echo "stage2"
 # ip -6 rule add from 2001::/64 table 100
@@ -522,6 +522,35 @@ exit 0
 RCLOCALFILEMANAGED
 fi
 
+CHECKMANAGEDNET=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/network/interfaces | awk '{print $4}' | head -n 1)
+if [ X"$CHECKMANAGEDNET" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat << CHECKMANAGEDNETFILE > /var/lib/lxc/managed/rootfs/etc/network/interfaces
+### ### ### lxc-to-go // ### ### ###
+#
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+iface eth0 inet6 auto
+
+auto eth1
+iface eth1 inet manual
+iface eth1 inet6 manual
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKMANAGEDNETFILE
+
+   lxc-stop -n managed
+
+   echo "... LXC Container (screen session): managed restarting ..."
+   screen -d -m -S managed -- lxc-start -n managed
+   sleep 1
+   screen -list | grep "managed"
+fi
 
 
 
