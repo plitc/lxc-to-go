@@ -222,7 +222,7 @@ LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{prin
 if [ X"$LXCCONFIGFILEMANAGED" = X"lxc-to-go" ]; then
    echo "" # dummy
 else
-/bin/cat <<LXCCONFIGMANAGED > /var/lib/lxc/managed/config
+/bin/cat << LXCCONFIGMANAGED > /var/lib/lxc/managed/config
 ### ### ### lxc-to-go // ### ### ###
 
 lxc.utsname=managed
@@ -337,7 +337,7 @@ if [ "$CHECKUPDATELIST1" = "1" ]; then
    : # dummy
 else
    /bin/cat << CHECKUPDATELIST1IN > /var/lib/lxc/managed/rootfs/etc/apt/sources.list
-### ### ### C3D2 ### ### ###
+### ### ### PLITC ### ### ###
 deb http://ftp.de.debian.org/debian/ jessie main contrib non-free
 deb-src http://ftp.de.debian.org/debian/ jessie main contrib non-free
 
@@ -346,7 +346,7 @@ deb-src http://ftp.de.debian.org/debian/ jessie-updates main contrib non-free
 
 deb http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
 deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
-### ### ### C3D2 ### ### ###
+### ### ### PLITC ### ### ###
 # EOF
 CHECKUPDATELIST1IN
 
@@ -393,6 +393,111 @@ else
    sleep 1
    screen -list | grep "managed"
 fi
+
+### ### ###
+
+CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c "iptables")
+if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install iptables
+fi
+
+SYSCTLMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/sysctl.conf | awk '{print $4}' | head -n 1)
+if [ X"$SYSCTLMANAGED" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat << SYSCTLFILEMANAGED > /var/lib/lxc/managed/rootfs/etc/sysctl.conf
+### ### ### lxc-to-go // ### ### ###
+#
+net.ipv4.conf.eth0.forwarding=1
+net.ipv4.conf.eth1.forwarding=1
+net.ipv6.conf.eth0.forwarding=1
+net.ipv6.conf.eth1.forwarding=1
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+SYSCTLFILEMANAGED
+
+lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth0.forwarding=1
+lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth1.forwarding=1
+lxc-attach -n managed -- sysctl -w net.ipv6.conf.eth0.forwarding=1
+lxc-attach -n managed -- sysctl -w net.ipv6.conf.eth1.forwarding=1
+
+### ### ###
+
+RCLOCALMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/rc.local | awk '{print $4}' | head -n 1)
+if [ X"$RCLOCALMANAGED" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat << RCLOCALFILEMANAGED > /var/lib/lxc/managed/rootfs/etc/rc.local
+#!/bin/sh -e
+### ### ### lxc-to-go // ### ### ###
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+##/ echo "stage0"
+iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+iptables -P INPUT ACCEPT
+iptables -P FORWARD ACCEPT
+iptables -P OUTPUT ACCEPT
+
+ip6tables -F
+ip6tables -X
+ip6tables -t nat -F
+ip6tables -t nat -X
+ip6tables -t mangle -F
+ip6tables -t mangle -X
+ip6tables -P INPUT ACCEPT
+ip6tables -P FORWARD ACCEPT
+ip6tables -P OUTPUT ACCEPT
+
+##/ echo "stage0"
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sysctl net.ipv4.conf.default.forwarding=1
+sysctl net.ipv4.conf.eth0.forwarding=1
+
+##/ echo "stage1"
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
+ip6tables -t nat -A POSTROUTING -o ipredator -j MASQUERADE
+
+##/ echo "stage2"
+# ip -6 rule add from 2001::/64 table 100
+# ip r a 2000::/3 dev eth0 via fe80:: table 100
+
+##/ echo "stage3"
+### IPredator // ###
+# route add -net 46.246.38.0 netmask 255.255.255.0 gw 192.168.1.1
+### // IPredator ###
+
+mkdir -p /dev/net
+mknod /dev/net/tun c 10 200
+chmod 666 /dev/net/tun
+
+# systemctl restart openvpn
+
+
+exit 0
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+RCLOCALFILEMANAGED
+
 
 
 
