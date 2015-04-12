@@ -559,12 +559,108 @@ if [ "$CHECKMANAGEDDHCP" = "1" ]; then
    : # dummy
 else
    lxc-attach -n managed -- apt-get -y install isc-dhcp-server
-
-
 fi
 
 
 
+
+
+CHECKMANAGEDDHCPCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf | awk '{print $4}' | head -n 1)
+if [ X"$CHECKMANAGEDDHCPCONFIG" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat << CHECKMANAGEDDHCPCONFIGFILE > /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf
+### ### ### lxc-to-go // ### ### ###
+#
+# /etc/dhcpd.conf for primary DHCP server
+#
+
+#/ option local-proxy-config code 252 = text;
+#/ option root-path "iscsi:freenas.domain.tld:6:3260:0:iqn.2015-01.tld.domain:iscsiboot";
+
+authoritative;                                             # server is authoritative
+option domain-name "privat.local";                         # the domain name issued
+option domain-search "privat.local";                       # dns search
+option domain-name-servers 192.168.1.1;                    # name servers issued
+#/ option netbios-name-servers 192.168.1.1;                # netbios servers
+allow booting;                                             # allow for booting over the network
+allow bootp;                                               # allow for booting
+next-server 192.168.1.1;                                   # TFTP server for booting
+filename "pxelinux.0";                                     # kernel for network booting
+#/ ddns-update-style interim;                                 # setup dynamic DNS updates
+#/ ddns-updates on;
+#/ ddns-domainname "extern.global.";                          # domain name for DDNS updates
+#/ do-forward-updates on;
+#/ ddns-rev-domainname "in-addr.arpa.";
+
+default-lease-time 86400;
+max-lease-time 604800;
+
+#/ key dhcp.domain.tld {
+#/     algorithm hmac-md5;
+#/     secret "... SECRETHASH ...";
+#/ }
+#/ zone extern.global.
+#/ {
+#/     primary 0.0.0.0;
+#/     key dhcp.domain.tld;
+#/ }
+#/ zone 1.168.192.in-addr.arpa.
+#/ {
+#/     primary 0.0.0.0;
+#/     key dhcp.domain.tld;
+#/ }
+
+#/ failover peer "dhcp-failover" {                         # fail over configuration
+#/          primary;                                       # this is the secondary
+#/          address 192.168.1.1;                           # our ip address
+#/          port 647;
+#/          peer address 192.168.1.2;                      # primary's ip address
+#/          peer port 647;
+#/          max-response-delay 60;
+#/          max-unacked-updates 10;
+#/          mclt 3600;
+#/          split 128;                                     # for primary only
+#/          load balance max seconds 3;
+
+}
+subnet 192.168.1.0 netmask 255.255.255.0                   # zone to issue addresses from
+{
+        pool {
+                #/ failover peer "dhcp-failover";          # pool for dhcp, bootp leases with failover
+                option routers 192.168.1.1;
+                range 192.168.1.100 192.168.1.200;
+
+                #/ option local-proxy-config "http://192.168.1.1/proxy.pac";
+
+### fixed-address // ###
+#
+  host managed {
+    hardware ethernet aa:bb:c0:0c:bb:aa;
+    fixed-address managed.privat.local;
+  }
+#
+### // fixed-address ###
+
+        }
+#/        pool {                                             # accomodate our bootp clients here no replication and failover
+#/                option routers 10.0.0.1;
+#/                range 10.0.0.100 10.0.0.200;
+#/        }
+
+        allow unknown-clients;
+        ignore client-updates;
+}
+
+log-facility local7;
+
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKMANAGEDDHCPCONFIGFILE
+
+   lxc-attach -n managed -- systemctl restart isc-dhcp-server
+fi
 
 
 
