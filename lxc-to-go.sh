@@ -418,6 +418,7 @@ net.ipv6.conf.eth1.forwarding=1
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 SYSCTLFILEMANAGED
+fi
 
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth0.forwarding=1
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth1.forwarding=1
@@ -496,7 +497,7 @@ exit 0
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 RCLOCALFILEMANAGED
-
+fi
 
 
 
