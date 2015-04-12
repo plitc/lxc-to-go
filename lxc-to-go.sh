@@ -387,6 +387,11 @@ else
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/proc-sys-fs-binfmt_misc.automount
 
    lxc-stop -n managed
+
+   echo "... LXC Container (screen session): managed restarting ..."
+   screen -d -m -S managed -- lxc-start -n managed
+   sleep 1
+   screen -list | grep "managed"
 fi
 
 
