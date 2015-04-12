@@ -358,7 +358,7 @@ CHECKUPDATELIST1IN
 fi
 
 DEBVERSIONMANAGED=$(grep "VERSION_ID" /var/lib/lxc/managed/rootfs/etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSIONMANAGED" = "8" ]; then
    : # dummy
 else
    lxc-attach -n managed -- apt-get -y upgrade
