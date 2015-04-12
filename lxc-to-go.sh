@@ -326,10 +326,31 @@ else
 fi
 
 ### ### ###
+echo ""
 echo "... wait 15 seconds ..."
+echo ""
 sleep 15
 ### ### ###
 
+CHECKUPDATELIST1=$(grep -c "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list)
+if [ "$CHECKUPDATELIST1" = "1" ]; then
+   : # dummy
+else
+   /bin/cat << CHECKUPDATELIST1IN > /var/lib/lxc/managed/rootfs/etc/apt/sources.list
+### ### ### C3D2 ### ### ###
+deb http://ftp.de.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ jessie main contrib non-free
+
+deb http://ftp.de.debian.org/debian/ jessie-updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ jessie-updates main contrib non-free
+
+deb http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
+### ### ### C3D2 ### ### ###
+# EOF
+CHECKUPDATELIST1IN
+
+lxc-attach -n managed -- apt-get clean
 lxc-attach -n managed -- apt-get update
 if [ "$?" != "0" ]; then
    echo "[ERROR] can't fetch update list"
