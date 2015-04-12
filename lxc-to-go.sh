@@ -483,14 +483,13 @@ ip6tables -t nat -A POSTROUTING -o ipredator -j MASQUERADE
 ##/ echo "stage3"
 ### IPredator // ###
 # route add -net 46.246.38.0 netmask 255.255.255.0 gw 192.168.1.1
-### // IPredator ###
-
-mkdir -p /dev/net
-mknod /dev/net/tun c 10 200
-chmod 666 /dev/net/tun
-
+#
+# mkdir -p /dev/net
+# mknod /dev/net/tun c 10 200
+# chmod 666 /dev/net/tun
+#
 # systemctl restart openvpn
-
+### // IPredator ###
 
 exit 0
 #
