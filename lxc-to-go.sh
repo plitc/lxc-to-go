@@ -561,10 +561,6 @@ else
    lxc-attach -n managed -- apt-get -y install isc-dhcp-server
 fi
 
-
-
-
-
 CHECKMANAGEDDHCPCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDHCPCONFIG" = X"lxc-to-go" ]; then
    echo "" # dummy
@@ -582,14 +578,15 @@ authoritative;                                             # server is authorita
 option domain-name "privat.local";                         # the domain name issued
 option domain-search "privat.local";                       # dns search
 option domain-name-servers 192.168.1.1;                    # name servers issued
+
 #/ option netbios-name-servers 192.168.1.1;                # netbios servers
-allow booting;                                             # allow for booting over the network
-allow bootp;                                               # allow for booting
-next-server 192.168.1.1;                                   # TFTP server for booting
-filename "pxelinux.0";                                     # kernel for network booting
-#/ ddns-update-style interim;                                 # setup dynamic DNS updates
+#/ allow booting;                                          # allow for booting over the network
+#/ allow bootp;                                            # allow for booting
+#/ next-server 192.168.1.1;                                # TFTP server for booting
+#/ filename "pxelinux.0";                                  # kernel for network booting
+#/ ddns-update-style interim;                              # setup dynamic DNS updates
 #/ ddns-updates on;
-#/ ddns-domainname "extern.global.";                          # domain name for DDNS updates
+#/ ddns-domainname "extern.global.";                       # domain name for DDNS updates
 #/ do-forward-updates on;
 #/ ddns-rev-domainname "in-addr.arpa.";
 
@@ -622,31 +619,31 @@ max-lease-time 604800;
 #/          mclt 3600;
 #/          split 128;                                     # for primary only
 #/          load balance max seconds 3;
+#/ }
 
-}
 subnet 192.168.1.0 netmask 255.255.255.0                   # zone to issue addresses from
 {
         pool {
                 #/ failover peer "dhcp-failover";          # pool for dhcp, bootp leases with failover
+                #/ option local-proxy-config "http://192.168.1.1/proxy.pac";
+
                 option routers 192.168.1.1;
                 range 192.168.1.100 192.168.1.200;
 
-                #/ option local-proxy-config "http://192.168.1.1/proxy.pac";
-
 ### fixed-address // ###
 #
-  host managed {
-    hardware ethernet aa:bb:c0:0c:bb:aa;
-    fixed-address managed.privat.local;
-  }
+#/  host managed {
+#/    hardware ethernet aa:bb:c0:0c:bb:aa;
+#/    fixed-address managed.privat.local;
+#/  }
 #
 ### // fixed-address ###
 
-        }
-#/        pool {                                             # accomodate our bootp clients here no replication and failover
+           }
+#/         pool {                                          # accomodate our bootp clients here no replication and failover
 #/                option routers 10.0.0.1;
 #/                range 10.0.0.100 10.0.0.200;
-#/        }
+#/         }
 
         allow unknown-clients;
         ignore client-updates;
@@ -661,6 +658,10 @@ CHECKMANAGEDDHCPCONFIGFILE
 
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
 fi
+
+### ### ###
+
+
 
 
 
