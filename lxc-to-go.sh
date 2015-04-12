@@ -357,6 +357,20 @@ CHECKUPDATELIST1IN
    fi
 fi
 
+DEBVERSIONMANAGED=$(grep "VERSION_ID" /var/lib/lxc/managed/rootfs/etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y upgrade
+   if [ "$?" != "0" ]; then
+      echo "[ERROR] can't upgrade the LXC Container"
+   fi
+fi
+
+
+
+
+
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
