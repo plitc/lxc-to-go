@@ -552,6 +552,17 @@ CHECKMANAGEDNETFILE
    screen -list | grep "managed"
 fi
 
+### DHCP-Service
+
+CHECKMANAGEDDHCP=$(lxc-attach -n managed -- dpkg -l | grep -c "isc-dhcp-server")
+if [ "$CHECKMANAGEDDHCP" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install isc-dhcp-server
+
+
+fi
+
 
 
 
