@@ -157,6 +157,24 @@ fi
 
 ### ### ###
 
+### check ip_tables/ip6_tables kernel module
+
+CHECKIPTABLES=$(lsmod | awk '{print $1}' | grep -c "ip_tables")
+if [ "$CHECKIPTABLES" = "1" ]; then
+    : # dummy
+else
+    modprobe ip_tables
+fi
+
+CHECKIP6TABLES=$(lsmod | awk '{print $1}' | grep -c "ip6_tables")
+if [ "$CHECKIP6TABLES" = "1" ]; then
+    : # dummy
+else
+    modprobe ip6_tables
+fi
+
+### ### ###
+
 CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
 if [ "$CREATEBRIDGE0" = "1" ]; then
     : # dummy
