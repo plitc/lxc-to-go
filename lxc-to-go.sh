@@ -317,7 +317,7 @@ fi
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKMANAGED1" = "1" ]; then
-   echo "... LXC Container ("$CHECKMANAGED1STATUS"): managed always running ..."
+   echo "... LXC Container (screen session: "$CHECKMANAGED1STATUS"): always running ..."
 else
    echo "... LXC Container (screen session): managed starting ..."
    screen -d -m -S managed -- lxc-start -n managed
@@ -326,10 +326,14 @@ else
 fi
 
 ### ### ###
+echo "... wait 15 seconds ..."
 sleep 15
 ### ### ###
 
 lxc-attach -n managed -- apt-get update
+if [ "$?" != "0" ]; then
+   echo "[ERROR] can't fetch update list"
+fi
 
 
 
