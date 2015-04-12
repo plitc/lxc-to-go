@@ -496,6 +496,10 @@ ip6tables -P OUTPUT ACCEPT
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sysctl net.ipv4.conf.default.forwarding=1
 sysctl net.ipv4.conf.eth0.forwarding=1
+sysctl net.ipv4.conf.eth1.forwarding=1
+sysctl net.ipv6.conf.eth0.forwarding=1
+sysctl net.ipv6.conf.eth1.forwarding=1
+sysctl net.ipv6.conf.all.forwarding=1
 
 ##/ echo "stage1"
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
@@ -786,7 +790,7 @@ interface eth1
         AdvSendAdvert on;
         MinRtrAdvInterval 3; 
         MaxRtrAdvInterval 10;
-        prefix fd00:aaaa:0001::/56
+        prefix fd00:aaaa:0001::/64
 	{ 
                 AdvOnLink on; 
                 AdvAutonomous on; 
@@ -799,7 +803,7 @@ interface eth1
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 CHECKMANAGEDIPV6CONFIGFILE
-   lxc-attach -n managed -- service restart radvd
+   lxc-attach -n managed -- service radvd restart
 fi
 
 
