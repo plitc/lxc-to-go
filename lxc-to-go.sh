@@ -259,6 +259,11 @@ lxc.network.link=vswitch1
 lxc.network.name=eth1
 lxc.network.veth.pair=managed1
 lxc.network.flags=up
+###
+lxc.network.ipv4 = 192.168.1.1/24
+#/ lxc.network.ipv4.gateway = auto
+lxc.network.ipv6 = fd00:aaaa:0001::1/64
+###
 
 lxc.mount=/etc/lxc/fstab.empty
 lxc.rootfs=/var/lib/lxc/managed/rootfs
@@ -516,6 +521,8 @@ exit 0
 # EOF
 RCLOCALFILEMANAGED
 fi
+
+
 
 
 
