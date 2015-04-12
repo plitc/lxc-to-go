@@ -386,6 +386,7 @@ else
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd-kernel.socket
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/proc-sys-fs-binfmt_misc.automount
 
+   lxc-stop -n managed
 fi
 
 
