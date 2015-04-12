@@ -493,7 +493,7 @@ sysctl net.ipv4.conf.eth0.forwarding=1
 ##/ echo "stage1"
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
 iptables -t nat -A PREROUTING -i eth0 -p udp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
-ip6tables -t nat -A POSTROUTING -o ipredator -j MASQUERADE
+ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
 ##/ echo "stage2"
 # ip -6 rule add from 2001::/64 table 100
