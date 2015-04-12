@@ -350,13 +350,12 @@ deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib no
 # EOF
 CHECKUPDATELIST1IN
 
-lxc-attach -n managed -- apt-get clean
-lxc-attach -n managed -- apt-get update
-if [ "$?" != "0" ]; then
-   echo "[ERROR] can't fetch update list"
+   lxc-attach -n managed -- apt-get clean
+   lxc-attach -n managed -- apt-get update
+   if [ "$?" != "0" ]; then
+      echo "[ERROR] can't fetch update list"
+   fi
 fi
-
-
 
 ### ### ### ### ### ### ### ### ###
 #
