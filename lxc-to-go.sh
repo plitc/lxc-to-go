@@ -799,7 +799,7 @@ interface eth1
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 CHECKMANAGEDIPV6CONFIGFILE
-   lxc-attach -n managed -- system restart radvd
+   lxc-attach -n managed -- service restart radvd
 fi
 
 
