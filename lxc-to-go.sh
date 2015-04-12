@@ -364,6 +364,12 @@ else
    lxc-attach -n managed -- apt-get -y upgrade
    if [ "$?" != "0" ]; then
       echo "[ERROR] can't upgrade the LXC Container"
+      echo '... try manually "lxc-attach -n managed -- apt-get -y upgrade"'
+   fi
+   lxc-attach -n managed -- apt-get -y dist-upgrade
+   if [ "$?" != "0" ]; then
+      echo "[ERROR] can't dist-upgrade the LXC Container"
+      echo '... try manually "lxc-attach -n managed -- apt-get -y dist-upgrade"'
    fi
 fi
 
