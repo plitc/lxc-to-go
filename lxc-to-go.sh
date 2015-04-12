@@ -371,6 +371,21 @@ else
       echo "[ERROR] can't dist-upgrade the LXC Container"
       echo '... try manually "lxc-attach -n managed -- apt-get -y dist-upgrade"'
    fi
+   lxc-attach -n managed -- apt-get -y autoremove
+   if [ "$?" != "0" ]; then
+      echo "[ERROR] can't autoremove the LXC Container"
+      echo '... try manually "lxc-attach -n managed -- apt-get -y autoremove"'
+   fi
+   lxc-attach -n managed -- apt-get -y install --reinstall systemd-sysv
+   if [ "$?" != "0" ]; then
+      echo "[ERROR] can't reinstall systemd-sysv the LXC Container"
+      echo '... try manually "lxc-attach -n managed -- apt-get -y install --reinstall systemd-sysv"'
+   fi
+   lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd.service
+   lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd-control.socket
+   lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd-kernel.socket
+   lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/proc-sys-fs-binfmt_misc.automount
+
 fi
 
 
