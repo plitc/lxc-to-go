@@ -655,11 +655,118 @@ log-facility local7;
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 CHECKMANAGEDDHCPCONFIGFILE
-
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
 fi
 
 ### ### ###
+
+### DNS-Service (unbound)
+
+CHECKMANAGEDDNS=$(lxc-attach -n managed -- dpkg -l | grep -c "unbound")
+if [ "$CHECKMANAGEDDNS" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install unbound
+fi
+
+CHECKMANAGEDDNSCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/unbound/unbound.conf | awk '{print $4}' | head -n 1)
+if [ X"$CHECKMANAGEDDNSCONFIG" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat << CHECKMANAGEDDNSCONFIGFILE > /var/lib/lxc/managed/rootfs/etc/unbound/unbound.conf
+### ### ### lxc-to-go // ### ### ###
+#
+server:
+### < --- server // --- > ###
+verbosity: 2
+ 
+# interface: 192.168.1.1
+# interface: 192.168.1.1@5003
+# interface: 2001::1
+ 
+# outgoing-interface: 192.168.1.1
+# outgoing-interface: 192.168.1.1@5003
+# outgoing-interface: 2001::1
+ 
+access-control: 0.0.0.0/0 allow
+access-control: ::/0 allow
+ 
+outgoing-port-permit: 1025-65535
+outgoing-port-avoid: 0-1024
+ 
+harden-large-queries: "yes"
+harden-short-bufsize: "yes"
+ 
+statistics-interval: 60
+ 
+#/ logfile: "/usr/local/etc/unbound/unbound.log"
+ 
+#/ root-hints: "/usr/local/etc/unbound/named.cache"
+#/ auto-trust-anchor-file: "/usr/local/etc/unbound/root.key"
+ 
+port: 53
+ 
+do-ip4: yes
+do-ip6: yes
+do-udp: yes
+do-tcp: yes
+ 
+hide-identity: yes
+hide-version: yes
+harden-glue: yes
+harden-dnssec-stripped: yes
+ 
+use-caps-for-id: yes
+ 
+cache-min-ttl: 3600
+cache-max-ttl: 86400
+ 
+prefetch: yes
+num-threads: 2
+ 
+max-udp-size: 512
+edns-buffer-size: 512
+ 
+# with libevent2
+outgoing-range: 8192
+num-queries-per-thread: 4096
+ 
+msg-cache-slabs: 8
+rrset-cache-slabs: 8
+infra-cache-slabs: 8
+key-cache-slabs: 8
+ 
+rrset-cache-size: 256m
+msg-cache-size: 128m
+ 
+so-rcvbuf: 1m
+ 
+unwanted-reply-threshold: 10000
+val-clean-additional: yes
+### < --- // server --- > ###
+python:
+ 
+remote-control:
+ 
+# forward-zone:
+# name: "."
+# forward-addr: 213.73.91.35  # dnscache.berlin.ccc.de
+# forward-addr: 74.82.42.42   # Hurricane Electric
+# forward-addr: 4.2.2.4       # Level3 Verizon
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKMANAGEDDNSCONFIGFILE
+   lxc-attach -n managed -- systemctl restart unbound
+fi
+
+### ### ###
+
+
+
+
+
+
 
 
 
