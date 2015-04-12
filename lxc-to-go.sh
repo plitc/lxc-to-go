@@ -762,10 +762,44 @@ fi
 
 ### ### ###
 
+### RA-Service
 
+CHECKMANAGEDIPV6D=$(lxc-attach -n managed -- dpkg -l | grep -c "radvd")
+if [ "$CHECKMANAGEDIPV6" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install radvd
+fi
 
-
-
+CHECKMANAGEDIPV6CONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/radvd.conf | awk '{print $4}' | head -n 1)
+if [ X"$CHECKMANAGEDIPV6CONFIG" = X"lxc-to-go" ]; then
+   echo "" # dummy
+else
+/bin/cat << CHECKMANAGEDIPV6CONFIGFILE > /var/lib/lxc/managed/rootfs/etc/radvd.conf
+### ### ### lxc-to-go // ### ### ###
+#
+interface eth1
+{ 
+        AdvSendAdvert on;
+        MinRtrAdvInterval 3; 
+        MaxRtrAdvInterval 10;
+        prefix fd00:aaaa:0001::/64
+	{ 
+                AdvOnLink on; 
+                AdvAutonomous on; 
+                AdvRouterAddr on; 
+        };
+	AdvDefaultPreference high;
+	# Knot:
+	# RDNSS 2001:4dd0:fb82:c3d2:5054:cfff:fefd:ce3f { };
+	RDNSS fd00:aaaa:0001::1 { };
+};
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKMANAGEDIPV6CONFIGFILE
+   lxc-attach -n managed -- systemctl restart radvd
+fi
 
 
 
