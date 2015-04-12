@@ -437,6 +437,7 @@ net.ipv4.conf.eth0.forwarding=1
 net.ipv4.conf.eth1.forwarding=1
 net.ipv6.conf.eth0.forwarding=1
 net.ipv6.conf.eth1.forwarding=1
+net.ipv6.conf.all.forwarding=1
 #
 ### ### ### // lxc-to-go ### ### ###
 # EOF
@@ -447,6 +448,7 @@ lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth0.forwarding=1
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth1.forwarding=1
 lxc-attach -n managed -- sysctl -w net.ipv6.conf.eth0.forwarding=1
 lxc-attach -n managed -- sysctl -w net.ipv6.conf.eth1.forwarding=1
+lxc-attach -n managed -- sysctl -w net.ipv6.conf.all.forwarding=1
 
 ### ### ###
 
@@ -771,6 +773,7 @@ else
    lxc-attach -n managed -- apt-get -y install radvd
 fi
 
+touch /var/lib/lxc/managed/rootfs/etc/radvd.conf
 CHECKMANAGEDIPV6CONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/radvd.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDIPV6CONFIG" = X"lxc-to-go" ]; then
    echo "" # dummy
@@ -783,22 +786,20 @@ interface eth1
         AdvSendAdvert on;
         MinRtrAdvInterval 3; 
         MaxRtrAdvInterval 10;
-        prefix fd00:aaaa:0001::/64
+        prefix fd00:aaaa:0001::/56
 	{ 
                 AdvOnLink on; 
                 AdvAutonomous on; 
                 AdvRouterAddr on; 
         };
 	AdvDefaultPreference high;
-	# Knot:
-	# RDNSS 2001:4dd0:fb82:c3d2:5054:cfff:fefd:ce3f { };
 	RDNSS fd00:aaaa:0001::1 { };
 };
 #
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 CHECKMANAGEDIPV6CONFIGFILE
-   lxc-attach -n managed -- systemctl restart radvd
+   lxc-attach -n managed -- system restart radvd
 fi
 
 
