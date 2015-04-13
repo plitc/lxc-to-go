@@ -667,7 +667,7 @@ fi
 
 ### DNS-Service (unbound)
 
-CHECKMANAGEDDNS=$(lxc-attach -n managed -- dpkg -l | grep -c "unbound")
+CHECKMANAGEDDNS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "unbound")
 if [ "$CHECKMANAGEDDNS" = "1" ]; then
    : # dummy
 else
@@ -769,7 +769,7 @@ fi
 
 ### RA-Service
 
-CHECKMANAGEDIPV6D=$(lxc-attach -n managed -- dpkg -l | grep -c "radvd")
+CHECKMANAGEDIPV6D=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "radvd")
 if [ "$CHECKMANAGEDIPV6" = "1" ]; then
    : # dummy
 else
