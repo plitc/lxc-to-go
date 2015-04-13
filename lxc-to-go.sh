@@ -770,7 +770,7 @@ fi
 ### RA-Service
 
 CHECKMANAGEDIPV6D=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "radvd")
-if [ "$CHECKMANAGEDIPV6" = "1" ]; then
+if [ "$CHECKMANAGEDIPV6D" = "1" ]; then
    : # dummy
 else
    lxc-attach -n managed -- apt-get -y install radvd
