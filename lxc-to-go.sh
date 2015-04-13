@@ -49,16 +49,16 @@ debian)
 if [ "$MYNAME" = "root" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
@@ -99,7 +99,7 @@ if [ -z "$BRIDGEUTILS" ]; then
 fi
 
 sleep 1
-    echo ""
+    : # dummy
     lxc-checkconfig
     if [ $? -eq 0 ]
     then
@@ -122,35 +122,35 @@ else
 
    ### grub update
 
-   echo "" # dummy
+   : # dummy
    sleep 2
    grub-mkconfig
-   echo "" # dummy
+   : # dummy
    sleep 2
    update-grub
    if [ "$?" != "0" ]; then
-      echo "" # dummy
+      : # dummy
       sleep 5
       echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
       cp -prfv /etc/default/grub_BACKUP_lxctogo /etc/default/grub
-      echo "" # dummy
+      : # dummy
       sleep 2
       grub-mkconfig
-      echo "" # dummy
+      : # dummy
       sleep 2
       update-grub
       exit 1
    fi
-   echo ""
+   : # dummy
    echo "Please Reboot your System immediately! and continue the bootstrap"
    exit 0
 fi
 
 CHECKGRUB2=$(cat /proc/cmdline | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
 if [ "$CHECKGRUB2" = "1" ]; then
-    : # dummy
+   : # dummy
 else
-   echo ""
+   : # dummy
    echo "Please Reboot your System immediately! and continue the bootstrap"
    exit 0
 fi
@@ -197,7 +197,7 @@ else
 fi
 
 ### ### ###
-sleep 1; echo ""
+sleep 1; : # dummy
 ### ### ###
 
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
@@ -206,9 +206,9 @@ if [ "$CHECKLXCMANAGED" = "1" ]; then
 else
    lxc-create -n managed -t debian
    if [ "$?" != "0" ]; then
-      echo "" # dummy
+      : # dummy
       echo '[ERROR] create "managed" lxc container failed'
-      echo ""
+      : # dummy
          read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
          if [ "$LXCMANAGEDREMOVE" = "y" ]; then
             lxc-destroy -n managed
@@ -218,7 +218,7 @@ else
 fi
 
 ### ### ###
-#/ sleep 1; echo ""
+#/ sleep 1; : # dummy
 ### ### ###
 
 CREATEBRIDGE1=$(ip a | grep -c "vswitch1:")
@@ -231,14 +231,14 @@ else
 fi
 
 ### ### ###
-#/ sleep 1; echo ""
+#/ sleep 1; : # dummy
 ### ### ###
 
 touch /etc/lxc/fstab.empty
 
 LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{print $4}' | head -n 1)
 if [ X"$LXCCONFIGFILEMANAGED" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << LXCCONFIGMANAGED > /var/lib/lxc/managed/config
 ### ### ### lxc-to-go // ### ### ###
@@ -347,9 +347,9 @@ else
    sleep 1
    screen -list | grep "managed"
    ### ### ###
-   echo ""
+   : # dummy
    echo "... wait 15 seconds ..."
-   echo ""
+   : # dummy
    sleep 15
    ### ### ###
 fi
@@ -427,7 +427,7 @@ fi
 
 SYSCTLMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/sysctl.conf | awk '{print $4}' | head -n 1)
 if [ X"$SYSCTLMANAGED" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << SYSCTLFILEMANAGED > /var/lib/lxc/managed/rootfs/etc/sysctl.conf
 ### ### ### lxc-to-go // ### ### ###
@@ -453,7 +453,7 @@ lxc-attach -n managed -- sysctl -w net.ipv6.conf.all.forwarding=1
 
 RCLOCALMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/rc.local | awk '{print $4}' | head -n 1)
 if [ X"$RCLOCALMANAGED" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << RCLOCALFILEMANAGED > /var/lib/lxc/managed/rootfs/etc/rc.local
 #!/bin/sh -e
@@ -529,7 +529,7 @@ fi
 
 CHECKMANAGEDNET=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/network/interfaces | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDNET" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << CHECKMANAGEDNETFILE > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
@@ -568,7 +568,7 @@ fi
 
 CHECKMANAGEDDHCPCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDHCPCONFIG" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << CHECKMANAGEDDHCPCONFIGFILE > /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf
 ### ### ### lxc-to-go // ### ### ###
@@ -676,7 +676,7 @@ fi
 
 CHECKMANAGEDDNSCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/unbound/unbound.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDNSCONFIG" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << CHECKMANAGEDDNSCONFIGFILE > /var/lib/lxc/managed/rootfs/etc/unbound/unbound.conf
 ### ### ### lxc-to-go // ### ### ###
@@ -779,7 +779,7 @@ fi
 touch /var/lib/lxc/managed/rootfs/etc/radvd.conf
 CHECKMANAGEDIPV6CONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/radvd.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDIPV6CONFIG" = X"lxc-to-go" ]; then
-   echo "" # dummy
+   : # dummy
 else
 /bin/cat << CHECKMANAGEDIPV6CONFIGFILE > /var/lib/lxc/managed/rootfs/etc/radvd.conf
 ### ### ### lxc-to-go // ### ### ###
@@ -820,8 +820,8 @@ fi
    ;;
 *)
    # error 1
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
@@ -841,16 +841,16 @@ debian)
 if [ "$MYNAME" = "root" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
@@ -872,8 +872,8 @@ fi
    ;;
 *)
    # error 1
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
@@ -893,16 +893,16 @@ debian)
 if [ "$MYNAME" = "root" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
@@ -924,8 +924,8 @@ fi
    ;;
 *)
    # error 1
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
@@ -945,16 +945,16 @@ debian)
 if [ "$MYNAME" = "root" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
@@ -976,8 +976,8 @@ fi
    ;;
 *)
    # error 1
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
@@ -997,16 +997,16 @@ debian)
 if [ "$MYNAME" = "root" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
 if [ "$DEBVERSION" = "8" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
 fi
@@ -1028,8 +1028,8 @@ fi
 ;;
 *)
    # error 1
-   echo "" # dummy
-   echo "" # dummy
+   : # dummy
+   : # dummy
    echo "[ERROR] Plattform = unknown"
    exit 1
    ;;
@@ -1038,7 +1038,7 @@ esac
 ### // stage1 ###
 ;;
 *)
-echo ""
+: # dummy
 echo "usage: $0 { bootstrap | start | stop | create | delete }"
 ;;
 esac
