@@ -33,7 +33,7 @@ Example
 
 Diagram
 =======
-![lxc-to-go](/content/lxc-to-go.jpg)
+![lxc-to-go](/content/lxc-to-go_.jpg)
 
 Screencast
 ==========
