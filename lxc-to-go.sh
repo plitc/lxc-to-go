@@ -346,16 +346,15 @@ else
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
    screen -list | grep "managed"
+   ### ### ###
+   echo ""
+   echo "... wait 15 seconds ..."
+   echo ""
+   sleep 15
+   ### ### ###
 fi
 
-### ### ###
-echo ""
-echo "... wait 15 seconds ..."
-echo ""
-sleep 15
-### ### ###
-
-CHECKUPDATELIST1=$(grep -c "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list)
+CHECKUPDATELIST1=$(grep "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list | head -n 1 | grep -c "jessie")
 if [ "$CHECKUPDATELIST1" = "1" ]; then
    : # dummy
 else
