@@ -76,10 +76,10 @@ fi
          if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
             echo "ENVIRONMENT=desktop" > /etc/lxc-to-go.conf
          fi
-         if [ "$ENVIRONMENT" = "server" ]; then
+         if [ "$ENVIRONMENTVALUE" = "server" ]; then
             echo "ENVIRONMENT=server" > /etc/lxc-to-go.conf
          fi
-         if [ -e "$ENVIRONMENT" ]; then
+         if [ -e "$ENVIRONMENTVALUE" ]; then
             echo "[ERROR] choose an environment"
             exit 0
          fi
