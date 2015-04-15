@@ -240,7 +240,8 @@ else
    else
       GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1)
-      ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
+      GETIPV4SUBNETMOD=$(sed 's/255.255.255.0/24/' "$GETIPV4SUBNET" | sed 's/255.255.255.254/27/')
+      ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNETMOD"
    fi
 
 ### ### ###
