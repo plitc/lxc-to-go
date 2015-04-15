@@ -17,7 +17,7 @@ Dependencies
    * lxc
    * bridge-utils
 
-* Linux (LXC Container: managed)
+* LXC Container: managed
    * debian jessie
    * systemd-sysv
    * iputils-ping
@@ -41,6 +41,7 @@ Usage
 
 Example
 =======
+* bootstrap
 ```
     # ./lxc-to-go.sh bootstrap
 
@@ -49,6 +50,22 @@ Example
     # ./lxc-to-go.sh bootstrap
 
     # lxc-attach -n managed
+```
+
+* start
+```
+```
+
+* stop
+```
+```
+
+* create
+```
+```
+
+* delete
+```
 ```
 
 Diagram
