@@ -831,7 +831,8 @@ fi
 ### ### ### ### ### ### ### ### ###
 #/ bash -c echo -e '\E[33;44m'"bootstrap finished"; tput sgr0
 #/ echo " `Control V``Control [`[33m bootstrap finished"
-echo "^[[0;31;40m bootstrap finished"
+#/ echo "^[[0;31;40m bootstrap finished"
+echo -e "\e[1;31m bootstrap finished \e[0m"
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
