@@ -146,7 +146,8 @@ else
       exit 1
    fi
    : # dummy
-   echo "Please Reboot your System immediately! and continue the bootstrap"
+   echo "" # dummy
+   printf "\033[1;31mPlease Reboot your System immediately! and continue the bootstrap\033[0m\n"
    exit 0
 fi
 
@@ -155,7 +156,8 @@ if [ "$CHECKGRUB2" = "1" ]; then
    : # dummy
 else
    : # dummy
-   echo "Please Reboot your System immediately! and continue the bootstrap"
+   echo "" # dummy
+   printf "\033[1;31mPlease Reboot your System immediately! and continue the bootstrap\033[0m\n"
    exit 0
 fi
 
