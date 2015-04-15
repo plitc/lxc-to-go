@@ -805,7 +805,23 @@ CHECKMANAGEDIPV6CONFIGFILE
    lxc-attach -n managed -- service radvd restart
 fi
 
+### ### ###
 
+### network tools
+
+CHECKMANAGEDIPUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "iputils-ping")
+if [ "$CHECKMANAGEDIPUTILS" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install iputils-ping
+fi
+
+CHECKMANAGEDTRACEROUTE=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "traceroute")
+if [ "$CHECKMANAGEDTRACEROUTE" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install traceroute
+fi
 
 
 
