@@ -244,6 +244,11 @@ fi
 GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
 echo "$GETIPV4"
 
+
+GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1)
+echo "$GETIPV4SUBNET"
+
+
 ### ### ###
 sleep 1; : # dummy
 ### ### ###
