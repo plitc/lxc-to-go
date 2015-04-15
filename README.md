@@ -17,6 +17,15 @@ Dependencies
    * lxc
    * bridge-utils
 
+* Linux (LXC Container: managed)
+   * debian jessie
+   * systemd-sysv
+   * iputils-ping
+   * traceroute
+   * isc-dhcp-server
+   * unbound
+   * radvd
+
 Features
 ========
 
@@ -27,11 +36,20 @@ Platform
 Usage
 =====
 ```
-    #
+    # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete }
 ```
 
 Example
 =======
+```
+    # ./lxc-to-go.sh bootstrap
+
+        Please Reboot your System immediately! and continue the bootstrap
+
+    # ./lxc-to-go.sh bootstrap
+
+    # lxc-attach -n managed
+```
 
 Diagram
 =======
