@@ -823,9 +823,13 @@ else
    lxc-attach -n managed -- apt-get -y install traceroute
 fi
 
+### ### ###
 
 
-echo -en '\E[47;31m'"\033[1mZ\033[0m"
+
+
+### ### ### ### ### ### ### ### ###
+echo -e '\E[33;44m'"bootstrap finished"; tput sgr0
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
