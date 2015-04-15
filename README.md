@@ -12,8 +12,10 @@ WARNING
 
 Dependencies
 ============
-* Linux (Debian)
+* Linux (Debian 8/jessie)
+   * screen
    * lxc
+   * bridge-utils
 
 Features
 ========
