@@ -79,6 +79,10 @@ fi
          if [ "$ENVIRONMENT" = "server" ]; then
             echo "ENVIRONMENT=server" > /etc/lxc-to-go.conf
          fi
+         if [ -e "$ENVIRONMENT" ]; then
+            echo "[ERROR] choose an environment"
+            exit 0
+         fi
 
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
