@@ -72,6 +72,14 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+         read -p "Choose your Environment: (desktop/server) ? (desktop/server) " ENVIRONMENTVALUE
+         if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
+            echo "ENVIRONMENT=desktop" > /etc/lxc-to-go.conf
+         fi
+         if [ "$ENVIRONMENT" = "server" ]; then
+            echo "ENVIRONMENT=server" > /etc/lxc-to-go.conf
+         fi
+
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
     echo "<--- --- --->"
