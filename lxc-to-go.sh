@@ -222,6 +222,7 @@ else
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       ifconfig "$GETBRIDGEPORT0" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs echo
+      ifconfig eth0 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs echo
    fi
 ###
 fi
