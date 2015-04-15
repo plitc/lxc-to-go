@@ -31,8 +31,8 @@
 ### ### ### PLITC // ### ### ###
 
 ### stage0 // ###
-DEBIAN=$(grep "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
-DEBVERSION=$(grep "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
+DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 MYNAME=$(whoami)
 ### // stage0 ###
 
@@ -54,15 +54,15 @@ else
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
-   if [ "$DEBVERSION" = "7" ]; then
+   if [ "$DEBVERSION" = "8" ]; then
    : # dummy
    else
    : # dummy
    : # dummy
-   echo "[ERROR] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
    exit 1
    fi
 fi
@@ -187,7 +187,7 @@ else
 
    UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
    if [ -e "$UDEVNET" ]; then
-      GETBRIDGEPORT0=$(grep 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
+      GETBRIDGEPORT0=$(grep -s 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
       brctl addif vswitch0 "$GETBRIDGEPORT0"
       sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
