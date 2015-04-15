@@ -74,7 +74,7 @@ fi
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
-         read -p "Choose your Environment: (desktop/server) ? (desktop/server) " ENVIRONMENTVALUE
+         read -p "Choose your Environment: (desktop/server) ? " ENVIRONMENTVALUE
          if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
             echo "ENVIRONMENT=desktop" > /etc/lxc-to-go.conf
          fi
