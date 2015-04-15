@@ -57,10 +57,14 @@ fi
 if [ "$DEBVERSION" = "8" ]; then
    : # dummy
 else
+   if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+   else
    : # dummy
    : # dummy
    echo "[ERROR] You need Debian 8 (Jessie) Version"
    exit 1
+   fi
 fi
 
 #
