@@ -1038,7 +1038,7 @@ esac
 ### // stage1 ###
 ;;
 *)
-: # dummy
+echo "" # usage
 echo "usage: $0 { bootstrap | start | stop | create | delete }"
 ;;
 esac
