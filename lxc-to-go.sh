@@ -118,6 +118,16 @@ if [ -z "$BRIDGEUTILS" ]; then
     echo "<--- --- --->"
 fi
 
+NETTOOLS=$(/usr/bin/dpkg -l | grep net-tools | awk '{print $2}')
+if [ -z "$NETTOOLS" ]; then
+    echo "<--- --- --->"
+    echo "need net-tools"
+    echo "<--- --- --->"
+    apt-get update
+    apt-get -y install net-tools
+    echo "<--- --- --->"
+fi
+
 sleep 1
     : # dummy
     lxc-checkconfig
@@ -228,8 +238,8 @@ fi
 
 
 
-      ifconfig "$GETBRIDGEPORT0" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs echo
-      ifconfig eth0 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs echo
+      # ifconfig "$GETBRIDGEPORT0" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs echo
+      ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | awk '{print $1}' | xargs echo
 
 
 ### ### ###
