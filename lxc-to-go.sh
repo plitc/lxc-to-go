@@ -829,7 +829,7 @@ fi
 
 
 ### ### ### ### ### ### ### ### ###
-echo -e '\E[33;44m'"bootstrap finished"; tput sgr0
+bash -c echo -e '\E[33;44m'"bootstrap finished"; tput sgr0
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
