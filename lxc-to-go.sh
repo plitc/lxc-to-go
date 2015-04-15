@@ -216,6 +216,14 @@ else
    fi
    sysctl -w net.ipv4.conf.vswitch0.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch0.forwarding=1 >/dev/null 2>&1
+###
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      : # dummy
+   fi
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      ifconfig "$GETBRIDGEPORT0" | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | xargs echo
+   fi
+###
 fi
 
 ### ### ###
