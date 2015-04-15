@@ -492,7 +492,6 @@ ip6tables -P FORWARD ACCEPT
 ip6tables -P OUTPUT ACCEPT
 
 ##/ echo "stage0"
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sysctl net.ipv4.conf.default.forwarding=1
 sysctl net.ipv4.conf.eth0.forwarding=1
 sysctl net.ipv4.conf.eth1.forwarding=1
@@ -501,9 +500,40 @@ sysctl net.ipv6.conf.eth1.forwarding=1
 sysctl net.ipv6.conf.all.forwarding=1
 
 ##/ echo "stage1"
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 60000 -j DNAT --to-destination 192.168.1.100:60000
-# ip6tables -t nat -A POSTROUTING -o ipredator -j MASQUERADE
+##/ nat
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+#/
+# lxc1
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.1.101:10001
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.1.101:10001
+# lxc2
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10002 -j DNAT --to-destination 192.168.1.102:10002
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10002 -j DNAT --to-destination 192.168.1.102:10002
+# lxc3
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10003 -j DNAT --to-destination 192.168.1.103:10003
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10003 -j DNAT --to-destination 192.168.1.103:10003
+# lxc4
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10004 -j DNAT --to-destination 192.168.1.104:10004
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10004 -j DNAT --to-destination 192.168.1.104:10004
+# lxc5
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10005 -j DNAT --to-destination 192.168.1.105:10005
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10005 -j DNAT --to-destination 192.168.1.105:10005
+# lxc6
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10006 -j DNAT --to-destination 192.168.1.106:10006
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10006 -j DNAT --to-destination 192.168.1.106:10006
+# lxc7
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10007 -j DNAT --to-destination 192.168.1.107:10007
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10007 -j DNAT --to-destination 192.168.1.107:10007
+# lxc8
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10008 -j DNAT --to-destination 192.168.1.108:10008
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10008 -j DNAT --to-destination 192.168.1.108:10008
+# lxc9
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10009 -j DNAT --to-destination 192.168.1.109:10009
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10009 -j DNAT --to-destination 192.168.1.109:10009
+# lxc10
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10010 -j DNAT --to-destination 192.168.1.110:10010
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destination 192.168.1.110:10010
+#/
 
 ##/ echo "stage2"
 # ip -6 rule add from 2001::/64 table 100
@@ -633,7 +663,7 @@ subnet 192.168.1.0 netmask 255.255.255.0                   # zone to issue addre
                 #/ option local-proxy-config "http://192.168.1.1/proxy.pac";
 
                 option routers 192.168.1.1;
-                range 192.168.1.100 192.168.1.200;
+                range 192.168.1.101 192.168.1.200;
 
 ### fixed-address // ###
 #
