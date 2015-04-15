@@ -74,7 +74,7 @@ if [ -z "$SCREEN" ]; then
     echo "need screen"
     echo "<--- --- --->"
     apt-get update
-    apt-get install screen
+    apt-get -y install screen
     echo "<--- --- --->"
 fi
 
@@ -84,7 +84,7 @@ if [ -z "$LXC" ]; then
     echo "need lxc"
     echo "<--- --- --->"
     apt-get update
-    apt-get install lxc
+    apt-get -y install lxc
     echo "<--- --- --->"
 fi
 
@@ -94,7 +94,7 @@ if [ -z "$BRIDGEUTILS" ]; then
     echo "need bridge-utils"
     echo "<--- --- --->"
     apt-get update
-    apt-get install bridge-utils
+    apt-get -y install bridge-utils
     echo "<--- --- --->"
 fi
 
