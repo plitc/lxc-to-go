@@ -410,7 +410,7 @@ fi
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKMANAGED1" = "1" ]; then
-   echo "... LXC Container (screen session: "$CHECKMANAGED1STATUS"): always running ..."
+   echo '... LXC Container (screen session: "$CHECKMANAGED1STATUS"): always running ...'
 else
    echo "... LXC Container (screen session): managed starting ..."
    screen -d -m -S managed -- lxc-start -n managed
