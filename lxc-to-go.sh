@@ -254,8 +254,9 @@ GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GAT
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
-      ##/ ip addr flush eth0
-      ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
+###/ ip addr flush eth0
+###/ ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
+      route del default
       route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
@@ -267,8 +268,9 @@ fi
       GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
-      ##/ ip addr flush eth0
-      ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
+###/ ip addr flush eth0
+###/ ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
+      route del default
       route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
