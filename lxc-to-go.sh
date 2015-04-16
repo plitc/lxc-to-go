@@ -539,6 +539,17 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED2
+#
+### ### ###
+/bin/cat << LXCCONFIGMANAGEDRESOLV > /var/lib/lxc/managed/rootfs/etc/resolv.conf
+### ### ### lxc-to-go // ### ### ###
+domain privat.local
+search privat.local
+nameserver 74.82.42.42
+### ### ### // lxc-to-go ### ### ###
+# EOF
+LXCCONFIGMANAGEDRESOLV
+### ### ###
    fi
 fi
 ### ### ###
