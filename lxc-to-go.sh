@@ -390,6 +390,15 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 LXCCONFIGMANAGED
 fi
 
+### ### ###
+CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
+if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
+    : # dummy
+else
+    lxc-clone -B dir -o managed -n deb7template
+fi
+### ### ###
+
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKMANAGED1" = "1" ]; then
