@@ -596,6 +596,7 @@ CHECKUPDATELIST1IN
    lxc-attach -n managed -- apt-get clean
    lxc-attach -n managed -- apt-get update
    if [ "$?" != "0" ]; then
+      rm -rf /var/lib/lxc/managed/rootfs/etc/apt/sources.list
       echo "[ERROR] can't fetch update list"
       exit 1
    fi
@@ -610,8 +611,15 @@ else
       echo "[ERROR] can't upgrade the LXC Container"
       echo '... try manually "lxc-attach -n managed -- apt-get -y upgrade"'
       if [ "$?" != "0" ]; then
-         rm -rf /var/lib/lxc/managed/rootfs/etc/apt/sources.list
          echo "[ERROR] can't upgrade"
+         rm -rf /var/lib/lxc/managed/rootfs/etc/apt/sources.list
+         : # dummy
+         read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
+         if [ "$LXCMANAGEDREMOVE" = "y" ]; then
+            lxc-stop -n managed -k
+            lxc-destroy -n managed
+            lxc-destroy -n deb7template
+         fi
          exit 1
       fi
    fi
@@ -621,18 +629,40 @@ else
       echo '... try manually "lxc-attach -n managed -- apt-get -y dist-upgrade"'
       if [ "$?" != "0" ]; then
          echo "[ERROR] can't dist-upgrade"
+         : # dummy
+         read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
+         if [ "$LXCMANAGEDREMOVE" = "y" ]; then
+            lxc-stop -n managed -k
+            lxc-destroy -n managed
+            lxc-destroy -n deb7template
+         fi
          exit 1
       fi
    fi
    lxc-attach -n managed -- apt-get -y autoremove
    if [ "$?" != "0" ]; then
-      echo "[ERROR] can't autoremove the LXC Container"
       echo '... try manually "lxc-attach -n managed -- apt-get -y autoremove"'
+      echo "[ERROR] can't autoremove the LXC Container"
+         : # dummy
+         read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
+         if [ "$LXCMANAGEDREMOVE" = "y" ]; then
+            lxc-stop -n managed -k
+            lxc-destroy -n managed
+            lxc-destroy -n deb7template
+         fi
+      exit 1
    fi
    lxc-attach -n managed -- apt-get -y install --reinstall systemd-sysv
    if [ "$?" != "0" ]; then
       echo '... try manually "lxc-attach -n managed -- apt-get -y install --reinstall systemd-sysv"'
       echo "[ERROR] can't reinstall systemd-sysv the LXC Container"
+         : # dummy
+         read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
+         if [ "$LXCMANAGEDREMOVE" = "y" ]; then
+            lxc-stop -n managed -k
+            lxc-destroy -n managed
+            lxc-destroy -n deb7template
+         fi
       exit 1
    fi
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd.service
