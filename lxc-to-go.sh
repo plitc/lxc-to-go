@@ -432,13 +432,16 @@ CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKMANAGED1" = "1" ]; then
    echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
 else
+   echo "" # dummy
    echo "... LXC Container (screen session): managed starting ..."
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
    screen -list | grep "managed"
    ### ### ###
    : # dummy
+   echo "" # dummy
    echo "... wait 15 seconds ..."
+   echo "" # dummy
    : # dummy
    sleep 15
    ### ### ###
@@ -515,7 +518,9 @@ echo "" # dummy
 fi
 ### ### ###
 
+   echo "" # dummy
    echo "... LXC Container (screen session): managed restarting ..."
+   echo "" # dummy
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
    screen -list | grep "managed"
