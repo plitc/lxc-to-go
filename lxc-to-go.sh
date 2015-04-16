@@ -395,7 +395,7 @@ LXCCONFIGMANAGED
 fi
 
 ### ### ###
-$ . ./hook_deb7.sh
+ ./hook_deb7.sh
 ### ### ###
 
 ### ### ###
@@ -479,7 +479,7 @@ else
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/proc-sys-fs-binfmt_misc.automount
 
 ### ### ###
-$ . ./hook_deb8.sh
+ ./hook_deb8.sh
 ### ### ###
 
    lxc-stop -n managed
