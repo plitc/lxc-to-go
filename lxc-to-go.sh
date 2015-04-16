@@ -391,6 +391,10 @@ LXCCONFIGMANAGED
 fi
 
 ### ### ###
+$ . ./hook_deb7.sh
+### ### ###
+
+### ### ###
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
     : # dummy
@@ -470,7 +474,20 @@ else
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd-kernel.socket
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/proc-sys-fs-binfmt_misc.automount
 
+### ### ###
+$ . ./hook_deb8.sh
+### ### ###
+
    lxc-stop -n managed
+
+### ### ###
+CHECKTEMPLATEDEB8=$(lxc-ls | grep -c "deb8template")
+if [ "$CHECKTEMPLATEDEB8" = "1" ]; then
+    : # dummy
+else
+    lxc-clone -B dir -o managed -n deb8template
+fi
+### ### ###
 
    echo "... LXC Container (screen session): managed restarting ..."
    screen -d -m -S managed -- lxc-start -n managed
