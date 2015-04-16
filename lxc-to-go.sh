@@ -417,8 +417,10 @@ CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
     : # dummy
 else
+    echo "" # dummy
     lxc-clone -B dir -o managed -n deb7template
 ### ### ###
+echo "" # dummy
  ./hook_deb7.sh
 ### ### ###
 fi
@@ -502,8 +504,10 @@ CHECKTEMPLATEDEB8=$(lxc-ls | grep -c "deb8template")
 if [ "$CHECKTEMPLATEDEB8" = "1" ]; then
     : # dummy
 else
+    echo "" # dummy
     lxc-clone -B dir -o managed -n deb8template
 ### ### ###
+echo "" # dummy
  ./hook_deb8.sh
 ### ### ###
 fi
