@@ -422,6 +422,7 @@ else
 ### ### ###
 echo "" # dummy
  ./hook_deb7.sh
+echo "" # dummy
 ### ### ###
 fi
 ### ### ###
@@ -509,6 +510,7 @@ else
 ### ### ###
 echo "" # dummy
  ./hook_deb8.sh
+echo "" # dummy
 ### ### ###
 fi
 ### ### ###
