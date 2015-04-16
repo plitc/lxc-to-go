@@ -429,7 +429,6 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED1
-fi
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
@@ -528,8 +527,8 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED2
-fi
    fi
+fi
 ### ### ###
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
