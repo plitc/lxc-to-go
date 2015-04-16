@@ -350,9 +350,9 @@ lxc.network.name=eth1
 lxc.network.veth.pair=managed1
 lxc.network.flags=up
 ###
-lxc.network.ipv4 = 192.168.1.1/24
+lxc.network.ipv4 = 192.168.254.254/24
 #/ lxc.network.ipv4.gateway = auto
-lxc.network.ipv6 = fd00:aaaa:0001::1/64
+lxc.network.ipv6 = fd00:aaaa:0254::254/64
 ###
 
 lxc.mount=/etc/lxc/fstab.empty
@@ -627,35 +627,35 @@ sysctl net.ipv6.conf.all.forwarding=1
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 #/
 # lxc1
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.1.101:10001
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.1.101:10001
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
 # lxc2
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10002 -j DNAT --to-destination 192.168.1.102:10002
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10002 -j DNAT --to-destination 192.168.1.102:10002
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
 # lxc3
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10003 -j DNAT --to-destination 192.168.1.103:10003
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10003 -j DNAT --to-destination 192.168.1.103:10003
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
 # lxc4
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10004 -j DNAT --to-destination 192.168.1.104:10004
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10004 -j DNAT --to-destination 192.168.1.104:10004
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
 # lxc5
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10005 -j DNAT --to-destination 192.168.1.105:10005
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10005 -j DNAT --to-destination 192.168.1.105:10005
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
 # lxc6
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10006 -j DNAT --to-destination 192.168.1.106:10006
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10006 -j DNAT --to-destination 192.168.1.106:10006
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
 # lxc7
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10007 -j DNAT --to-destination 192.168.1.107:10007
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10007 -j DNAT --to-destination 192.168.1.107:10007
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
 # lxc8
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10008 -j DNAT --to-destination 192.168.1.108:10008
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10008 -j DNAT --to-destination 192.168.1.108:10008
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
 # lxc9
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10009 -j DNAT --to-destination 192.168.1.109:10009
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10009 -j DNAT --to-destination 192.168.1.109:10009
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
 # lxc10
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10010 -j DNAT --to-destination 192.168.1.110:10010
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destination 192.168.1.110:10010
+iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
+iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
 #/
 
 ##/ echo "stage2"
@@ -664,7 +664,7 @@ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destinat
 
 ##/ echo "stage3"
 ### IPredator // ###
-# route add -net 46.246.38.0 netmask 255.255.255.0 gw 192.168.1.1
+# route add -net 46.246.38.0 netmask 255.255.255.0 gw 192.168.254.254
 #
 # mkdir -p /dev/net
 # mknod /dev/net/tun c 10 200
@@ -737,12 +737,12 @@ else
 authoritative;                                             # server is authoritative
 option domain-name "privat.local";                         # the domain name issued
 option domain-search "privat.local";                       # dns search
-option domain-name-servers 192.168.1.1;                    # name servers issued
+option domain-name-servers 192.168.254.254;                    # name servers issued
 
-#/ option netbios-name-servers 192.168.1.1;                # netbios servers
+#/ option netbios-name-servers 192.168.254.254;                # netbios servers
 #/ allow booting;                                          # allow for booting over the network
 #/ allow bootp;                                            # allow for booting
-#/ next-server 192.168.1.1;                                # TFTP server for booting
+#/ next-server 192.168.254.254;                                # TFTP server for booting
 #/ filename "pxelinux.0";                                  # kernel for network booting
 #/ ddns-update-style interim;                              # setup dynamic DNS updates
 #/ ddns-updates on;
@@ -770,9 +770,9 @@ max-lease-time 604800;
 
 #/ failover peer "dhcp-failover" {                         # fail over configuration
 #/          primary;                                       # this is the secondary
-#/          address 192.168.1.1;                           # our ip address
+#/          address 192.168.254.254;                           # our ip address
 #/          port 647;
-#/          peer address 192.168.1.2;                      # primary's ip address
+#/          peer address 192.168.254.253;                      # primary's ip address
 #/          peer port 647;
 #/          max-response-delay 60;
 #/          max-unacked-updates 10;
@@ -781,14 +781,14 @@ max-lease-time 604800;
 #/          load balance max seconds 3;
 #/ }
 
-subnet 192.168.1.0 netmask 255.255.255.0                   # zone to issue addresses from
+subnet 192.168.254.0 netmask 255.255.255.0                   # zone to issue addresses from
 {
         pool {
                 #/ failover peer "dhcp-failover";          # pool for dhcp, bootp leases with failover
-                #/ option local-proxy-config "http://192.168.1.1/proxy.pac";
+                #/ option local-proxy-config "http://192.168.254.254/proxy.pac";
 
-                option routers 192.168.1.1;
-                range 192.168.1.101 192.168.1.200;
+                option routers 192.168.254.254;
+                range 192.168.254.101 192.168.254.200;
 
 ### fixed-address // ###
 #
@@ -840,12 +840,12 @@ server:
 ### < --- server // --- > ###
 verbosity: 2
  
-# interface: 192.168.1.1
-# interface: 192.168.1.1@5003
+# interface: 192.168.254.254
+# interface: 192.168.254.254@5003
 # interface: 2001::1
  
-# outgoing-interface: 192.168.1.1
-# outgoing-interface: 192.168.1.1@5003
+# outgoing-interface: 192.168.254.254
+# outgoing-interface: 192.168.254.254@5003
 # outgoing-interface: 2001::1
  
 access-control: 0.0.0.0/0 allow
