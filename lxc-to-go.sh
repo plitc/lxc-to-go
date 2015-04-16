@@ -233,21 +233,23 @@ else
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
 ### ### ###
-GETIPV4DEFAULTGATEWAY=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}')
+#/ GETIPV4DEFAULTGATEWAY=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}')
+netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" >> /etc/lxc-to-go.conf
+IPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /etc/lxc-to-go.conf | sed 's/IPV4DEFAULTGATEWAY=//')
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.254/27/')
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       #/ ip addr flush eth0
       ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
-      route add default gw "$GETIPV4DEFAULTGATEWAY" dev "$GETBRIDGEPORT0"
+      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev "$GETBRIDGEPORT0"
    else
       GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.254/27/')
       ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       #/ ip addr flush eth0
       ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
-      route add default gw "$GETIPV4DEFAULTGATEWAY" dev eth0
+      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev eth0
    fi
 ### ### ###
    fi
