@@ -79,11 +79,11 @@ Example
 
 Diagram
 =======
-lxc-to-go for servers
-![lxc-to-go](/content/lxc-to-go_servers_.jpg)
+* lxc-to-go for servers
+![lxc-to-go_servers](/content/lxc-to-go_servers_.jpg)
 
-lxc-to-go for mobile devices
-![lxc-to-go](/content/lxc-to-go_desktop_.jpg)
+* lxc-to-go for mobile devices
+![lxc-to-go_desktop](/content/lxc-to-go_desktop_.jpg)
 
 Screencast
 ==========
