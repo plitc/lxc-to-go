@@ -177,7 +177,7 @@ else
    exit 0
 fi
 
-CHECKGRUB2=$(cat /proc/cmdline | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+CHECKGRUB2=$(grep "cgroup_enable=memory" /proc/cmdline | grep -c "swapaccount=1")
 if [ "$CHECKGRUB2" = "1" ]; then
    : # dummy
 else
