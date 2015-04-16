@@ -289,8 +289,6 @@ fi
 ###
 fi
 
-
-
 ### ### ###
 sleep 1; : # dummy
 ### ### ###
@@ -447,6 +445,11 @@ lxc.network.name=eth0
 lxc.network.hwaddr=aa:bb:c0:0c:bb:aa
 lxc.network.veth.pair=managed
 lxc.network.flags=up
+###
+lxc.network.ipv4 = 192.168.253.254/24
+#/ lxc.network.ipv4.gateway = auto
+lxc.network.ipv6 = fd00:aaaa:0253::254/64
+###
 
 # vswitch1 / intern
 lxc.network.type=veth
