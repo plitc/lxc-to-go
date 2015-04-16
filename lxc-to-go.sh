@@ -520,10 +520,10 @@ fi
 
    echo "" # dummy
    echo "... LXC Container (screen session): managed restarting ..."
-   echo "" # dummy
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
    screen -list | grep "managed"
+   echo "" # dummy
 fi
 
 ### ### ###
@@ -691,10 +691,12 @@ CHECKMANAGEDNETFILE
 
    lxc-stop -n managed
 
+   echo "" # dummy
    echo "... LXC Container (screen session): managed restarting ..."
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
    screen -list | grep "managed"
+   echo "" # dummy
 fi
 
 ### DHCP-Service
