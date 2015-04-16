@@ -219,13 +219,26 @@ else
       brctl addif vswitch0 "$GETBRIDGEPORT0"
       sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
+### Proxy_ARP/NDP // ###
+      sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".proxy_arp=1 >/dev/null 2>&1
+      sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".proxy_ndp=1 >/dev/null 2>&1
+### // Proxy_ARP/NDP ###
    else
       brctl addif vswitch0 eth0
       sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
+### Proxy_ARP/NDP // ###
+      sysctl -w net.ipv4.conf.eth0.proxy_arp=1 >/dev/null 2>&1
+      sysctl -w net.ipv6.conf.eth0.proxy_ndp=1 >/dev/null 2>&1
+### // Proxy_ARP/NDP ###
    fi
    sysctl -w net.ipv4.conf.vswitch0.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch0.forwarding=1 >/dev/null 2>&1
+### Proxy_ARP/NDP // ###
+   sysctl -w net.ipv4.conf.vswitch0.proxy_arp=1 >/dev/null 2>&1
+   sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
+### // Proxy_ARP/NDP ###
+#
 ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy

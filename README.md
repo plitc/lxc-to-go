@@ -34,6 +34,12 @@ Features
    * deb7 template
    * deb8 template
 
+* create "managed" lxc for:
+   * routing (layer 3)
+   * dhcp server
+   * dns server
+   * ipv6 router advertisement
+
 Platform
 ========
 * Linux
@@ -79,7 +85,7 @@ Example
 
 Diagram
 =======
-* lxc-to-go for servers (prototype > 0.7)
+* lxc-to-go for servers (prototype > 0.9)
 ![lxc-to-go_servers](/content/lxc-to-go_servers_.jpg)
 
 * lxc-to-go for mobile devices (prototype 0.6)
