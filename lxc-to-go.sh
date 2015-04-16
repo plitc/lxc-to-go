@@ -234,8 +234,9 @@ else
       : # dummy
 ### ### ###
 ##/ GETIPV4DEFAULTGATEWAY=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}')
-netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" >> /etc/lxc-to-go.conf
-IPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /etc/lxc-to-go.conf | sed 's/IPV4DEFAULTGATEWAY=//')
+netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
+chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
+GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GATEWAY.log | sed 's/IPV4DEFAULTGATEWAY=//')
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.254/27/')
