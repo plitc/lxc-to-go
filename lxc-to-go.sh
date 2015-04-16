@@ -258,6 +258,7 @@ GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GAT
       ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
       route del default >/dev/null 2>&1
       route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+      ip addr add 192.168.253.253/24 dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
 if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
@@ -272,6 +273,7 @@ fi
       ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
       route del default >/dev/null 2>&1
       route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+      ip addr add 192.168.253.253/24 dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
 if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
@@ -330,7 +332,9 @@ LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{prin
 if [ X"$LXCCONFIGFILEMANAGED" = X"lxc-to-go" ]; then
    : # dummy
 else
-/bin/cat << LXCCONFIGMANAGED > /var/lib/lxc/managed/config
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      : # dummy
+/bin/cat << LXCCONFIGMANAGED1 > /var/lib/lxc/managed/config
 ### ### ### lxc-to-go // ### ### ###
 
 lxc.utsname=managed
@@ -424,9 +428,108 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 
 ### ### ### // lxc-to-go ### ### ###
 # EOF
-LXCCONFIGMANAGED
+LXCCONFIGMANAGED1
 fi
+   fi
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      : # dummy
+/bin/cat << LXCCONFIGMANAGED2 > /var/lib/lxc/managed/config
+### ### ### lxc-to-go // ### ### ###
 
+lxc.utsname=managed
+
+# vswitch0 / untagged
+lxc.network.type=veth
+lxc.network.link=vswitch0
+lxc.network.name=eth0
+lxc.network.hwaddr=aa:bb:c0:0c:bb:aa
+lxc.network.veth.pair=managed
+lxc.network.flags=up
+
+# vswitch1 / intern
+lxc.network.type=veth
+lxc.network.link=vswitch1
+lxc.network.name=eth1
+lxc.network.veth.pair=managed1
+lxc.network.flags=up
+###
+lxc.network.ipv4 = 192.168.254.254/24
+#/ lxc.network.ipv4.gateway = auto
+lxc.network.ipv6 = fd00:aaaa:0254::254/64
+###
+
+lxc.mount=/etc/lxc/fstab.empty
+lxc.rootfs=/var/lib/lxc/managed/rootfs
+
+# mounts point
+lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry = sysfs sys sysfs defaults  0 0
+
+#/ lxc.cgroup.memory.limit_in_bytes=268435456
+#/ lxc.cgroup.memory.memsw.limit_in_bytes=268435456
+
+### default ### lxc.cap.drop=audit_control audit_write mac_admin mac_override mknod setfcap setpcap sys_boot sys_module sys_pacct sys_rawio sys_resource sys_time sys_tty_config
+#/ lxc.cap.drop=audit_control audit_write mac_admin mac_override mknod setfcap setpcap sys_boot sys_module sys_pacct sys_rawio sys_resource sys_time sys_tty_config
+
+#
+### LXC - jessie/systemd hacks // ###
+lxc.autodev = 1
+lxc.kmsg = 0
+
+#!# lxc.cap.drop = sys_admin
+#!# lxc.cap.drop = mknod
+#!# lxc.cap.drop = audit_control
+#!# lxc.cap.drop = audit_write
+#!# lxc.cap.drop = setfcap
+#!# lxc.cap.drop = setpcap
+#!# lxc.cap.drop = sys_resource
+#
+lxc.cap.drop = sys_module
+lxc.cap.drop = mac_admin
+lxc.cap.drop = mac_override
+lxc.cap.drop = sys_time
+lxc.cap.drop = sys_boot
+lxc.cap.drop = sys_pacct
+lxc.cap.drop = sys_rawio
+lxc.cap.drop = sys_tty_config
+
+lxc.tty=2
+lxc.pts = 1024
+#/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
+### // LXC - jessie/systemd hacks ###
+#
+
+lxc.cgroup.devices.deny = a
+# tty
+lxc.cgroup.devices.allow = c 5:0 rwm
+lxc.cgroup.devices.allow = c 4:0 rwm
+lxc.cgroup.devices.allow = c 4:1 rwm
+# console
+lxc.cgroup.devices.allow = c 5:1 rwm
+# ptmx
+lxc.cgroup.devices.allow = c 5:2 rwm
+# pts/*
+lxc.cgroup.devices.allow = c 136:* rwm
+# null
+lxc.cgroup.devices.allow = c 1:3 rwm
+# zero
+lxc.cgroup.devices.allow = c 1:5 rwm
+# full
+lxc.cgroup.devices.allow = c 1:7 rwm
+# random
+lxc.cgroup.devices.allow = c 1:8 rwm
+# urandom
+lxc.cgroup.devices.allow = c 1:9 rwm
+# fuse
+lxc.cgroup.devices.allow = c 10:229 rwm
+# tun
+lxc.cgroup.devices.allow = c 10:200 rwm
+
+### ### ### // lxc-to-go ### ### ###
+# EOF
+LXCCONFIGMANAGED2
+fi
+   fi
 ### ### ###
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
