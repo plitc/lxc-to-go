@@ -216,7 +216,7 @@ else
    UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
    if [ -e "$UDEVNET" ]; then
       GETBRIDGEPORT0=$(grep -s 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
-      brctl addif vswitch0 "$GETBRIDGEPORT0"
+###/brctl addif vswitch0 "$GETBRIDGEPORT0"
       sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
 ### Proxy_ARP/NDP // ###
@@ -224,7 +224,7 @@ else
       sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".proxy_ndp=1 >/dev/null 2>&1
 ### // Proxy_ARP/NDP ###
    else
-      brctl addif vswitch0 eth0
+###/brctl addif vswitch0 eth0
       sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
 ### Proxy_ARP/NDP // ###
