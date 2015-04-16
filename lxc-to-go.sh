@@ -83,7 +83,7 @@ if [ -z "$CHECKENVIRONMENT" ]; then
          fi
          if [ -z "$ENVIRONMENTVALUE" ]; then
             echo "[ERROR] choose an environment"
-            exit 0
+            exit 1
          fi
 fi
 GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
@@ -453,7 +453,7 @@ lxc.network.veth.pair=managed
 lxc.network.flags=up
 ###
 lxc.network.ipv4 = 192.168.253.254/24
-lxc.network.ipv4.gateway = auto
+lxc.network.ipv4.gateway = 192.168.253.253
 lxc.network.ipv6 = fd00:aaaa:0253::254/64
 ###
 
@@ -597,6 +597,7 @@ CHECKUPDATELIST1IN
    lxc-attach -n managed -- apt-get update
    if [ "$?" != "0" ]; then
       echo "[ERROR] can't fetch update list"
+      exit 1
    fi
 fi
 
@@ -608,11 +609,20 @@ else
    if [ "$?" != "0" ]; then
       echo "[ERROR] can't upgrade the LXC Container"
       echo '... try manually "lxc-attach -n managed -- apt-get -y upgrade"'
+      if [ "$?" != "0" ]; then
+         rm -rf /var/lib/lxc/managed/rootfs/etc/apt/sources.list
+         echo "[ERROR] can't upgrade"
+         exit 1
+      fi
    fi
    lxc-attach -n managed -- apt-get -y dist-upgrade
    if [ "$?" != "0" ]; then
       echo "[ERROR] can't dist-upgrade the LXC Container"
       echo '... try manually "lxc-attach -n managed -- apt-get -y dist-upgrade"'
+      if [ "$?" != "0" ]; then
+         echo "[ERROR] can't dist-upgrade"
+         exit 1
+      fi
    fi
    lxc-attach -n managed -- apt-get -y autoremove
    if [ "$?" != "0" ]; then
