@@ -1,9 +1,10 @@
 #!/bin/sh
 ### ### ### PLITC ### ### ###
-echo "<--- --- --- debian 7 lxc hooks --- --- --->"
+echo "<--- --- --- debian 7 lxc template hooks // --- --- --->"
 
-sleep 10
-echo ""
 
+
+echo "<--- --- --- // debian 7 lxc template hooks --- --- --->"
+#/ exit 0
 ### ### ### PLITC ### ### ###
 # EOF
