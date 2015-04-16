@@ -241,6 +241,7 @@ else
 ### NAT // ###
    iptables -t nat -A POSTROUTING -o vswitch0 -j MASQUERADE
    sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
+   iptables -A FORWARD -o vswitch0 -s 192.168.0.0/16 -j ACCEPT
 ### // NAT ###
 #
 ###
