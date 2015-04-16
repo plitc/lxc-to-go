@@ -1,11 +1,11 @@
 
 Background
 ==========
-* create an lxc environment for mobile devices (and server)
+* create an lxc environment for mobile devices (and servers)
 
 Benefits of Goal Setting
 ========================
-* rapid lxc deployment for mobile devices (and server)
+* rapid lxc deployment for mobile devices (and servers)
 
 WARNING
 =======
@@ -79,7 +79,11 @@ Example
 
 Diagram
 =======
-![lxc-to-go](/content/lxc-to-go_.jpg)
+* lxc-to-go for servers
+![lxc-to-go](/content/lxc-to-go_servers_.jpg)
+
+* lxc-to-go for mobile devices
+![lxc-to-go](/content/lxc-to-go_desktop_.jpg)
 
 Screencast
 ==========
