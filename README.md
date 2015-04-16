@@ -89,4 +89,5 @@ Errata
 
 TODO
 ====
+* 16.04.2015: support for zfs/btrfs lxc-clone templates
 
