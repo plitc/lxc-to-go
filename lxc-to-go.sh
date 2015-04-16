@@ -238,6 +238,9 @@ else
    sysctl -w net.ipv4.conf.vswitch0.proxy_arp=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
 ### // Proxy_ARP/NDP ###
+### NAT // ###
+   iptables -t nat -A POSTROUTING -o vswitch0 -j MASQUERADE
+### // NAT ###
 #
 ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
