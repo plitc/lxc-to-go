@@ -240,6 +240,7 @@ else
 ### // Proxy_ARP/NDP ###
 ### NAT // ###
    iptables -t nat -A POSTROUTING -o vswitch0 -j MASQUERADE
+   sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
 ### // NAT ###
 #
 ###
