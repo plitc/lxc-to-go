@@ -240,7 +240,7 @@ else
 ### // Proxy_ARP/NDP ###
 ### NAT // ###
    iptables -t nat -A POSTROUTING -o vswitch0 -j MASQUERADE
-   sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
+   #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
    #/ iptables -A FORWARD -o vswitch0 -s 192.168.0.0/16 -j ACCEPT
 # lxc1
 iptables -t nat -A PREROUTING -i vswitch0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
@@ -264,9 +264,9 @@ GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GAT
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
 ###/ip addr flush eth0
-      ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
-      route del default >/dev/null 2>&1
-      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+#      ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
+#      route del default >/dev/null 2>&1
+#      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
       ip addr add 192.168.253.253/24 dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
@@ -279,9 +279,9 @@ fi
       GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
 ###/ip addr flush eth0
-      ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
-      route del default >/dev/null 2>&1
-      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+#      ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
+#      route del default >/dev/null 2>&1
+#      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
       ip addr add 192.168.253.253/24 dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
