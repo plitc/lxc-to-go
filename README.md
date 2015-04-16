@@ -1,18 +1,19 @@
 
 Background
 ==========
-* create an lxc environment for mobile devices
+* create an lxc environment for mobile devices (and server)
 
 Benefits of Goal Setting
 ========================
-* rapid lxc deployment for mobile devices
+* rapid lxc deployment for mobile devices (and server)
 
 WARNING
 =======
+* lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
 Dependencies
 ============
-* Linux (Debian 8/jessie)
+* Linux
    * screen
    * lxc
    * bridge-utils
@@ -28,14 +29,21 @@ Dependencies
 
 Features
 ========
+* create basic templates
+   * deb7 template
+   * deb8 template
 
 Platform
 ========
-* Linux (Debian 8/jessie)
+* Linux
+   * Debian 8/jessie (recommended)
+   * Debian 7/wheezy
 
 Usage
 =====
 ```
+    WARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.
+
     # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete }
 ```
 

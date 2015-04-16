@@ -1172,6 +1172,7 @@ esac
 ### // stage1 ###
 ;;
 *)
+printf "\033[1;31mWARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.\033[0m\n"
 echo "" # usage
 echo "usage: $0 { bootstrap | start | stop | create | delete }"
 ;;
