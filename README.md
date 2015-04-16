@@ -17,6 +17,7 @@ Dependencies
    * screen
    * lxc
    * bridge-utils
+   * sh (as dash/bash)
 
 * LXC Container: managed
    * debian jessie
