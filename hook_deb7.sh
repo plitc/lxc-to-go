@@ -1,6 +1,6 @@
 #!/bin/sh
 ### ### ### PLITC ### ### ###
-echo "<--- --- --- debian 7 lxc hooks --- --- --->
+echo "<--- --- --- debian 7 lxc hooks --- --- --->"
 
 
 
