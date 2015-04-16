@@ -256,7 +256,7 @@ GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GAT
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
 ###/ip addr flush eth0
       ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
-      route del default
+      route del default >/dev/null 2>&1
       route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
@@ -270,7 +270,7 @@ fi
       ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
 ###/ip addr flush eth0
       ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
-      route del default
+      route del default >/dev/null 2>&1
       route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
