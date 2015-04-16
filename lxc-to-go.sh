@@ -631,8 +631,9 @@ else
    fi
    lxc-attach -n managed -- apt-get -y install --reinstall systemd-sysv
    if [ "$?" != "0" ]; then
-      echo "[ERROR] can't reinstall systemd-sysv the LXC Container"
       echo '... try manually "lxc-attach -n managed -- apt-get -y install --reinstall systemd-sysv"'
+      echo "[ERROR] can't reinstall systemd-sysv the LXC Container"
+      exit 1
    fi
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd.service
    lxc-attach -n managed -- ln -s /dev/null /etc/systemd/system/systemd-udevd-control.socket
