@@ -235,16 +235,13 @@ else
 ### ### ###
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-      GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1)
+      GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.254/27/')
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
    else
       GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-      GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1)
-#      GETIPV4SUBNETMOD=$(sed 's/255.255.255.0/24/' "$GETIPV4SUBNET" | sed 's/255.255.255.254/27/')
-      GETIPV4SUBNETMOD=$(`echo "$GETIPV4SUBNET" | sed '/\(^255.255.255.0=\).*/ s//\124/' | sed '/\(^255.255.255.254=\).*/ s//\127/'`)
-      ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNETMOD"
+      GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.254/27/')
+      ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
    fi
-
 ### ### ###
    fi
 ###
