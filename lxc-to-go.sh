@@ -1261,11 +1261,11 @@ fi
 #/ ipv6
       if [ -e "$UDEVNET" ]; then
          #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
-         ip -6 route del ::/0
+         ip -6 route del ::/0 >/dev/null 2>&1
          echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
       else
          #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
-         ip -6 route del ::/0
+         ip -6 route del ::/0 >/dev/null 2>&1
          echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
       fi
 #/ container
