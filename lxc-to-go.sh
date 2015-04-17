@@ -260,6 +260,7 @@ else
 ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
+      dhclient vswitch0
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
@@ -276,7 +277,9 @@ GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GAT
 #      ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
 #      route del default >/dev/null 2>&1
 #      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+   if [ "$GETENVIRONMENT" = "server" ]; then
       ip addr add 192.168.253.253/24 dev vswitch0
+   fi
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
 if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
@@ -291,7 +294,9 @@ fi
 #      ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
 #      route del default >/dev/null 2>&1
 #      route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+   if [ "$GETENVIRONMENT" = "server" ]; then
       ip addr add 192.168.253.253/24 dev vswitch0
+   fi
 ### fix //
 CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
 if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
