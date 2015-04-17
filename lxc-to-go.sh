@@ -1273,8 +1273,6 @@ fi
    fi 
 ### NEW IP - Desktop Environment // ###
 
-
-
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;31mbootstrap finished\033[0m\n"
