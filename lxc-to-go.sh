@@ -1231,6 +1231,9 @@ fi
 ### NEW IP - Desktop Environment // ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
+      killall dhclient
+      dhclient eth0
+      dhclient vswitch0
       lxc-attach -n managed -- pkill dhclient
       lxc-attach -n managed -- dhclient eth0
    fi 
