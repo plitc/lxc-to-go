@@ -1236,9 +1236,13 @@ fi
 ### NEW IP - Desktop Environment // ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
-      #/ killall dhclient
-      #/ dhclient eth0
-      #/ dhclient vswitch0
+      killall dhclient
+      if [ -e "$UDEVNET" ]; then
+         dhclient "$GETBRIDGEPORT0"
+      else
+         dhclient eth0
+      fi
+      dhclient vswitch0
       #/ lxc-attach -n managed -- pkill dhclient
       lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
       lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
