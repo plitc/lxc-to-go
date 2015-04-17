@@ -89,6 +89,9 @@ Example
 
 Diagram
 =======
+* lxc-to-go bootstrap (prototype > 0.11)
+![lxc-to-go_schema](/content/lxc-to-go_schema_.jpg)
+
 * lxc-to-go for servers (prototype > 0.9)
 ![lxc-to-go_servers](/content/lxc-to-go_servers_.jpg)
 
