@@ -1239,13 +1239,15 @@ fi
 #/ ipv4
       killall dhclient
       if [ -e "$UDEVNET" ]; then
-         dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
-         route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+         #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
+         #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+         ip addr flush "$GETBRIDGEPORT0"
          echo "" # dummy
          echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
       else
-         dhclient eth0 >/dev/null 2>&1
-         route del default dev eth0 >/dev/null 2>&1
+         #/ dhclient eth0 >/dev/null 2>&1
+         #/ route del default dev eth0 >/dev/null 2>&1
+         ip addr flush eth0
          echo "" # dummy
          echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
       fi
