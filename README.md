@@ -104,5 +104,6 @@ Errata
 
 TODO
 ====
+* 17.04.2015: useful ipv6 routing
 * 16.04.2015: support for zfs/btrfs lxc-clone templates
 
