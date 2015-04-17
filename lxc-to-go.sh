@@ -214,6 +214,10 @@ if [ "$CREATEBRIDGE0" = "1" ]; then
 else
    brctl addbr vswitch0
 
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+   brctl addif vswitch0 dummy0
+   fi
+
    UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
    if [ -e "$UDEVNET" ]; then
       GETBRIDGEPORT0=$(grep -s 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
@@ -260,7 +264,7 @@ else
 ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
-      dhclient vswitch0
+      #/ dhclient vswitch0
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
@@ -1231,11 +1235,12 @@ fi
 ### NEW IP - Desktop Environment // ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
-      killall dhclient
-      dhclient eth0
-      dhclient vswitch0
-      lxc-attach -n managed -- pkill dhclient
-      lxc-attach -n managed -- dhclient eth0
+      #/ killall dhclient
+      #/ dhclient eth0
+      #/ dhclient vswitch0
+      #/ lxc-attach -n managed -- pkill dhclient
+      lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
+      lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
    fi 
 ### NEW IP - Desktop Environment // ###
 
