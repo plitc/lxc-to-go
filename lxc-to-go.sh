@@ -1238,11 +1238,11 @@ fi
       : # dummy
       killall dhclient
       if [ -e "$UDEVNET" ]; then
-         dhclient "$GETBRIDGEPORT0"
+         dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
       else
-         dhclient eth0
+         dhclient eth0 >/dev/null 2>&1
       fi
-      dhclient vswitch0
+      dhclient vswitch0 >/dev/null 2>&1
       #/ lxc-attach -n managed -- pkill dhclient
       lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
       lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
