@@ -8,7 +8,13 @@ run(){
    lxc-attach -n deb7template -- $1
 }
 
-#/ run echo ""
+### EXAMPLE // ###
+#
+
+#/ run apt-get -y install iputils-ping
+
+#
+### // EXAMPLE ###
 
 echo "<--- --- --- // debian 7 lxc template hooks --- --- --->"
 #/ exit 0
