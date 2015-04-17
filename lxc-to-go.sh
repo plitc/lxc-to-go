@@ -1236,6 +1236,7 @@ fi
 ### NEW IP - Desktop Environment // ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
+#/ ipv4
       killall dhclient
       if [ -e "$UDEVNET" ]; then
          dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
@@ -1247,6 +1248,15 @@ fi
          echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
       fi
       dhclient vswitch0 >/dev/null 2>&1
+#/ ipv6
+      if [ -e "$UDEVNET" ]; then
+         ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+      else
+         ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+      fi
+#/ container
       #/ lxc-attach -n managed -- pkill dhclient
       lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
       lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
