@@ -1237,16 +1237,20 @@ fi
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
 #/ ipv4
-      killall dhclient
+      #/ killall dhclient
       if [ -e "$UDEVNET" ]; then
          #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
          #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 kill -9
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 kill -9
          ip addr flush "$GETBRIDGEPORT0"
          echo "" # dummy
          echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
       else
          #/ dhclient eth0 >/dev/null 2>&1
          #/ route del default dev eth0 >/dev/null 2>&1
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 kill -9
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 kill -9
          ip addr flush eth0
          echo "" # dummy
          echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
