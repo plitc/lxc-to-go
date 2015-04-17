@@ -217,37 +217,46 @@ else
    UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
    if [ -e "$UDEVNET" ]; then
       GETBRIDGEPORT0=$(grep -s 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
-###/brctl addif vswitch0 "$GETBRIDGEPORT0"
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      brctl addif vswitch0 "$GETBRIDGEPORT0"
+   fi
       sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
-### Proxy_ARP/NDP // ###
+   if [ "$GETENVIRONMENT" = "server" ]; then
+   ### Proxy_ARP/NDP // ###
       sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".proxy_arp=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".proxy_ndp=1 >/dev/null 2>&1
-### // Proxy_ARP/NDP ###
+   ### // Proxy_ARP/NDP ###
+   fi
    else
-###/brctl addif vswitch0 eth0
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      brctl addif vswitch0 eth0
+   fi
       sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
-### Proxy_ARP/NDP // ###
+   if [ "$GETENVIRONMENT" = "server" ]; then
+   ### Proxy_ARP/NDP // ###
       sysctl -w net.ipv4.conf.eth0.proxy_arp=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf.eth0.proxy_ndp=1 >/dev/null 2>&1
-### // Proxy_ARP/NDP ###
+   ### // Proxy_ARP/NDP ###
    fi
-   sysctl -w net.ipv4.conf.vswitch0.forwarding=1 >/dev/null 2>&1
-   sysctl -w net.ipv6.conf.vswitch0.forwarding=1 >/dev/null 2>&1
-### Proxy_ARP/NDP // ###
-   sysctl -w net.ipv4.conf.vswitch0.proxy_arp=1 >/dev/null 2>&1
-   sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
-### // Proxy_ARP/NDP ###
-### NAT // ###
-   iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-   #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
-   #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
-   # EXAMPLE #/ lxc1
-   # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
-   # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
-### // NAT ###
-#
+   fi
+      sysctl -w net.ipv4.conf.vswitch0.forwarding=1 >/dev/null 2>&1
+      sysctl -w net.ipv6.conf.vswitch0.forwarding=1 >/dev/null 2>&1
+   if [ "$GETENVIRONMENT" = "server" ]; then
+   ### Proxy_ARP/NDP // ###
+      sysctl -w net.ipv4.conf.vswitch0.proxy_arp=1 >/dev/null 2>&1
+      sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
+   ### // Proxy_ARP/NDP ###
+   ### NAT // ###
+      iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
+      #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
+      ### # EXAMPLE #/ lxc1
+      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
+      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
+   ### // NAT ###
+   fi
 ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
@@ -627,7 +636,7 @@ else
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
       echo "" # dummy
-      echo "... wait 30 seconds ..."
+      echo "... please wait 30 seconds ..."
       sleep 30
       echo "" # dummy
       : # dummy
@@ -635,7 +644,7 @@ else
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
       echo "" # dummy
-      echo "... wait 15 seconds ..."
+      echo "... please wait 15 seconds ..."
       sleep 15
       echo "" # dummy
       : # dummy
