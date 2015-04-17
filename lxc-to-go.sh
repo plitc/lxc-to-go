@@ -214,10 +214,10 @@ if [ "$CREATEBRIDGE0" = "1" ]; then
 else
    brctl addbr vswitch0
 
-#/   if [ "$GETENVIRONMENT" = "desktop" ]; then
-#/   ip link add dummy0 type dummy >/dev/null 2>&1
-#/   brctl addif vswitch0 dummy0
-#/   fi
+   #/ if [ "$GETENVIRONMENT" = "desktop" ]; then
+   #/ ip link add dummy0 type dummy >/dev/null 2>&1
+   #/ brctl addif vswitch0 dummy0
+   #/ fi
 
    UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
    if [ -e "$UDEVNET" ]; then
