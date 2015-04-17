@@ -624,12 +624,22 @@ else
    sleep 1
    screen -list | grep "managed"
    ### ### ###
-   : # dummy
-   echo "" # dummy
-   echo "... wait 15 seconds ..."
-   echo "" # dummy
-   : # dummy
-   sleep 15
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      : # dummy
+      echo "" # dummy
+      echo "... wait 30 seconds ..."
+      sleep 30
+      echo "" # dummy
+      : # dummy
+   fi
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      : # dummy
+      echo "" # dummy
+      echo "... wait 15 seconds ..."
+      sleep 15
+      echo "" # dummy
+      : # dummy
+   fi
    ### ### ###
 fi
 
