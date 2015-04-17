@@ -605,6 +605,7 @@ sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb
 sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb7template/config
 sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
+sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
 ### ### ###
 echo "" # dummy
  ./hook_deb7.sh
@@ -746,6 +747,7 @@ sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb
 sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb8template/config
 sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb8template/config
 sed -i 's/managed1/deb8temp/g' /var/lib/lxc/deb8template/config
+sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
 ### ### ###
 echo "" # dummy
  ./hook_deb8.sh
