@@ -215,6 +215,7 @@ else
    brctl addbr vswitch0
 
    if [ "$GETENVIRONMENT" = "desktop" ]; then
+   ip link add dummy0 type dummy >/dev/null 2>&1
    brctl addif vswitch0 dummy0
    fi
 
