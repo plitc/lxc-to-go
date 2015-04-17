@@ -1239,8 +1239,10 @@ fi
       killall dhclient
       if [ -e "$UDEVNET" ]; then
          dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
+         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
       else
          dhclient eth0 >/dev/null 2>&1
+         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
       fi
       dhclient vswitch0 >/dev/null 2>&1
       #/ lxc-attach -n managed -- pkill dhclient
