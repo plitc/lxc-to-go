@@ -40,8 +40,9 @@ Features
    * dns server
    * ipv6 router advertisement
 
-* proxy_arp/ndp support for "managed" lxc (server mode)
-* dhcp support for "managed" lxc (desktop mode)
+* "managed" lxc container:
+   * proxy_arp/ndp support (server mode)
+   * dhcp support (desktop mode)
 
 Platform
 ========
