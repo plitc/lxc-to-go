@@ -14,10 +14,10 @@ WARNING
 Dependencies
 ============
 * Linux
+   * sh (as dash/bash)
+   * bridge-utils
    * screen
    * lxc
-   * bridge-utils
-   * sh (as dash/bash)
 
 * LXC Container: managed
    * debian jessie
@@ -39,6 +39,9 @@ Features
    * dhcp server
    * dns server
    * ipv6 router advertisement
+
+* proxy_arp/ndp support for "managed" lxc (server mode)
+* dhcp support for "managed" lxc (desktop mode)
 
 Platform
 ========
