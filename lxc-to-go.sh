@@ -598,13 +598,12 @@ else
 ### ### ###
 sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
 sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
-sed -i 's/aa:bb:c0:0c:bb:aa/aa:bb:c1:1c:bb:aa/g' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb7template/config
-sed -i 's/aa:bb:c1:1c:bb:aa/d' /var/lib/lxc/deb7template/config
+sed -i 's/aa:bb:c0:0c:bb:aa/d' /var/lib/lxc/deb7template/config
 sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
 ### ### ###
 echo "" # dummy
