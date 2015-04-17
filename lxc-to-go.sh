@@ -239,9 +239,9 @@ else
    sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
 ### // Proxy_ARP/NDP ###
 ### NAT // ###
-   iptables -t nat -A POSTROUTING -o vswitch0 -j MASQUERADE
+   iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+   #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
    #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
-   #/ iptables -A FORWARD -o vswitch0 -s 192.168.0.0/16 -j ACCEPT
 # lxc1
 iptables -t nat -A PREROUTING -i vswitch0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
 iptables -t nat -A PREROUTING -i vswitch0 -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
