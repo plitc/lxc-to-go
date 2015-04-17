@@ -594,7 +594,11 @@ if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
     : # dummy
 else
     echo "" # dummy
-    lxc-clone -B dir -o managed -n deb7template
+    lxc-clone -M -B dir -o managed -n deb7template
+### ### ###
+sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
+sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
+sed -i 's/aa:bb:c0:0c:bb:aa/aa:bb:c1:1c:bb:aa/g' /var/lib/lxc/deb7template/config
 ### ### ###
 echo "" # dummy
  ./hook_deb7.sh
@@ -725,7 +729,11 @@ if [ "$CHECKTEMPLATEDEB8" = "1" ]; then
     : # dummy
 else
     echo "" # dummy
-    lxc-clone -B dir -o managed -n deb8template
+    lxc-clone -M -B dir -o managed -n deb8template
+### ### ###
+sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
+sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
+sed -i 's/aa:bb:c0:0c:bb:aa/aa:bb:c2:2c:bb:aa/g' /var/lib/lxc/deb8template/config
 ### ### ###
 echo "" # dummy
  ./hook_deb8.sh
