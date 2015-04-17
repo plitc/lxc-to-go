@@ -456,6 +456,14 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 # EOF
 LXCCONFIGMANAGED1
 ### ### ###
+#
+### randomized MAC address // ###
+RANDOM1=$(shuf -i 10-99 -n 1)
+RANDOM2=$(shuf -i 10-99 -n 1)
+sed -i 's/aa:bb:c0:0c:bb:aa/aa:bb:'"$RANDOM1"':'"$RANDOM2"':bb:aa/' /var/lib/lxc/managed/config
+### randomized MAC address // ###
+#
+### ### ###
 /bin/cat << CHECKMANAGEDNETFILE1 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
 #
@@ -474,6 +482,10 @@ iface eth1 inet6 manual
 # EOF
 CHECKMANAGEDNETFILE1
 ### ### ###
+#
+### randomized MAC address // ###
+
+### randomized MAC address // ###
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
@@ -622,7 +634,8 @@ sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb7t
 sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb7template/config
 sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb7template/config
-sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb7template/config
+#/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb7template/config
+sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb7template/config
 sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
 sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
 ### ### ###
@@ -774,7 +787,8 @@ sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb8t
 sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb8template/config
 sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb8template/config
 sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb8template/config
-sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb8template/config
+#/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb8template/config
+sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb8template/config
 sed -i 's/managed1/deb8temp/g' /var/lib/lxc/deb8template/config
 sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
 ### ### ###
