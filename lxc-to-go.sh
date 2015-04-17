@@ -436,6 +436,25 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED1
+### ### ###
+/bin/cat << CHECKMANAGEDNETFILE1 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
+### ### ### lxc-to-go // ### ### ###
+#
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+iface eth0 inet6 auto
+
+auto eth1
+iface eth1 inet manual
+iface eth1 inet6 manual
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKMANAGEDNETFILE1
+### ### ###
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
@@ -539,7 +558,6 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED2
-#
 ### ### ###
 /bin/cat << LXCCONFIGMANAGEDRESOLV > /var/lib/lxc/managed/rootfs/etc/resolv.conf
 ### ### ### lxc-to-go // ### ### ###
@@ -549,6 +567,24 @@ nameserver 74.82.42.42
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGEDRESOLV
+### ### ###
+/bin/cat << CHECKMANAGEDNETFILE2 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
+### ### ### lxc-to-go // ### ### ###
+#
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet manual
+iface eth0 inet6 manual
+
+auto eth1
+iface eth1 inet manual
+iface eth1 inet6 manual
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKMANAGEDNETFILE2
 ### ### ###
    fi
 fi
