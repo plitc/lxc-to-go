@@ -72,21 +72,22 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
-CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+mkdir -p /etc/lxc-to-go
+CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
          read -p "Choose your Environment: (desktop/server) ? " ENVIRONMENTVALUE
          if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
-            echo "ENVIRONMENT=desktop" > /etc/lxc-to-go.conf
+            echo "ENVIRONMENT=desktop" > /etc/lxc-to-go/lxc-to-go.conf
          fi
          if [ "$ENVIRONMENTVALUE" = "server" ]; then
-            echo "ENVIRONMENT=server" > /etc/lxc-to-go.conf
+            echo "ENVIRONMENT=server" > /etc/lxc-to-go/lxc-to-go.conf
          fi
          if [ -z "$ENVIRONMENTVALUE" ]; then
             echo "[ERROR] choose an environment"
             exit 1
          fi
 fi
-GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
