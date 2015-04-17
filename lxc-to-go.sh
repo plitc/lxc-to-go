@@ -1204,6 +1204,13 @@ fi
 
 ### ### ###
 
+### NEW IP - Desktop Environment // ###
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      : # dummy
+      lxc-attach -n managed -- pkill dhclient
+      lxc-attach -n managed -- dhclient eth0
+   fi 
+### NEW IP - Desktop Environment // ###
 
 
 
