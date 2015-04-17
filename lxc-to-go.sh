@@ -1250,6 +1250,12 @@ fi
          echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
       fi
       dhclient vswitch0 >/dev/null 2>&1
+### fix //
+CHECKGETIPV4DEFAULTGATEWAY3=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+if [ "$CHECKGETIPV4DEFAULTGATEWAY3" = "2" ]; then
+   route del default
+fi
+### // fix
 #/ ipv6
       if [ -e "$UDEVNET" ]; then
          #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
