@@ -14,6 +14,7 @@ WARNING
 Dependencies
 ============
 * Linux
+   * (grub/kernel compatibility for lxc)
    * sh (as dash/bash)
    * bridge-utils
    * screen
@@ -42,7 +43,7 @@ Features
 
 * "managed" lxc container:
    * proxy_arp/ndp support (server mode)
-   * dhcp support (desktop mode)
+   * dhcp/ra support (desktop mode)
 
 Platform
 ========
