@@ -1,11 +1,15 @@
 
+LICENSE
+=======
+* BSD 2-Clause
+
 Background
 ==========
-* create an lxc environment for mobile devices (and servers)
+* create an lxc environment for mobile devices and servers
 
 Benefits of Goal Setting
 ========================
-* rapid lxc deployment for mobile devices (and servers)
+* rapid lxc deployment for mobile devices and servers
 
 WARNING
 =======
@@ -69,7 +73,7 @@ Example
 
     # ./lxc-to-go.sh bootstrap
 
-    # lxc-attach -n managed
+    # lxc-attach -n managed (or screen attach)
 ```
 
 * start
