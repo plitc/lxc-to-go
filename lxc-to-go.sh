@@ -131,6 +131,12 @@ fi
 
 sleep 1
     : # dummy
+CHECKCGROUP=$(mount | grep -c "cgroup")
+if [ "$CHECKCGROUP" = "1" ]; then
+    : # dummy
+else
+    mount cgroup -t cgroup /sys/fs/cgroup
+fi
     lxc-checkconfig
     if [ $? -eq 0 ]
     then
