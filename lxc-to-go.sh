@@ -153,6 +153,8 @@ if [ "$DEBVERSION" = "7" ]; then
    if [ "$CHECKDEB7KERNEL" = "1" ]; then
    CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
       if [ "$CHECKDEB7BACKPORTS" = "1" ]; then
+         : # dummy
+      else
          echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
          echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
       fi
