@@ -168,6 +168,8 @@ if [ "$DEBVERSION" = "7" ]; then
          apt-get -y install firmware-linux-nonfree
          CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
          if [ "$CHECKDEB7VBOX" = "1" ]; then
+            apt-get install build-essential module-assistant
+            m-a prepare
             apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
             #/ apt-get -y install --reinstall virtualbox-guest-dkms
             apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
@@ -179,6 +181,8 @@ if [ "$DEBVERSION" = "7" ]; then
          apt-get -y install firmware-linux-nonfree
          CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
          if [ "$CHECKDEB7VBOX" = "1" ]; then
+            apt-get install build-essential module-assistant
+            m-a prepare
             apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
             #/ apt-get -y install --reinstall virtualbox-guest-dkms
             apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
