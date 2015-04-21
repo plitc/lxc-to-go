@@ -166,6 +166,10 @@ if [ "$DEBVERSION" = "7" ]; then
          apt-get -y install initramfs-tools=0.115*
          apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
          apt-get -y install firmware-linux-nonfree
+         CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+         if [ "$CHECKDEB7VBOX" = "1" ]; then
+            apt-get -y install --reinstall virtualbox-guest-dkms
+         fi
       fi
       if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
          apt-get -y install initramfs-tools=0.115*
