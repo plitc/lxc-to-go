@@ -163,7 +163,9 @@ if [ "$DEBVERSION" = "7" ]; then
    apt-get -y update
       CHECKDEB7ARCH=$(arch)
       if [ "$CHECKDEB7ARCH" = "i386" ]; then
+         apt-get -y install initramfs-tools=0.115*
          apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
+         apt-get -y install firmware-linux-nonfree
       fi
       if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
          apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
