@@ -151,40 +151,43 @@ sleep 1
 if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7KERNEL=$(cat /proc/sys/kernel/osrelease | grep -c "3.2")
    if [ "$CHECKDEB7KERNEL" = "1" ]; then
-   CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
-      if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
-         echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
-         echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
-      fi
-   apt-get -y autoclean
-   apt-get -y clean
-   apt-get -y update
-      CHECKDEB7ARCH=$(arch)
-      if [ "$CHECKDEB7ARCH" = "686" ]; then
-         apt-get -y install initramfs-tools=0.115*
-         apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
-         apt-get -y install firmware-linux-nonfree
-         CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
-         if [ "$CHECKDEB7VBOX" = "1" ]; then
-            apt-get -y install build-essential module-assistant
-            m-a prepare
-            apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
-            #/ apt-get -y install --reinstall virtualbox-guest-dkms
-            apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
-         fi
-      fi
-      if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
-         apt-get -y install initramfs-tools=0.115*
-         apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
-         apt-get -y install firmware-linux-nonfree
-         CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
-         if [ "$CHECKDEB7VBOX" = "1" ]; then
-            apt-get -y install build-essential module-assistant
-            m-a prepare
-            apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
-            #/ apt-get -y install --reinstall virtualbox-guest-dkms
-            apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
-         fi
+      CHECKDEB7KERNEL316=(dpkg -l | grep "linux-headers-3.16")
+      if [ "$CHECKDEB7KERNEL316" = "0" ]; then
+         CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
+            if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
+               echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
+               echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
+            fi
+            apt-get -y autoclean
+            apt-get -y clean
+            apt-get -y update
+            CHECKDEB7ARCH=$(arch)
+            if [ "$CHECKDEB7ARCH" = "686" ]; then
+               apt-get -y install initramfs-tools=0.115*
+               apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
+               apt-get -y install firmware-linux-nonfree
+               CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+               if [ "$CHECKDEB7VBOX" = "1" ]; then
+                  apt-get -y install build-essential module-assistant
+                  m-a prepare
+                  apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
+                  #/ apt-get -y install --reinstall virtualbox-guest-dkms
+                  apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
+               fi
+            fi
+            if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
+               apt-get -y install initramfs-tools=0.115*
+               apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
+               apt-get -y install firmware-linux-nonfree
+               CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+               if [ "$CHECKDEB7VBOX" = "1" ]; then
+                  apt-get -y install build-essential module-assistant
+                  m-a prepare
+                  apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
+                  #/ apt-get -y install --reinstall virtualbox-guest-dkms
+                  apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
+               fi
+            fi
       fi
    fi
 fi
