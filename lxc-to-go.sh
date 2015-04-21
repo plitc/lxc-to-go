@@ -628,10 +628,14 @@ fi
 ### ### ###
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
-    : # dummy
+   : # dummy
 else
-    echo "" # dummy
-    lxc-clone -M -B dir -o managed -n deb7template
+   echo "" # dummy
+if [ "$DEBVERSION" = "7" ]; then
+   lxc-clone -o managed -n deb7template
+else
+   lxc-clone -M -B dir -o managed -n deb7template
+fi
 ### ### ###
 sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
 sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
@@ -781,10 +785,14 @@ else
 ### ### ###
 CHECKTEMPLATEDEB8=$(lxc-ls | grep -c "deb8template")
 if [ "$CHECKTEMPLATEDEB8" = "1" ]; then
-    : # dummy
+   : # dummy
 else
-    echo "" # dummy
-    lxc-clone -M -B dir -o managed -n deb8template
+   echo "" # dummy
+if [ "$DEBVERSION" = "7" ]; then
+   lxc-clone -o managed -n deb8template
+else
+   lxc-clone -M -B dir -o managed -n deb8template
+fi
 ### ### ###
 sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
 sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
