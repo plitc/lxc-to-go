@@ -190,7 +190,33 @@ if [ "$DEBVERSION" = "7" ]; then
       fi
    fi
 fi
-### Wheezy KERNEL UPGRADE // ###
+### // Wheezy KERNEL UPGRADE ###
+
+### Wheezy - Jessie LXC // ###
+if [ "$DEBVERSION" = "7" ]; then
+   CHECKDEB7JESSIELXC=$(grep -r "jessie" /etc/apt/ | grep -c "jessie")
+   if [ "$CHECKDEB7JESSIELXC" = "1" ]; then
+      : # dummy
+   else
+/bin/cat << CHECKDEB7JESSIELXCFILE > /etc/apt/sources.list.d/jessie.list
+### ### ### lxc-to-go // ### ### ###
+deb http://ftp.de.debian.org/debian/ jessie main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ jessie main contrib non-free
+
+deb http://ftp.de.debian.org/debian/ jessie-updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ jessie-updates main contrib non-free
+
+deb http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
+### ### ### // lxc-to-go  ### ### ###
+# EOF
+
+### deb http://ftp.de.debian.org/debian sid main
+CHECKDEB7JESSIELXCFILE
+      apt-get -y install --reinstall -t jessie lxc
+   fi
+fi
+### // Wheezy - Jessie LXC ###
 
 ## modify grub
 
