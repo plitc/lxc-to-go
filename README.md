@@ -110,6 +110,9 @@ Screencast
 Errata
 ======
 * 21.04.2015: Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed!
+```
+   STRACE: open("/dev/vboxguest", O_RDWR|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+```
 * 21.04.2015: add unnecessary kernel options on debian 7 wheezy (not critical)
 * 11.04.2015: 
 
