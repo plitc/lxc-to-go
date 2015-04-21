@@ -192,7 +192,7 @@ fi
 
 ### Wheezy - Jessie LXC // ###
 if [ "$DEBVERSION" = "7" ]; then
-   CHECKDEB7JESSIELXC=$(grep -r "jessie" /etc/apt/ | grep -c "jessie")
+   CHECKDEB7JESSIELXC=$(grep -r "jessie" /etc/apt/sources.list* | grep -c "jessie")
    if [ "$CHECKDEB7JESSIELXC" = "0" ]; then
 
 /bin/cat << CHECKDEB7JESSIELXCFILE > /etc/apt/sources.list.d/jessie.list
