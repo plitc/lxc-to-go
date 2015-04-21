@@ -152,9 +152,7 @@ if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7KERNEL=$(cat /proc/sys/kernel/osrelease | grep -c "3.2")
    if [ "$CHECKDEB7KERNEL" = "1" ]; then
    CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
-      if [ "$CHECKDEB7BACKPORTS" = "1" ]; then
-         : # dummy
-      else
+      if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
          echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
          echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
       fi
@@ -196,6 +194,7 @@ fi
 if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7JESSIELXC=$(grep -r "jessie" /etc/apt/ | grep -c "jessie")
    if [ "$CHECKDEB7JESSIELXC" = "0" ]; then
+
 /bin/cat << CHECKDEB7JESSIELXCFILE > /etc/apt/sources.list.d/jessie.list
 ### ### ### lxc-to-go // ### ### ###
 deb http://ftp.de.debian.org/debian/ jessie main contrib non-free
@@ -211,6 +210,10 @@ deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib no
 
 ### deb http://ftp.de.debian.org/debian sid main
 CHECKDEB7JESSIELXCFILE
+
+   apt-get -y autoclean
+   apt-get -y clean
+   apt-get -y update
       apt-get -y install --reinstall -t jessie lxc
    fi
 fi
