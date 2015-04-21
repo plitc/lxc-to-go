@@ -463,6 +463,11 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 LXCCONFIGMANAGED1
 ### ### ###
 #
+if [ "$DEBVERSION" = "7" ]; then
+   sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
+   sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
+fi
+#
 ### randomized MAC address // ###
 RANDOM1=$(shuf -i 10-99 -n 1)
 RANDOM2=$(shuf -i 10-99 -n 1)
@@ -605,6 +610,11 @@ nameserver 74.82.42.42
 # EOF
 LXCCONFIGMANAGEDRESOLV
 ### ### ###
+if [ "$DEBVERSION" = "7" ]; then
+   sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
+   sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
+fi
+### ### ###
 /bin/cat << CHECKMANAGEDNETFILE2 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
 #
@@ -649,8 +659,13 @@ sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb7template/config
 sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
 sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
 ### ### ###
+if [ "$DEBVERSION" = "7" ]; then
+   sed -i '/lxc.autodev/d' /var/lib/lxc/deb7template/config
+   sed -i '/lxc.kmsg/d' /var/lib/lxc/deb7template/config
+fi
+### ### ###
 echo "" # dummy
- ./hook_deb7.sh
+   ./hook_deb7.sh
 echo "" # dummy
 ### ### ###
 fi
@@ -839,8 +854,13 @@ sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb8template/config
 sed -i 's/managed1/deb8temp/g' /var/lib/lxc/deb8template/config
 sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
 ### ### ###
+if [ "$DEBVERSION" = "8" ]; then
+   sed -i '/lxc.autodev/d' /var/lib/lxc/deb8template/config
+   sed -i '/lxc.kmsg/d' /var/lib/lxc/deb8template/config
+fi
+### ### ###
 echo "" # dummy
- ./hook_deb8.sh
+   ./hook_deb8.sh
 echo "" # dummy
 ### ### ###
 fi
