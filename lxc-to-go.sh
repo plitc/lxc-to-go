@@ -151,7 +151,7 @@ sleep 1
 if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7KERNEL=$(cat /proc/sys/kernel/osrelease | grep -c "3.2")
    if [ "$CHECKDEB7KERNEL" = "1" ]; then
-      CHECKDEB7KERNEL316=(dpkg -l | grep -c "linux-headers-3.16")
+      CHECKDEB7KERNEL316=$(dpkg -l | grep -c "linux-headers-3.16")
       if [ "$CHECKDEB7KERNEL316" = "0" ]; then
          CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
             if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
@@ -188,7 +188,7 @@ if [ "$DEBVERSION" = "7" ]; then
                   apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
                fi
             fi
-         fi
+
       fi
    fi
 fi
