@@ -657,7 +657,9 @@ fi
 ### ### ###
 
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
-CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
+
+if [ "$DEBVERSION" = "7" ]; then
+CHECKMANAGED1=$(lxc-list | sed -e '/FROZEN/,+99d' | grep -c "managed")
 if [ "$CHECKMANAGED1" = "1" ]; then
    echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
 else
@@ -683,6 +685,37 @@ else
       : # dummy
    fi
    ### ### ###
+fi
+fi
+
+if [ "$DEBVERSION" = "8" ]; then
+CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
+if [ "$CHECKMANAGED2" = "1" ]; then
+   echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
+else
+   echo "... LXC Container (screen session): managed starting ..."
+   screen -d -m -S managed -- lxc-start -n managed
+   sleep 1
+   screen -list | grep "managed"
+   ### ### ###
+   if [ "$GETENVIRONMENT" = "desktop" ]; then
+      : # dummy
+      echo "" # dummy
+      echo "... please wait 30 seconds ..."
+      sleep 30
+      echo "" # dummy
+      : # dummy
+   fi
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      : # dummy
+      echo "" # dummy
+      echo "... please wait 15 seconds ..."
+      sleep 15
+      echo "" # dummy
+      : # dummy
+   fi
+   ### ### ###
+fi
 fi
 
 CHECKUPDATELIST1=$(grep "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list | head -n 1 | grep -c "jessie")
