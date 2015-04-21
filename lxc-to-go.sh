@@ -147,6 +147,29 @@ fi
     fi
 sleep 1
 
+### Wheezy KERNEL UPGRADE // ###
+if [ "$DEBVERSION" = "7" ]; then
+   CHECKDEB7KERNEL=$(cat /proc/sys/kernel/osrelease | grep -c "3.2")
+   if [ "$CHECKDEB7KERNEL" = "1" ]; then
+   CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
+      if [ "$CHECKDEB7BACKPORTS" = "1" ]; then
+         echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
+         echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
+      fi
+   apt-get -y autoclean
+   apt-get -y clean
+   apt-get -y update
+      CHECKDEB7ARCH=$(arch)
+      if [ "$CHECKDEB7ARCH" = "i386" ]; then
+         apt-get -y install linux-image-3.2.0-4-all
+      fi
+      if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
+         apt-get -y install linux-image-3.2.0-4-amd64
+      fi
+   fi
+fi
+### Wheezy KERNEL UPGRADE // ###
+
 ## modify grub
 
 CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")

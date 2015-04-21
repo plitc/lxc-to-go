@@ -18,6 +18,7 @@ WARNING
 Dependencies
 ============
 * Linux
+   * NEED Kernel Upgrade on Wheezy (default 3.2 to 3.16 wheezy backports)
    * (grub/kernel compatibility for lxc)
    * sh (as dash/bash)
    * bridge-utils
