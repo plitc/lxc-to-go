@@ -161,10 +161,10 @@ if [ "$DEBVERSION" = "7" ]; then
    apt-get -y update
       CHECKDEB7ARCH=$(arch)
       if [ "$CHECKDEB7ARCH" = "i386" ]; then
-         apt-get -y install linux-image-3.16.0-4-all
+         apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
       fi
       if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
-         apt-get -y install linux-image-3.16.0-4-amd64
+         apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
       fi
    fi
 fi
