@@ -754,7 +754,8 @@ fi
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 
 if [ "$DEBVERSION" = "7" ]; then
-CHECKMANAGED1=$(lxc-list | sed -e '/FROZEN/,+99d' | grep -c "managed")
+CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
+#/ CHECKMANAGED1=$(lxc-list | sed -e '/FROZEN/,+99d' | grep -c "managed") # lxc 0.8
 if [ "$CHECKMANAGED1" = "1" ]; then
    echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
 else
