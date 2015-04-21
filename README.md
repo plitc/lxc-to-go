@@ -108,7 +108,8 @@ Screencast
 
 Errata
 ======
-* 11.04.2015 : 
+* 21.04.2015: add unnecessary kernel options on debian 7 wheezy (not critical)
+* 11.04.2015: 
 
 TODO
 ====
