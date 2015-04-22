@@ -1652,6 +1652,12 @@ if [ -z "$LXCNAME" ]; then
    exit 1
 fi
 
+CHECKLXCEXIST=$(lxc-ls | grep -c "$LXCNAME")
+if [ "$CHECKLXCEXIST" = "1" ]; then
+   echo "[ERROR]: lxc already exists!"
+   exit 1
+fi
+
 echo ""
 echo "Choose the LXC template:"
 echo "1) wheezy"
