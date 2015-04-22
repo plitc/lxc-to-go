@@ -1609,7 +1609,18 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+### ### ###
+echo "FOUND (active):"
+lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
+echo "" # dummy
 
+lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ lxc-stop -n "%"; sleep 5; }'
+### ### ###
+
+### ### ###
+echo "" # printf
+printf "\033[1;31mlxc-to-go stop finished.\033[0m\n"
+### ### ###
 
 ### ### ### ### ### ### ### ### ###
 #
