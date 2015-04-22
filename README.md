@@ -94,7 +94,7 @@ Example
 ```
     # ./lxc-to-go.sh bootstrap
 
-        Please Reboot your System immediately! and continue the bootstrap
+        Stage 1 finished. Please Reboot your System immediately! and continue the bootstrap
 
     # ./lxc-to-go.sh bootstrap
 
