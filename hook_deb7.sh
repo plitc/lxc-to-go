@@ -1,11 +1,10 @@
 #!/bin/sh
-### ### ### PLITC ### ### ###
+### ### ### lxc-to-go // ### ### ###
 echo "<--- --- --- debian 7 lxc template hooks // --- --- --->"
 
 run(){
-   # execute inside lxc
-   run1=$1
-   lxc-attach -n deb7template -- $1
+   # execute commands inside the lxc template
+   lxc-attach -n deb7template -- $*
 }
 
 ### EXAMPLE // ###
@@ -18,5 +17,5 @@ run(){
 
 echo "<--- --- --- // debian 7 lxc template hooks --- --- --->"
 #/ exit 0
-### ### ### PLITC ### ### ###
+### ### ### // lxc-to-go ### ### ###
 # EOF

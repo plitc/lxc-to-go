@@ -1,22 +1,21 @@
 #!/bin/sh
-### ### ### PLITC ### ### ###
+### ### ### lxc-to-go // ### ### ###
 echo "<--- --- --- flavor hooks // --- --- --->"
 
 run(){
-   # execute inside lxc
-   run1=$1
-   lxc-attach -n "$LXCCREATENAME" -- $1
+   # execute commands inside the lxc template
+   lxc-attach -n "$LXCCREATENAME" -- $*
 }
 
 ### EXAMPLE // ###
 #
 
-run (echo "inside hook")
+run echo -> inside hook <-
 
 #
 ### // EXAMPLE ###
 
 echo "<--- --- --- // flavor hooks --- --- --->"
 #/ exit 0
-### ### ### PLITC ### ### ###
+### ### ### // lxc-to-go ### ### ###
 # EOF
