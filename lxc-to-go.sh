@@ -1811,16 +1811,19 @@ if [ -z "$LXCDESTROY" ]; then
 fi
 
 if [ "$LXCDESTROY" = "managed" ]; then
+   echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n managed' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
 
 if [ "$LXCDESTROY" = "deb7template" ]; then
+   echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb7template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
 
 if [ "$LXCDESTROY" = "deb8template" ]; then
+   echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
