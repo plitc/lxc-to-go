@@ -105,6 +105,18 @@ Example
 
 * start
 ```
+    # ./lxc-to-go.sh start
+    FOUND:
+    test1 test2 test3 test4 test5 
+
+    ... LXC Container (screen sessions): ...
+        14608.test1     (04/22/15 10:19:39)     (Detached)
+        14887.test2     (04/22/15 10:19:44)     (Detached)
+        15147.test3     (04/22/15 10:19:49)     (Detached)
+        15409.test4     (04/22/15 10:19:54)     (Detached)
+        15671.test5     (04/22/15 10:19:59)     (Detached)
+
+    lxc-to-go start finished.
 ```
 
 * stop

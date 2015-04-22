@@ -1543,7 +1543,7 @@ lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
 #/ lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I {} screen -d -m -S "{}" -- lxc-start -n "{}"
-lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -d -m -S "%" -- lxc-start -n "%"; sleep 10; }'
+lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }'
 
 echo "" # dummy
 echo "... LXC Container (screen sessions): ..."
