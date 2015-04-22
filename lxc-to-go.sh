@@ -1782,6 +1782,31 @@ if [ "$LXCSTART" = "y" ]; then
   sleep 1
   screen -list | grep "$LXCNAME"
   echo ""
+
+### flavor hooks // ###
+#
+read -p "Do you wanna use 'flavor hooks' ? (y/n) " FLAVOR
+if [ "$FLAVOR" = "y" ]; then
+   #
+   export LXCCREATENAME="$LXCNAME"
+   : # dummy
+   echo "" # dummy
+   echo "... please wait 15 seconds ..."
+   sleep 15
+   echo "" # dummy
+   : # dummy
+   ###
+      echo "" # dummy
+      ./hook_flavor.sh
+      echo "" # dummy
+   ###
+else
+   : # dummy
+   #
+fi
+#
+### // flavor hooks ###
+
   printf "\033[1;31mlxc-to-go create finished.\033[0m\n"
 else
   echo ""
