@@ -18,7 +18,8 @@ WARNING
 Dependencies
 ============
 * Linux
-   * NEED Kernel Upgrade on Wheezy (default 3.2 to 3.16 wheezy backports)
+   * NEED Kernel Upgrade on Wheezy HOST (default 3.2 to 3.16 wheezy-backports repo)
+   * NEED LXC > 1.0 on Wheezy HOST (jessie repo)
    * (grub/kernel compatibility for lxc)
    * sh (as dash/bash)
    * bridge-utils
@@ -109,12 +110,11 @@ Screencast
 
 Errata
 ======
-* 21.04.2015: Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed!
+* 21.04.2015: "lxc-to-go < 0.14" Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed!
 ```
    STRACE: open("/dev/vboxguest", O_RDWR|O_CLOEXEC) = -1 ENOENT (No such file or directory)
 ```
 * 21.04.2015: "lxc-to-go < 0.13.5" add unnecessary kernel options on debian 7 wheezy (not critical)
-* 11.04.2015: 
 
 TODO
 ====
