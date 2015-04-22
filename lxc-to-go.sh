@@ -1652,6 +1652,7 @@ if [ -z "$LXCNAME" ]; then
    exit 1
 fi
 
+echo ""
 echo "Choose the LXC template:"
 echo "1) wheezy"
 echo "2) jessie"
@@ -1661,8 +1662,12 @@ read LXCCREATETEMPLATE;
       exit 1
    fi
 case $LXCCREATETEMPLATE in
-   1) echo "select wheezy";;
-   2) echo "select jessie";;
+   1) echo "select: wheezy"
+      lxc-clone -o deb7template -n "$LXCNAME"
+   ;;
+   2) echo "select: jessie"
+      lxc-clone -o deb7template -n "$LXCNAME"
+   ;;
 esac
 
 
