@@ -74,6 +74,8 @@ Features
    * proxy_arp/ndp support (server mode)
    * dhcp/ra support (desktop mode)
 
+* simple "template/flavor hooks" for general purposes
+
 Platform
 ========
 * Linux
