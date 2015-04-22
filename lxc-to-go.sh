@@ -1788,7 +1788,8 @@ if [ "$LXCSTART" = "y" ]; then
 read -p "Do you wanna use 'flavor hooks' ? (y/n) " FLAVOR
 if [ "$FLAVOR" = "y" ]; then
    #
-   export LXCCREATENAME="$LXCNAME"
+   LXCCREATENAME="$LXCNAME"
+   export LXCCREATENAME
    : # dummy
    echo "" # dummy
    echo "... please wait 15 seconds ..."
