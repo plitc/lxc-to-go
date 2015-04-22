@@ -154,6 +154,7 @@ Example
 
 
     <--- --- --- flavor hooks // --- --- --->
+    example
     <--- --- --- // flavor hooks --- --- --->
 
     lxc-to-go create finished.
