@@ -111,6 +111,23 @@ Example
 
 * create
 ```
+    # ./lxc-to-go.sh create
+    Please enter the new LXC Container name:
+    test
+
+    Choose the LXC template:
+    1) wheezy
+    2) jessie
+    1
+    select: wheezy
+    Created container test as copy of deb7template
+
+    Do you wish to start this LXC Container: test ? (y/n) y
+
+    ... starting screen session ...
+        3898.test        (04/22/15 08:03:34)     (Detached)
+
+    lxc-to-go create finished.
 ```
 
 * delete
