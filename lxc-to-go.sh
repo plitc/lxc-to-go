@@ -1645,15 +1645,22 @@ else
    ### ### ### ### ### ### ### ### ###
 fi
 
+echo "Please enter the new LXC Container name: "
+read LXCNAME;
+if [ -z "$LXCNAME" ]; then
+   echo "[ERROR]: empty name"
+   exit 1
+fi
+
 echo "Choose the LXC template:"
 echo "1) wheezy"
 echo "2) jessie"
-read case;
-   if [ -z "$case" ]; then
-      echo "empty"
-      exit 0
+read LXCCREATETEMPLATE;
+   if [ -z "$LXCCREATETEMPLATE" ]; then
+      echo "[ERROR]: nothing selected"
+      exit 1
    fi
-case $case in
+case $LXCCREATETEMPLATE in
    1) echo "select wheezy";;
    2) echo "select jessie";;
 esac
