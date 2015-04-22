@@ -1538,7 +1538,12 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
 fi
 
 ### ### ###
-lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I {} screen -d -m -S "{}" -- lxc-start -n "{}"
+echo "FOUND:"
+lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
+echo "" # dummy
+
+#/ lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I {} screen -d -m -S "{}" -- lxc-start -n "{}"
+lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }'
 ### ### ###
 
 ### ### ###
