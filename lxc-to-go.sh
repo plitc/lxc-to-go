@@ -1648,13 +1648,14 @@ fi
 echo "Please enter the new LXC Container name:"
 read LXCNAME;
 if [ -z "$LXCNAME" ]; then
-   echo "[ERROR]: empty name"
+   echo "[ERROR] empty name"
    exit 1
 fi
 
 CHECKLXCEXIST=$(lxc-ls | grep -c "$LXCNAME")
 if [ "$CHECKLXCEXIST" = "1" ]; then
-   echo "[ERROR]: lxc already exists!"
+   echo "" # dummy
+   echo "[ERROR] lxc already exists!"
    exit 1
 fi
 
@@ -1664,15 +1665,31 @@ echo "1) wheezy"
 echo "2) jessie"
 read LXCCREATETEMPLATE;
    if [ -z "$LXCCREATETEMPLATE" ]; then
-      echo "[ERROR]: nothing selected"
+      echo "[ERROR] nothing selected"
       exit 1
    fi
 case $LXCCREATETEMPLATE in
    1) echo "select: wheezy"
       lxc-clone -o deb7template -n "$LXCNAME"
+      if [ $? -eq 0 ]
+      then
+         : # dummy
+      else
+         echo "" # dummy
+         echo "[ERROR] lxc-clone failed!"
+         exit 1
+      fi
    ;;
    2) echo "select: jessie"
       lxc-clone -o deb7template -n "$LXCNAME"
+      if [ $? -eq 0 ]
+      then
+         : # dummy
+      else
+         echo "" # dummy
+         echo "[ERROR] lxc-clone failed!"
+         exit 1
+      fi
    ;;
 esac
 
