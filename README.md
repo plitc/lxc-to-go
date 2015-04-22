@@ -146,6 +146,14 @@ Example
     ... starting screen session ...
         3898.test        (04/22/15 08:03:34)     (Detached)
 
+    Do you wanna use 'flavor hooks' ? (y/n) y
+
+    ... please wait 15 seconds ...
+
+
+    <--- --- --- flavor hooks // --- --- --->
+    <--- --- --- // flavor hooks --- --- --->
+
     lxc-to-go create finished.
 ```
 
