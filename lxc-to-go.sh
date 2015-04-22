@@ -1683,6 +1683,7 @@ case $LXCCREATETEMPLATE in
          fi
          exit 1
       fi
+      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
       sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
    ;;
    2) echo "select: jessie"
@@ -1699,6 +1700,7 @@ case $LXCCREATETEMPLATE in
          fi
          exit 1
       fi
+      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
       sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
    ;;
 esac
