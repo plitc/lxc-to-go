@@ -1407,12 +1407,12 @@ fi
          #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
          #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
          if [ "$DEBVERSION" = "7" ]; then
-            pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 kill -9
-            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 kill -9
+            pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
          fi
          if [ "$DEBVERSION" = "8" ]; then
-            ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 kill -9
-            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 kill -9
+            ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
          fi
          ip addr flush "$GETBRIDGEPORT0"
          echo "" # dummy
@@ -1421,12 +1421,12 @@ fi
          #/ dhclient eth0 >/dev/null 2>&1
          #/ route del default dev eth0 >/dev/null 2>&1
          if [ "$DEBVERSION" = "7" ]; then
-            pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 kill -9
-            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 kill -9
+            pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
          fi
          if [ "$DEBVERSION" = "8" ]; then
-            ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 kill -9
-            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 kill -9
+            ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
          fi
          ip addr flush eth0
          echo "" # dummy
