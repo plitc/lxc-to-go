@@ -1633,6 +1633,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    ### ### ### ### ### ### ### ### ###
    echo "" # printf
    printf "\033[1;31mCan't find the Bridge Zones, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
    ### ### ### ### ### ### ### ### ###
 fi
 
@@ -1643,6 +1644,7 @@ else
    ### ### ### ### ### ### ### ### ###
    echo "" # printf
    printf "\033[1;31mCan't find all nessessary default lxc container, delete the 'managed|deb7template|deb8template' lxc and execute the 'bootstrap' command again\033[0m\n"
+   exit 1
    ### ### ### ### ### ### ### ### ###
 fi
 
