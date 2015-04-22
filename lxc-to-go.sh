@@ -1645,7 +1645,7 @@ else
    ### ### ### ### ### ### ### ### ###
 fi
 
-echo "Please enter the new LXC Container name: "
+echo "Please enter the new LXC Container name:"
 read LXCNAME;
 if [ -z "$LXCNAME" ]; then
    echo "[ERROR]: empty name"
