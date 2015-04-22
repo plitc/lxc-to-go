@@ -1521,7 +1521,13 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
-
+CHECKLXCSTARTMANAGED=$(lxc-ls | grep -c "managed")
+if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
+   : # dummy
+else
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
 
 ### ### ### ### ### ### ### ### ###
 #
