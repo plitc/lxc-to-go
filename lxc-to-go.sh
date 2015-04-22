@@ -1799,7 +1799,27 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
+echo "" # dummy
 
+echo "Please enter the LXC Ccontainer name to DESTROY!: "
+read LXCDESTROY
+if [ -z "$LXCDESTROY" ]; then
+   echo "[ERROR] empty name"
+   exit 1
+fi
+
+if [ "$LXCDESTROY" = "managed" ]; then
+   printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n managed' and repeat the bootstrap\033[0m\n"
+fi
+
+if [ "$LXCDESTROY" = "deb7template" ]; then
+   printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb7template' and repeat the bootstrap\033[0m\n"
+fi
+
+if [ "$LXCDESTROY" = "deb8template" ]; then
+   printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
+fi
 
 ### ### ### ### ### ### ### ### ###
 #
