@@ -1683,7 +1683,7 @@ case $LXCCREATETEMPLATE in
          fi
          exit 1
       fi
-      sed -i '0,/lxc.network.veth.pair = deb7temp/s/lxc.network.veth.pair = '"$LXCNAME"'//' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
    ;;
    2) echo "select: jessie"
       lxc-clone -o deb8template -n "$LXCNAME"
@@ -1699,7 +1699,7 @@ case $LXCCREATETEMPLATE in
          fi
          exit 1
       fi
-      sed -i '0,/lxc.network.veth.pair = deb8temp/s/lxc.network.veth.pair = '"$LXCNAME"'//' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
    ;;
 esac
 
@@ -1729,10 +1729,10 @@ if [ "$LXCSTART" = "y" ]; then
   sleep 1
   screen -list | grep "$LXCNAME"
   echo ""
-  printf "\033[1;31mfinished.\033[0m\n"
+  printf "\033[1;31mlxc-to-go create finished.\033[0m\n"
 else
   echo ""
-  printf "\033[1;31mfinished.\033[0m\n"
+  printf "\033[1;31mlxc-to-go create finished.\033[0m\n"
 fi
 
 ### ### ### ### ### ### ### ### ###
