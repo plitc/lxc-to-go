@@ -1603,7 +1603,13 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
-
+CHECKBRIDGE1=$(ifconfig | grep -c "vswitch0")
+if [ "$CHECKBRIDGE1" = "0" ]; then
+   ### ### ### ### ### ### ### ### ###
+   echo "" # printf
+   printf "\033[1;31mCan't find the Bridge Zones, execute the 'bootstrap' command at first\033[0m\n"
+   ### ### ### ### ### ### ### ### ###
+fi
 
 ### ### ### ### ### ### ### ### ###
 #
