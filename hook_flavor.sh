@@ -10,7 +10,7 @@ run(){
 ### EXAMPLE // ###
 #
 
-run echo -> inside hook <-
+run echo inside hook
 
 #
 ### // EXAMPLE ###
