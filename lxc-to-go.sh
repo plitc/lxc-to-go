@@ -1701,6 +1701,10 @@ case $LXCCREATETEMPLATE in
    ;;
 esac
 
+#/ RANDOMMAC1=$(shuf -i 10-99 -n 1)
+#/ RANDOMMAC2=$(shuf -i 10-99 -n 1)
+#/ sed -i 's/aa:bb:01:01:bb:aa/aa:bb:'"$RANDOMMAC1"':'"$RANDOMMAC2"':bb:aa/' /var/lib/lxc/"$LXCNAME"/config
+
 
 
 ### ### ### ### ### ### ### ### ###
