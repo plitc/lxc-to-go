@@ -1701,11 +1701,37 @@ case $LXCCREATETEMPLATE in
    ;;
 esac
 
+### randomized MAC address // ###
 #/ RANDOMMAC1=$(shuf -i 10-99 -n 1)
 #/ RANDOMMAC2=$(shuf -i 10-99 -n 1)
 #/ sed -i 's/aa:bb:01:01:bb:aa/aa:bb:'"$RANDOMMAC1"':'"$RANDOMMAC2"':bb:aa/' /var/lib/lxc/"$LXCNAME"/config
+#
+#/ CHECKMAC1=$(grep "aa:bb" /var/lib/lxc/"$LXCNAME"/config | sed 's/lxc.network.hwaddr=//')
+#/ CHECKMAC2=$(grep -c "$CHECKMAC1" /var/lib/lxc/*/config | egrep -v ":0")
+#/ if [ -z "$CHECKMAC2" ]; then
+#/    : # dummy
+#/ else
+#/    sed -i 's/aa:bb:01:01:bb:aa/aa:bb:'"$RANDOMMAC1"':'"$RANDOMMAC2"':bb:aa/' /var/lib/lxc/"$LXCNAME"/config
+#/    echo "try random mac for the second time"
+#/ fi
+### // randomized MAC address ###
 
+echo "$LXCNAME" > /var/lib/lxc/"$LXCNAME"/rootfs/etc/hostname
 
+echo ""
+read -p "Do you wish to start this LXC Container: "$LXCNAME" ? (y/n) " LXCSTART
+if [ "$LXCSTART" = "y" ]; then
+  screen -d -m -S "$LXCNAME" -- lxc-start -n "$LXCNAME"
+  echo ""
+  echo "... starting screen session ..."
+  sleep 1
+  screen -list | grep "$LXCNAME"
+  echo ""
+  echo "That's it"
+else
+  echo ""
+  echo "That's it"
+fi
 
 ### ### ### ### ### ### ### ### ###
 #
