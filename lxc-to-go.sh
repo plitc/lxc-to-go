@@ -1729,10 +1729,10 @@ if [ "$LXCSTART" = "y" ]; then
   sleep 1
   screen -list | grep "$LXCNAME"
   echo ""
-  echo "That's it"
+  printf "\033[1;31mfinished.\033[0m\n"
 else
   echo ""
-  echo "That's it"
+  printf "\033[1;31mfinished.\033[0m\n"
 fi
 
 ### ### ### ### ### ### ### ### ###
