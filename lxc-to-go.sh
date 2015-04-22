@@ -1611,6 +1611,16 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    ### ### ### ### ### ### ### ### ###
 fi
 
+CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
+if [ "$CHECKLXCCONTAINER" = "3" ]; then
+   : # dummy
+else
+   ### ### ### ### ### ### ### ### ###
+   echo "" # printf
+   printf "\033[1;31mCan't find all nessessary default lxc container, delete the 'managed|deb7template|deb8template' lxc and execute the 'bootstrap' command again\033[0m\n"
+   ### ### ### ### ### ### ### ### ###
+fi
+
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
