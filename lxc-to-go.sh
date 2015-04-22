@@ -1538,7 +1538,12 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
 fi
 
 ### ### ###
+lxc-ls | egrep -v -c "managed|deb7template|deb8template" | xargs -L1 -I {} screen -d -m -S "{}" -- lxc-start -n "{}"
+### ### ###
 
+### ### ###
+echo "" # printf
+printf "\033[1;31mlxc-to-go start finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
