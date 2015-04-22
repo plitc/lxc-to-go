@@ -1649,11 +1649,11 @@ echo "Choose the LXC template:"
 echo "1) wheezy"
 echo "2) jessie"
 read case;
-case $case in
-   if [ -z "$$case" ]; then
+   if [ -z "$case" ]; then
       echo "empty"
       exit 0
    fi
+case $case in
    1) echo "select wheezy";;
    2) echo "select jessie";;
 esac
