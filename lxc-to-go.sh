@@ -1802,7 +1802,8 @@ fi
 lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
-echo "Please enter the LXC Ccontainer name to DESTROY!: "
+echo "" # dummy
+echo "Please enter the LXC Ccontainer name to DESTROY:"
 read LXCDESTROY
 if [ -z "$LXCDESTROY" ]; then
    echo "[ERROR] empty name"
