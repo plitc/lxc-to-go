@@ -1803,7 +1803,7 @@ lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
 echo "" # dummy
-echo "Please enter the LXC Ccontainer name to DESTROY:"
+echo "Please enter the LXC Container name to DESTROY:"
 read LXCDESTROY
 if [ -z "$LXCDESTROY" ]; then
    echo "[ERROR] empty name"
@@ -1827,6 +1827,16 @@ if [ "$LXCDESTROY" = "deb8template" ]; then
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
+
+   echo "" # dummy
+   echo "... shutdown & delete the lxc container ..."
+   lxc-stop -n "$LXCDESTROY" > /dev/null 2>&1
+   lxc-destroy -n "$LXCDESTROY"
+
+### ### ###
+echo ""
+printf "\033[1;31mlxc-to-go delete finished.\033[0m\n"
+### ### ###
 
 ### ### ### ### ### ### ### ### ###
 #
