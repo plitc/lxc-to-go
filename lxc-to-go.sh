@@ -426,6 +426,7 @@ if [ "$CREATEBRIDGE1" = "1" ]; then
     : # dummy
 else
    brctl addbr vswitch1
+   ifconfig vswitch1 up
    sysctl -w net.ipv4.conf.vswitch1.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch1.forwarding=1 >/dev/null 2>&1
 fi
