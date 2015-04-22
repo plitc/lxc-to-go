@@ -1497,13 +1497,17 @@ else
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
+   if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+   else
    : # dummy
    : # dummy
-   echo "[ERROR] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
    exit 1
+   fi
 fi
 
 #
@@ -1549,13 +1553,17 @@ else
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
+   if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+   else
    : # dummy
    : # dummy
-   echo "[ERROR] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
    exit 1
+   fi
 fi
 
 #
@@ -1601,13 +1609,17 @@ else
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
+   if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+   else
    : # dummy
    : # dummy
-   echo "[ERROR] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
    exit 1
+   fi
 fi
 
 #
@@ -1669,13 +1681,17 @@ else
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
+   if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+   else
    : # dummy
    : # dummy
-   echo "[ERROR] You need Debian 8 (Jessie) Version"
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
    exit 1
+   fi
 fi
 
 #
