@@ -1521,7 +1521,7 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
-CHECKLXCSTARTMANAGED=$(lxc-ls | grep -c "managed")
+CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
    : # dummy
 else
