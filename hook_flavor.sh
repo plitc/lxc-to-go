@@ -13,6 +13,8 @@ run(){
 
 #/ run apt-get -y install iputils-ping
 
+echo "$LXCCREATENAME"
+
 #
 ### // EXAMPLE ###
 
