@@ -121,6 +121,11 @@ Example
 
 * stop
 ```
+    # ./lxc-to-go.sh stop 
+    FOUND (active):
+    test1 test2 test3 test4 test5 
+
+    lxc-to-go stop finished.
 ```
 
 * create
