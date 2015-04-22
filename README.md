@@ -98,7 +98,9 @@ Example
 
     # ./lxc-to-go.sh bootstrap
 
-    # lxc-attach -n managed (or screen attach)
+    ### lxc-attach -n managed (or screen attach) ###
+
+    lxc-to-go bootstrap finished.
 ```
 
 * start

@@ -1466,7 +1466,7 @@ fi
 
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
-printf "\033[1;31mbootstrap finished\033[0m\n"
+printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
