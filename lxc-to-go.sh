@@ -1261,7 +1261,12 @@ verbosity: 2
 # interface: 192.168.254.254
 # interface: 192.168.254.254@5003
 # interface: 2001::1
- 
+
+interface: 127.0.0.1
+interface: ::1
+interface: 192.168.254.254
+interface: fd00:aaaa:254::254
+
 # outgoing-interface: 192.168.254.254
 # outgoing-interface: 192.168.254.254@5003
 # outgoing-interface: 2001::1
