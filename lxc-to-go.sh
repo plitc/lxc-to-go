@@ -1683,9 +1683,10 @@ case $LXCCREATETEMPLATE in
          fi
          exit 1
       fi
+      sed -i '0,/lxc.network.veth.pair = deb7temp/s/lxc.network.veth.pair = '"$LXCNAME"'//' /var/lib/lxc/"$LXCNAME"/config
    ;;
    2) echo "select: jessie"
-      lxc-clone -o deb7template -n "$LXCNAME"
+      lxc-clone -o deb8template -n "$LXCNAME"
       if [ $? -eq 0 ]
       then
          : # dummy
@@ -1698,6 +1699,7 @@ case $LXCCREATETEMPLATE in
          fi
          exit 1
       fi
+      sed -i '0,/lxc.network.veth.pair = deb8temp/s/lxc.network.veth.pair = '"$LXCNAME"'//' /var/lib/lxc/"$LXCNAME"/config
    ;;
 esac
 
