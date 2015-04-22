@@ -1801,6 +1801,7 @@ if [ "$FLAVOR" = "y" ]; then
       ./hook_flavor.sh
       echo "" # dummy
    ###
+   unset LXCCREATENAME
 else
    : # dummy
    #
