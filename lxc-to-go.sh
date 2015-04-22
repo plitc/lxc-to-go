@@ -1677,6 +1677,10 @@ case $LXCCREATETEMPLATE in
       else
          echo "" # dummy
          echo "[ERROR] lxc-clone failed!"
+         read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
+         if [ "$LXCCREATEFAILED" = "y" ]; then
+            lxc-destroy -n "$LXCNAME"
+         fi
          exit 1
       fi
    ;;
@@ -1688,6 +1692,10 @@ case $LXCCREATETEMPLATE in
       else
          echo "" # dummy
          echo "[ERROR] lxc-clone failed!"
+         read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
+         if [ "$LXCCREATEFAILED" = "y" ]; then
+            lxc-destroy -n "$LXCNAME"
+         fi
          exit 1
       fi
    ;;
