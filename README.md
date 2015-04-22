@@ -134,6 +134,15 @@ Example
 
 * delete
 ```
+    # ./lxc-to-go.sh delete 
+    test test1 test2 
+
+    Please enter the LXC Container name to DESTROY:
+    test
+
+    ... shutdown & delete the lxc container ...
+
+    lxc-to-go delete finished.
 ```
 
 Diagram
