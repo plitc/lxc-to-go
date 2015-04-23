@@ -273,7 +273,7 @@ Package: *
 Pin: release n=jessie
 Pin-Priority: 100
 
-Package: linux-image linux-headers
+Package: linux-image linux-headers linux-image-amd64 linux-image-amd64-dbg initramfs-tools firmware-linux-free firmware-linux-nonfree
 Pin: release n=wheezy-backports
 Pin-Priority: 999
 
