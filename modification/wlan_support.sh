@@ -7,7 +7,7 @@ cp -prf ../lxc-to-go.sh lxc-to-go_wlan.sh
 ### MOD // ###
 #
 sed -i 's/eth0/wlan0/g' lxc-to-go_wlan.sh
-
+#
 sed -i 's/-o wlan0 -j MASQUERADE/-o eth0 -j MASQUERADE/g' lxc-to-go_wlan.sh
 sed -i 's/PREROUTING -i wlan0/PREROUTING -i eth0/g' lxc-to-go_wlan.sh
 sed -i 's/lxc.network.name=wlan0/lxc.network.name=eth0/g' lxc-to-go_wlan.sh
@@ -24,8 +24,6 @@ sed -i 's/wlan0\/accept_ra/eth0\/accept_ra/g' lxc-to-go_wlan.sh
 sed -i 's/managed -- sysctl -w net.ipv6.conf.wlan0.forwarding=1/managed -- sysctl -w net.ipv6.conf.eth0.forwarding=1/g' lxc-to-go_wlan.sh
 sed -i 's/wlan0.forwarding=1 # LXC/eth0.forwarding=1 # LXC/g' lxc-to-go_wlan.sh
 sed -i 's/wlan0.forwarding=1    # LXC/eth0.forwarding=1    # LXC/g' lxc-to-go_wlan.sh
-
-sed -i 's/wlan0.rp_filter/eth0.rp_filter/g' lxc-to-go_wlan.sh
 #
 ### // MOD ###
 
