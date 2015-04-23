@@ -1646,6 +1646,20 @@ fi
    fi 
 ### NEW IP - Desktop Environment // ###
 
+### NEW IP - Server Environment // ###
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      : # dummy
+#/ ipv4
+      : # dummy
+#/ ipv6
+      : # dummy
+#/ container
+### rc.local reload // ###
+      lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+### // rc.local reload ###
+   fi
+### // NEW IP - Server Environment ###
+
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
