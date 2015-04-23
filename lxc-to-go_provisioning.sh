@@ -272,7 +272,7 @@ if [ "$start" = "yes" ]; then
          echo "" # dummy
       ###
       unset LXCCREATENAME
-      echo '$name : $port' >> /etc/lxc-to-go/portforwarding.conf
+      echo "$name : $port" >> /etc/lxc-to-go/portforwarding.conf
 ### FORWARDING // ###
 #
 CHECKFORWARDING=$(grep "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
