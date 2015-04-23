@@ -1648,7 +1648,47 @@ fi
 
 ### NEW IP - Server Environment // ###
    if [ "$GETENVIRONMENT" = "server" ]; then
-      : # dummy
+### ### ###
+##/ GETIPV4DEFAULTGATEWAY=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}')
+netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
+chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
+#/    GETIPV4DEFAULTGATEWAYVALUE=$(grep -s "IPV4DEFAULTGATEWAY" /tmp/lxc-to-go_IPV4GATEWAY.log | sed 's/IPV4DEFAULTGATEWAY=//')
+   if [ -e "$UDEVNET" ]; then
+      GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+      GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
+      ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
+###/ip addr flush eth0
+#/    ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev "$GETBRIDGEPORT0"
+#/    route del default >/dev/null 2>&1
+#/    route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      ip addr add 192.168.253.253/24 dev vswitch0
+   fi
+### fix //
+CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
+   route del default
+fi
+### // fix
+   else
+      GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+      GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
+      ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
+###/ip addr flush eth0
+#/    ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev eth0
+#/    route del default >/dev/null 2>&1
+#/    route add default gw "$GETIPV4DEFAULTGATEWAYVALUE" dev vswitch0
+   if [ "$GETENVIRONMENT" = "server" ]; then
+      ip addr add 192.168.253.253/24 dev vswitch0
+   fi
+### fix //
+CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
+   route del default
+fi
+### // fix
+   fi
+### ### ###
 #/ ipv4
       : # dummy
 #/ ipv6
