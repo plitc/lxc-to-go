@@ -95,7 +95,7 @@ usage:
    ./lxc-to-go_wlan.sh
 ```
 
-* rp_filter active by default
+* rp_filter enabled by default
 
 * simple "template/flavor hooks" for general purposes
 
