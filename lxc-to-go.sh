@@ -301,7 +301,7 @@ CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=
 if [ "$CHECKGRUB1" = "1" ]; then
     : # dummy
 else
-    cp -prfv /etc/default/grub /etc/default/grub_BACKUP_lxctogo
+    cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
     sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
     sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
 
@@ -317,7 +317,7 @@ else
       : # dummy
       sleep 5
       echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
-      cp -prfv /etc/default/grub_BACKUP_lxctogo /etc/default/grub
+      cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
       : # dummy
       sleep 2
       grub-mkconfig
