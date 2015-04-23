@@ -22,6 +22,8 @@ sed -i 's/managed -- ip addr flush wlan0/managed -- ip addr flush eth0/g' lxc-to
 sed -i 's/managed -- dhclient wlan0/managed -- dhclient eth0/g' lxc-to-go_wlan.sh
 sed -i 's/wlan0\/accept_ra/eth0\/accept_ra/g' lxc-to-go_wlan.sh
 sed -i 's/managed -- sysctl -w net.ipv6.conf.wlan0.forwarding=1/managed -- sysctl -w net.ipv6.conf.eth0.forwarding=1/g' lxc-to-go_wlan.sh
+sed -i 's/wlan0.forwarding=1 # LXC/eth0.forwarding=1 # LXC/g' lxc-to-go_wlan.sh
+sed -i 's/wlan0.forwarding=1    # LXC/eth0.forwarding=1    # LXC/g' lxc-to-go_wlan.sh
 
 
 #sed -i 's/
