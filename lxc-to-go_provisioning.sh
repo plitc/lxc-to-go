@@ -141,7 +141,7 @@ else
 fi
 
 #/ check port - numeric
-cport="$(echo "$port" | sed -e 's/[^[:num:]]//g')"
+cport="$(echo "$port" | sed 's/[^0-9]*//g')"
 if [ "$cport" != "$port" ] ; then
    echo "" # dummy
    echo "[ERROR] string -port '"$port"' has characters which are not numeric"
