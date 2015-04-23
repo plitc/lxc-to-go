@@ -1194,35 +1194,35 @@ sysctl net.ipv6.conf.all.forwarding=1
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 #/
 # lxc1
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
 # lxc2
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
 # lxc3
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
 # lxc4
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
 # lxc5
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
 # lxc6
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
 # lxc7
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
 # lxc8
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
 # lxc9
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
 # lxc10
-iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
-iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
+### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
 #/
 
 ##/ echo "stage2"
