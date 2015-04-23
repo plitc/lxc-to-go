@@ -223,6 +223,7 @@ if [ "$template" = "deb7" ]; then
    else
       echo "" # dummy
       echo "[ERROR] lxc-clone to "$name" failed!"
+         lxc-stop -n "$name" -k
          lxc-destroy -n "$name"
       exit 1
    fi
@@ -254,6 +255,21 @@ fi
 ### create // ###
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+
+### cleanup // ###
+#
+CHECKDEB7IF=$(ifconfig deb7temp | grep -c "deb7temp")
+if [ "$CHECKDEB7IF" = "1" ]; then
+   ifconfig deb7temp down
+   ip link del deb7temp
+fi
+CHECKDEB8IF=$(ifconfig deb8temp | grep -c "deb8temp")
+if [ "$CHECKDEB8IF" = "1" ]; then
+   ifconfig deb8temp down
+   ip link del deb8temp
+fi
+#
+### // cleanup ###
 
 ### start // ###
 #
@@ -289,6 +305,8 @@ else
    GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
    if [ -z "$GETIPV4" ]; then
       echo "[ERROR] Can't get IPv4 Address"
+         lxc-stop -n "$name" -k
+         lxc-destroy -n "$name"
       exit 1
    else
       # iptables - managed
