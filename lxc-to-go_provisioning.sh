@@ -183,7 +183,7 @@ fi
 CHECKPORTRESERVATION=$(grep -c "$port" /etc/lxc-to-go/portforwarding.conf)
 if [ "$CHECKPORTRESERVATION" = "1" ]; then
    echo "" # dummy
-   echo "[ERROR] port is already reserved"
+   echo "[ERROR] port already reserved"
    exit 1
 fi
 
