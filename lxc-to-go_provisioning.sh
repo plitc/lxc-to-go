@@ -276,7 +276,7 @@ if [ "$start" = "yes" ]; then
 ### FORWARDING // ###
 #
 CHECKFORWARDING=$(grep "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
-if [ -z "$CHECKFORWARDING" ]
+if [ -z "$CHECKFORWARDING" ]; then
    : # dummy
 else
    GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
