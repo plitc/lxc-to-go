@@ -1685,6 +1685,12 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+CHECKCONTAINER1=$(lxc-ls | egrep -v "managed|deb7template|deb8template")
+if [ -z "$CHECKCONTAINER1" ]; then
+   echo "[WARNING] no additional container found"
+   exit 0
+fi
+
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
    : # dummy
@@ -1777,6 +1783,12 @@ fi
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###
+
+CHECKCONTAINER2=$(lxc-ls | egrep -v "managed|deb7template|deb8template")
+if [ -z "$CHECKCONTAINER2" ]; then
+   echo "[WARNING] no additional container found"
+   exit 0
+fi
 
 ### ### ###
 echo "FOUND (active):"
@@ -2051,6 +2063,12 @@ fi
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###
+
+CHECKCONTAINER3=$(lxc-ls | egrep -v "managed|deb7template|deb8template")
+if [ -z "$CHECKCONTAINER3" ]; then
+   echo "[WARNING] no additional container found"
+   exit 0
+fi
 
 lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
