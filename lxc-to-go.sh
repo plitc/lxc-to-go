@@ -1702,6 +1702,19 @@ fi
    fi
 ### // NEW IP - Server Environment ###
 
+### RP_FILTER // ###
+sysctl -w net.ipv4.conf.all.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf.default.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf.eth0.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf.managed.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf.managed1.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf.vswitch0.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf.vswitch1.rp_filter=1 >/dev/null 2>&1
+if [ -e "$UDEVNET" ]; then
+   sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".rp_filter=1 >/dev/null 2>&1
+fi
+### // RP_FILTER ###
+
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
