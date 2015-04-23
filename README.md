@@ -36,6 +36,8 @@ Dependencies
    * unbound
    * radvd
 
+* free hard disk space requirement: 2-3 GB
+
 HOST (Package) Dependencies
 =================
 * Debian 7 Wheezy HOST
