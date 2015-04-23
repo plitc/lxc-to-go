@@ -210,20 +210,98 @@ fi
 
 if [ "$template" = "deb7" ]; then
    lxc-clone -o deb7template -n "$name"
+   if [ $? -eq 0 ]
+   then
+      : # dummy
+   else
+      echo "" # dummy
+      echo "[ERROR] lxc-clone to "$name" failed!"
+         lxc-destroy -n "$name"
+      fi
+      exit 1
+   fi
+      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
+      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$name"'/' /var/lib/lxc/"$name"/config
+      sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
+      sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
+      echo "$name" > /var/lib/lxc/"$name"/rootfs/etc/hostname
 fi
 
 if [ "$template" = "deb8" ]; then
    lxc-clone -o deb8template -n "$name"
+   if [ $? -eq 0 ]
+   then
+      : # dummy
+   else
+      echo "" # dummy
+      echo "[ERROR] lxc-clone to "$name" failed!"
+         lxc-destroy -n "$name"
+      fi
+      exit 1
+   fi
+      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
+      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$name"'/' /var/lib/lxc/"$name"/config
+      sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
+      sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
+      echo "$name" > /var/lib/lxc/"$name"/rootfs/etc/hostname
 fi
-
-
 
 ### create // ###
 
+CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 
-
-
-
+### start // ###
+#
+if [ "$start" = "yes" ]; then
+   screen -d -m -S "$name" -- lxc-start -n "$name"
+   echo ""
+   echo "... starting screen session ..."
+   sleep 1
+   screen -list | grep "$name"
+   echo ""
+   if [ "$hooks" = "yes" ]; then
+      LXCCREATENAME="$name"
+      export LXCCREATENAME
+      : # dummy
+      echo "" # dummy
+      echo "... please wait 15 seconds ..."
+      sleep 15
+      echo "" # dummy
+      : # dummy
+      ###
+         echo "" # dummy
+            ./hooks/hook_provisioning.sh
+         echo "" # dummy
+      ###
+      unset LXCCREATENAME
+      echo '"$name" : "$port"' >> /etc/lxc-to-go/portforwarding.conf
+### FORWARDING // ###
+#
+CHECKFORWARDING=$(grep "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
+if [ -z "$CHECKFORWARDING" ]
+   : # dummy
+else
+   GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+   if [ -z "$GETIPV4" ]; then
+      echo "[ERROR] Can't get IPv4 Address"
+      exit 1
+   else
+      # iptables - managed
+      lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+      lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+      if [ "$CHECKENVIRONMENT" = "server" ]; then
+         # iptables - host
+         iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+         iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+      fi
+   fi
+fi
+#
+### // FORWARDING ###
+   fi
+fi
+#
+### // start ###
 
 ### // PROVISIONING ###
 
