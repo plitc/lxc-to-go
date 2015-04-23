@@ -18,8 +18,8 @@ WARNING
 Dependencies
 ============
 * Linux
-   * NEED Kernel Upgrade on Wheezy HOST (default 3.2 to 3.16 wheezy-backports repo)
-   * NEED LXC > 1.0 on Wheezy HOST (jessie repo)
+   * NEED Kernel Upgrade on Wheezy HOST (default 3.2 to 3.16 from wheezy-backports repo)
+   * NEED LXC > 1.0 on Wheezy HOST (from jessie repo)
    * (kernel compatibility for lxc)
    * (grub environment)
    * sh (as dash/bash)
