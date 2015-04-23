@@ -80,7 +80,7 @@ Features
    * dhcp/ra support (desktop mode)
 
 * transparent network flow
-   * if you run debian linux inside a virtualbox with an wireless lan bridge and the option "promiscuous mode: allow all" than the lxc-to-go "server" variant will also works! (thanks to proxy_arp/ndp)
+   * if you run debian linux inside a virtualbox with an wireless lan bridge and the option "promiscuous mode: allow all" then the lxc-to-go "server" variant will also work! (thanks to proxy_arp/ndp)
 
 * simple "template/flavor hooks" for general purposes
 
