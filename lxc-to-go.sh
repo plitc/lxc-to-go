@@ -1129,11 +1129,11 @@ else
 /bin/cat << SYSCTLFILEMANAGED > /var/lib/lxc/managed/rootfs/etc/sysctl.conf
 ### ### ### lxc-to-go // ### ### ###
 #
-net.ipv4.conf.eth0.forwarding=1
-net.ipv4.conf.eth1.forwarding=1
-net.ipv6.conf.eth0.forwarding=1
-net.ipv6.conf.eth1.forwarding=1
-net.ipv6.conf.all.forwarding=1
+net.ipv4.conf.eth0.forwarding=1 # LXC
+net.ipv4.conf.eth1.forwarding=1 # LXC
+net.ipv6.conf.eth0.forwarding=1 # LXC
+net.ipv6.conf.eth1.forwarding=1 # LXC
+net.ipv6.conf.all.forwarding=1  # LXC
 #
 ### ### ### // lxc-to-go ### ### ###
 # EOF
@@ -1189,12 +1189,12 @@ ip6tables -P FORWARD ACCEPT
 ip6tables -P OUTPUT ACCEPT
 
 ##/ echo "stage0"
-sysctl net.ipv4.conf.default.forwarding=1
-sysctl net.ipv4.conf.eth0.forwarding=1
-sysctl net.ipv4.conf.eth1.forwarding=1
-sysctl net.ipv6.conf.eth0.forwarding=1
-sysctl net.ipv6.conf.eth1.forwarding=1
-sysctl net.ipv6.conf.all.forwarding=1
+sysctl net.ipv4.conf.default.forwarding=1 # LXC
+sysctl net.ipv4.conf.eth0.forwarding=1    # LXC
+sysctl net.ipv4.conf.eth1.forwarding=1    # LXC
+sysctl net.ipv6.conf.eth0.forwarding=1    # LXC
+sysctl net.ipv6.conf.eth1.forwarding=1    # LXC
+sysctl net.ipv6.conf.all.forwarding=1     # LXC
 
 ##/ echo "stage1"
 ##/ nat
