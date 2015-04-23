@@ -419,7 +419,61 @@ else
 ###
    if [ "$GETENVIRONMENT" = "desktop" ]; then
       : # dummy
-      dhclient vswitch0
+      #/ dhclient vswitch0
+### ### ###
+#
+### NEW IP - Desktop Environment // ###
+#/ ipv4
+      #/ killall dhclient
+      if [ -e "$UDEVNET" ]; then
+         #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
+         #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+         if [ "$DEBVERSION" = "7" ]; then
+            pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         fi
+         if [ "$DEBVERSION" = "8" ]; then
+            ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         fi
+         ip addr flush "$GETBRIDGEPORT0"
+         echo "" # dummy
+         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
+      else
+         #/ dhclient eth0 >/dev/null 2>&1
+         #/ route del default dev eth0 >/dev/null 2>&1
+         if [ "$DEBVERSION" = "7" ]; then
+            pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         fi
+         if [ "$DEBVERSION" = "8" ]; then
+            ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         fi
+         ip addr flush eth0
+         echo "" # dummy
+         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
+      fi
+      dhclient vswitch0 >/dev/null 2>&1
+### fix //
+CHECKGETIPV4DEFAULTGATEWAY3=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+if [ "$CHECKGETIPV4DEFAULTGATEWAY3" = "2" ]; then
+   route del default
+fi
+### // fix
+#/ ipv6
+      if [ -e "$UDEVNET" ]; then
+         #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+         ip -6 route del ::/0 >/dev/null 2>&1
+         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+      else
+         #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+         ip -6 route del ::/0 >/dev/null 2>&1
+         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+      fi
+### NEW IP - Desktop Environment // ###
+#
+### ### ###
    fi
    if [ "$GETENVIRONMENT" = "server" ]; then
       : # dummy
