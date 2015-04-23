@@ -210,8 +210,7 @@ fi
 
 if [ "$template" = "deb7" ]; then
    lxc-clone -o deb7template -n "$name"
-   if [ $? -eq 0 ]
-   then
+   if [ $? -eq 0 ]; then
       : # dummy
    else
       echo "" # dummy
