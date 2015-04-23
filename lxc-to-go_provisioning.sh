@@ -117,15 +117,16 @@ shift $(( OPTIND - 1 ))
 #/ show usage
 if [ -z "$name" ]; then
    echo "" # dummy
-   echo "usage:   ./lxc-to-go.sh provisioning -n {name} -h {hooks} -p {port} -s {start}"
+   echo "usage:   ./lxc-to-go_provisioning.sh -n {name} -h {hooks} -p {port} -s {start}"
    echo "example: -n example -h yes -p 60000 -s yes"
-   exit 1
+   exit 0
 fi
 
-#/ check name
+#/ check name - alphanumeric
 cname="$(echo "$name" | sed -e 's/[^[:alnum:]]//g')"
 if [ "$cname" != "$name" ] ; then
-    echo "string -name '"$name"' has characters which are not alphanumeric"
+    echo "[ERROR] string -name '"$name"' has characters which are not alphanumeric"
+    exit 1
 fi
 
 ### // PROVISIONING ###
