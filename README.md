@@ -200,7 +200,22 @@ Example
 
 * provisioning
 ```
-    #
+    # ./lxc-to-go_provisioning.sh -n test3 -t deb8 -h yes -p 60003 -s yes
+    Created container test3 as copy of deb8template
+
+    ... starting screen session ...
+          6743.test3     (04/24/15 00:48:53)    (Detached)
+
+
+    ... please wait 15 seconds ...
+
+
+    <--- --- --- provisioning hooks // --- --- --->
+    example
+    <--- --- --- // provisioning hooks --- --- --->
+
+
+    lxc-to-go provisioning finished.
 ```
 
 Diagram
