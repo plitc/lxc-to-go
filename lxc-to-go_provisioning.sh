@@ -285,8 +285,8 @@ if [ "$start" = "yes" ]; then
       export LXCCREATENAME
       : # dummy
       echo "" # dummy
-      echo "... please wait 20 seconds ..."
-      sleep 20
+      echo "... please wait 15 seconds ..."
+      sleep 15
       echo "" # dummy
       : # dummy
       ###
