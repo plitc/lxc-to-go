@@ -210,13 +210,13 @@ fi
 
 if [ "$template" = "deb7" ]; then
    lxc-clone -o deb7template -n "$name"
-   if [ $? -eq 0 ]; then
+   if [ $? -eq 0 ]
+   then
       : # dummy
    else
       echo "" # dummy
       echo "[ERROR] lxc-clone to "$name" failed!"
          lxc-destroy -n "$name"
-      fi
       exit 1
    fi
       sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
@@ -235,7 +235,6 @@ if [ "$template" = "deb8" ]; then
       echo "" # dummy
       echo "[ERROR] lxc-clone to "$name" failed!"
          lxc-destroy -n "$name"
-      fi
       exit 1
    fi
       sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
