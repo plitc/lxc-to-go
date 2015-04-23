@@ -140,6 +140,25 @@ else
    exit 1
 fi
 
+#/ check port - numeric
+cport="$(echo "$port" | sed -e 's/[^[:num:]]//g')"
+if [ "$cport" != "$port" ] ; then
+   echo "" # dummy
+   echo "[ERROR] string -port '"$port"' has characters which are not numeric"
+   exit 1
+fi
+
+#/ check start - argument
+cstart="$(echo "$start" | sed 's/yes//g' | sed 's/no//g')"
+if [ -z "$start" ] ; then
+   : # dummy
+else
+   echo "" # dummy
+   echo "[ERROR] choose for start argument (yes/no)"
+   exit 1
+fi
+
+
 
 
 
