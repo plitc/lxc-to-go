@@ -543,6 +543,7 @@ else
       lxc-destroy -n deb7template
       lxc-destroy -n deb8template
    fi
+   echo "" # dummy
 fi
 #
 ### // NEW 'managed' lxc bootstrap ###
