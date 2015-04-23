@@ -1530,13 +1530,13 @@ interface eth1
 # EOF
 CHECKMANAGEDIPV6CONFIGFILE
    lxc-attach -n managed -- service radvd restart
-
+#
 ### bootstrap finished file // ###
-#
-touch /etc/lxc-to-go/INSTALLED
-#
-### // bootstrap finished file ###
 
+touch /etc/lxc-to-go/INSTALLED
+
+### // bootstrap finished file ###
+#
 fi
 
 ### ### ###
@@ -1617,6 +1617,9 @@ fi
       lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
       lxc-attach -n managed -- ip -6 route del ::/0 >/dev/null 2>&1
       lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra
+### rc.local reload // ###
+      lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+### // rc.local reload ###
    fi 
 ### NEW IP - Desktop Environment // ###
 
