@@ -746,7 +746,7 @@ sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
 #
 ### ### ###
 echo "" # dummy
-   ./hook_deb7.sh
+   ./hooks/hook_deb7.sh
 echo "" # dummy
 ### ### ###
 fi
@@ -944,7 +944,7 @@ sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
 #
 ### ### ###
 echo "" # dummy
-   ./hook_deb8.sh
+   ./hooks/hook_deb8.sh
 echo "" # dummy
 ### ### ###
 fi
@@ -1802,7 +1802,7 @@ if [ "$FLAVOR" = "y" ]; then
    : # dummy
    ###
       echo "" # dummy
-         ./hook_flavor.sh
+         ./hooks/hook_flavor.sh
       echo "" # dummy
    ###
    unset LXCCREATENAME
