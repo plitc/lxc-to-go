@@ -90,8 +90,8 @@ Features
 Platform
 ========
 * Linux
-   * Debian 8/jessie (recommended)
-   * Debian 7/wheezy
+   * Debian 8 / Jessie (recommended)
+   * Debian 7 / Wheezy
 
 Usage
 =====
