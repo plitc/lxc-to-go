@@ -180,7 +180,7 @@ if [ "$cport" != "$port" ] ; then
    exit 1
 fi
 
-CHECKPORTRESERVATION=$(grep -c "$port" /etc/lxc-to-go/portforwarding.conf)
+CHECKPORTRESERVATION=$(grep -sc "$port" /etc/lxc-to-go/portforwarding.conf)
 if [ "$CHECKPORTRESERVATION" = "1" ]; then
    echo "" # dummy
    echo "[ERROR] port already reserved"
@@ -282,7 +282,7 @@ if [ "$start" = "yes" ]; then
       echo "$name : $port" >> /etc/lxc-to-go/portforwarding.conf
 ### FORWARDING // ###
 #
-CHECKFORWARDING=$(grep "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
+CHECKFORWARDING=$(grep -s "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
 if [ -z "$CHECKFORWARDING" ]; then
    : # dummy
 else
