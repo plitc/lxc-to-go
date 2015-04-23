@@ -196,6 +196,15 @@ Screencast
 
 Errata
 ======
+* 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed
+```
+  The following packages have unmet dependencies:
+   locales : Depends: glibc-2.13-1
+             Depends: debconf (>= 0.5) but it is not going to be installed or
+                      debconf-2.0
+  E: Unable to correct problems, you have held broken packages.
+```
+
 * 22.04.2015: [lxc-to-go < 0.17.1]: under circumstances can't load rc.local (firewall rules) after lxc 'managed' bootstrap
 * 21.04.2015: [lxc-to-go < 0.14.1]: Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed!
 ```

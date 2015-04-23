@@ -155,8 +155,17 @@ if [ "$DEBVERSION" = "7" ]; then
       if [ "$CHECKDEB7KERNEL316" = "0" ]; then
          CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
             if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
-               echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
-               echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
+               #/ echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
+               #/ echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
+/bin/cat << CHECKDEB7WHEEZYBACKPORTSFILE > /etc/apt/sources.list.d/wheezy-backports.list
+### ### ### lxc-to-go // ### ### ###
+
+deb http://ftp.debian.org/debian wheezy-backports main contrib non-free
+deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free
+
+### ### ### // lxc-to-go ### ### ###
+# EOF
+CHECKDEB7WHEEZYBACKPORTSFILE
             fi
             apt-get -y autoclean
             apt-get -y clean
@@ -199,6 +208,22 @@ if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7JESSIELXC=$(grep -r "jessie" /etc/apt/sources.list* | grep -c "jessie")
    if [ "$CHECKDEB7JESSIELXC" = "0" ]; then
 
+mv -f /etc/apt/sources.list /etc/apt/sources.list_lxc-to-go_BK
+
+/bin/cat << CHECKDEB7WHEEZYFILE > /etc/apt/sources.list.d/wheezy.list
+### ### ### lxc-to-go // ### ### ###
+deb http://ftp.de.debian.org/debian/ wheezy main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ wheezy main contrib non-free
+
+deb http://ftp.de.debian.org/debian/ wheezy-updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ wheezy-updates main contrib non-free
+
+deb http://ftp.de.debian.org/debian-security/ wheezy/updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian-security/ wheezy/updates main contrib non-free
+### ### ### // lxc-to-go  ### ### ###
+# EOF
+CHECKDEB7WHEEZYFILE
+
 /bin/cat << CHECKDEB7JESSIELXCFILE > /etc/apt/sources.list.d/jessie.list
 ### ### ### lxc-to-go // ### ### ###
 deb http://ftp.de.debian.org/debian/ jessie main contrib non-free
@@ -211,9 +236,40 @@ deb http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-fr
 deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib non-free
 ### ### ### // lxc-to-go  ### ### ###
 # EOF
-
-### deb http://ftp.de.debian.org/debian sid main
 CHECKDEB7JESSIELXCFILE
+
+mv -f /etc/apt/apt.conf /etc/apt/apt.conf_lxc-to-go_BK
+
+### APT Pinning // ###
+#
+/bin/cat << CHECKDEB7PREFERENCESFILE > /etc/apt/preferences
+### ### ### lxc-to-go // ### ### ###
+
+Package: *
+Pin: release n=wheezy
+Pin-Priority: 900
+
+Package: *
+Pin: release n=wheezy-backports
+Pin-Priority: 500
+
+Package: *
+Pin: release n=jessie
+Pin-Priority: 100
+
+Package: linux-image linux-headers
+Pin: release n=wheezy-backports
+Pin-Priority: 999
+
+Package: lxc
+Pin: release n=jessie
+Pin-Priority: 999
+
+### ### ### // lxc-to-go  ### ### ###
+# EOF
+CHECKDEB7PREFERENCESFILE
+#
+### // APT Pinning ###
 
    apt-get -y autoclean
    apt-get -y clean
