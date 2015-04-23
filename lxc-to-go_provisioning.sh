@@ -130,6 +130,14 @@ if [ "$cname" != "$name" ] ; then
    exit 1
 fi
 
+
+#/ check hooks - empty argument
+if [ -z "$hooks" ]; then
+   echo "" # dummy
+   echo "[ERROR] choose for hooks argument (yes/no)"
+   exit 1
+fi
+
 #/ check hooks - argument
 chooks="$(echo "$hooks" | sed 's/yes//g' | sed 's/no//g')"
 if [ -z "$chooks" ] ; then
@@ -140,11 +148,25 @@ else
    exit 1
 fi
 
+#/ check port - empty argument
+if [ -z "$port" ]; then
+   echo "" # dummy
+   echo "[ERROR] choose a port number or alternative use 'lxc-to-got create'"
+   exit 1
+fi
+
 #/ check port - numeric
 cport="$(echo "$port" | sed 's/[^0-9]*//g')"
 if [ "$cport" != "$port" ] ; then
    echo "" # dummy
    echo "[ERROR] string -port '"$port"' has characters which are not numeric"
+   exit 1
+fi
+
+#/ check start - empty argument
+if [ -z "$start" ]; then
+   echo "" # dummy
+   echo "[ERROR] choose for start argument (yes/no)"
    exit 1
 fi
 
