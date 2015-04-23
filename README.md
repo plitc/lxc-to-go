@@ -76,6 +76,8 @@ Features
 
 * simple "template/flavor hooks" for general purposes
 
+* provisioning
+
 Platform
 ========
 * Linux
@@ -171,6 +173,11 @@ Example
     ... shutdown & delete the lxc container ...
 
     lxc-to-go delete finished.
+```
+
+* provisioning
+```
+    #
 ```
 
 Diagram

@@ -1931,10 +1931,74 @@ esac
 #
 ### // stage1 ###
 ;;
+'provisioning')
+### stage1 // ###
+case $DEBIAN in
+debian)
+### stage2 // ###
+
+### // stage2 ###
+#
+### stage3 // ###
+if [ "$MYNAME" = "root" ]; then
+   : # dummy
+else
+   : # dummy
+   : # dummy
+   echo "[ERROR] You must be root to run this script"
+   exit 1
+fi
+if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+else
+   if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+   else
+   : # dummy
+   : # dummy
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
+   exit 1
+   fi
+fi
+
+#
+### stage4 // ###
+#
+### ### ### ### ### ### ### ### ###
+
+lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
+echo "" # dummy
+
+
+
+### ### ###
+echo ""
+printf "\033[1;31mlxc-to-go provisioning finished.\033[0m\n"
+### ### ###
+
+### ### ### ### ### ### ### ### ###
+#
+### // stage4 ###
+#
+### // stage3 ###
+#
+### // stage2 ###
+;;
+*)
+   # error 1
+   : # dummy
+   : # dummy
+   echo "[ERROR] Plattform = unknown"
+   exit 1
+   ;;
+esac
+#
+### // stage1 ###
+;;
 *)
 printf "\033[1;31mWARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.\033[0m\n"
 echo "" # usage
-echo "usage: $0 { bootstrap | start | stop | create | delete }"
+echo "usage: $0 { bootstrap | start | stop | create | delete | provisioning }"
 ;;
 esac
 exit 0
