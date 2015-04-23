@@ -2263,10 +2263,53 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
-lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
-echo "" # dummy
+CHECKBRIDGE1=$(ifconfig | grep -c "vswitch0")
+if [ "$CHECKBRIDGE1" = "0" ]; then
+   ### ### ### ### ### ### ### ### ###
+   echo "" # printf
+   printf "\033[1;31mCan't find the Bridge Zones, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+   ### ### ### ### ### ### ### ### ###
+fi
 
+CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
+if [ "$CHECKLXCCONTAINER" = "3" ]; then
+   : # dummy
+else
+   ### ### ### ### ### ### ### ### ###
+   echo "" # printf
+   printf "\033[1;31mCan't find all nessessary default lxc container, delete the 'managed|deb7template|deb8template' lxc and execute the 'bootstrap' command again\033[0m\n"
+   exit 1
+   ### ### ### ### ### ### ### ### ###
+fi
 
+### PROVISIONING // ###
+
+while getopts ":n:h:p:s:" opt; do
+  case "$opt" in
+    n) name=$OPTARG ;;
+    h) hooks=$OPTARG ;;
+    p) port=$OPTARG ;;
+    s) start=$OPTARG ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
+
+#/ show usage
+if [ -z "$name" ]; then
+   echo "" # dummy
+   echo "usage:   ./lxc-to-go.sh provisioning -n {name} -h {hooks} -p {port} -s {start}"
+   echo "example: -n example -h yes -p 60000 -s yes"
+   exit 1
+fi
+
+#/ check name
+cname="$(echo "$name" | sed -e 's/[^[:alnum:]]//g')"
+if [ "$cname" != "$name" ] ; then
+    echo "string -name '"$name"' has characters which are not alphanumeric"
+fi
+
+### // PROVISIONING ###
 
 ### ### ###
 echo ""
