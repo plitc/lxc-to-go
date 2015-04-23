@@ -131,8 +131,8 @@ if [ "$cname" != "$name" ] ; then
 fi
 
 #/ check hooks - argument
-chooks="$(echo "$hooks" | sed -e 's/yes//g' -e 's/no//g')"
-if [ "$chooks" != "$hooks" ] ; then
+chooks="$(echo "$hooks" | sed 's/yes//g' | sed 's/no//g')"
+if [ -z "$chooks" ] ; then
    echo "" # dummy
    echo "[ERROR] choose for hooks argument (yes/no)"
    exit 1
