@@ -198,6 +198,10 @@ Errata
 ======
 * 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed
 ```
+  locale: Cannot set LC_CTYPE to default locale: No such file or directory
+  locale: Cannot set LC_MESSAGES to default locale: No such file or directory
+  locale: Cannot set LC_ALL to default locale: No such file or directory
+
   The following packages have unmet dependencies:
    locales : Depends: glibc-2.13-1
              Depends: debconf (>= 0.5) but it is not going to be installed or

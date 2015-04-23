@@ -238,7 +238,10 @@ deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib no
 # EOF
 CHECKDEB7JESSIELXCFILE
 
-mv -f /etc/apt/apt.conf /etc/apt/apt.conf_lxc-to-go_BK
+CHECKDEB7APTFILE="/etc/apt/apt.conf"
+if [ -e "$CHECKDEB7APTFILE" ]; then
+   mv -f /etc/apt/apt.conf /etc/apt/apt.conf_lxc-to-go_BK
+fi
 
 ### APT Pinning // ###
 #
