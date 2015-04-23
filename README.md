@@ -32,6 +32,8 @@ Dependencies
    * systemd-sysv
    * iputils-ping
    * traceroute
+   * dnsutils
+   * mtr-tiny
    * isc-dhcp-server
    * unbound
    * radvd

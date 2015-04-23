@@ -1548,8 +1548,8 @@ fi
 
 ### ### ###
 
-### network tools
-
+### network debug tools // ###
+#
 CHECKMANAGEDIPUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "iputils-ping")
 if [ "$CHECKMANAGEDIPUTILS" = "1" ]; then
    : # dummy
@@ -1563,6 +1563,22 @@ if [ "$CHECKMANAGEDTRACEROUTE" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install traceroute
 fi
+
+CHECKMANAGEDDNSUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "dnsutils")
+if [ "$CHECKMANAGEDDNSUTILS" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install dnsutils
+fi
+
+CHECKMANAGEDMTRTINY=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "mtr-tiny")
+if [ "$CHECKMANAGEDMTRTINY" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install mtr-tiny
+fi
+#
+### // network debug tools ###
 
 ### ### ###
 
