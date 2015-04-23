@@ -98,7 +98,7 @@ Usage
 ```
     WARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
-    # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete }
+    # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete | provisioning }
 ```
 
 Example
