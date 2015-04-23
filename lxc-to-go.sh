@@ -1671,7 +1671,7 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc)
+CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
@@ -1764,7 +1764,7 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc)
+CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
@@ -1836,7 +1836,7 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc)
+CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
@@ -2038,7 +2038,7 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc)
+CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
@@ -2136,7 +2136,7 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc)
+CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
