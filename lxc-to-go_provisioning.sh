@@ -172,7 +172,7 @@ fi
 
 #/ check start - argument
 cstart="$(echo "$start" | sed 's/yes//g' | sed 's/no//g')"
-if [ -z "$start" ] ; then
+if [ -z "$cstart" ] ; then
    : # dummy
 else
    echo "" # dummy
