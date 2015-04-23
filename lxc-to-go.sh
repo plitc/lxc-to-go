@@ -532,8 +532,9 @@ CHECKBOOTSTRAPINSTALL1="/etc/lxc-to-go/INSTALLED"
 if [ -e "$CHECKBOOTSTRAPINSTALL1" ]; then
    : # dummy
 else
-   echo '[ERROR] previous "managed" lxc container bootstrap goes wrong'
-   : # dummy
+   #/ echo '[ERROR] previous "managed" lxc container bootstrap goes wrong'
+   printf "\033[1;31m[ERROR] previous managed lxc container bootstrap goes wrong\033[0m\n"
+   echo "" # dummy
    read -p "Do you wish to remove and cleanup the corrupt lxc-to-go environment and start again ? (y/n) " BOOTSTRAPCLEAN
    if [ "$BOOTSTRAPCLEAN" = "y" ]; then
       rm -f /etc/lxc-to-go/INSTALLED
