@@ -327,6 +327,7 @@ else
       exit 1
    fi
    : # dummy
+   touch /etc/lxc-to-go/STAGE1
    echo "" # dummy
    printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
    exit 0
@@ -337,6 +338,7 @@ if [ "$CHECKGRUB2" = "1" ]; then
    : # dummy
 else
    : # dummy
+   touch /etc/lxc-to-go/STAGE1
    echo "" # dummy
    printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
    exit 0
@@ -528,23 +530,28 @@ sleep 1; : # dummy
 
 ### NEW 'managed' lxc bootstrap // ###
 #
-CHECKBOOTSTRAPINSTALL1="/etc/lxc-to-go/INSTALLED"
-if [ -e "$CHECKBOOTSTRAPINSTALL1" ]; then
-   : # dummy
+CHECKBOOTSTRAPINSTALL0="/etc/lxc-to-go/STAGE1"
+if [ -e "$CHECKBOOTSTRAPINSTALL0" ]; then
+   rm -f /etc/lxc-to-go/STAGE1
 else
-   #/ echo '[ERROR] previous "managed" lxc container bootstrap goes wrong'
-   printf "\033[1;31m[ERROR] previous managed lxc container bootstrap goes wrong\033[0m\n"
-   echo "" # dummy
-   read -p "Do you wish to remove and cleanup the corrupt lxc-to-go environment and start again ? (y/n) " BOOTSTRAPCLEAN
-   if [ "$BOOTSTRAPCLEAN" = "y" ]; then
-      rm -f /etc/lxc-to-go/INSTALLED
-      lxc-stop -n managed -k
-      lxc-destroy -n managed
-      lxc-destroy -n deb7template
-      lxc-destroy -n deb8template
+   CHECKBOOTSTRAPINSTALL1="/etc/lxc-to-go/INSTALLED"
+   if [ -e "$CHECKBOOTSTRAPINSTALL1" ]; then
+      : # dummy
+   else
+      #/ echo '[ERROR] previous "managed" lxc container bootstrap goes wrong'
+      printf "\033[1;31m[ERROR] previous managed lxc container bootstrap goes wrong\033[0m\n"
+      echo "" # dummy
+      read -p "Do you wish to remove and cleanup the corrupt lxc-to-go environment and start again ? (y/n) " BOOTSTRAPCLEAN
+      if [ "$BOOTSTRAPCLEAN" = "y" ]; then
+         rm -f /etc/lxc-to-go/INSTALLED
+         lxc-stop -n managed -k
+         lxc-destroy -n managed
+         lxc-destroy -n deb7template
+         lxc-destroy -n deb8template
+      fi
+      sleep 1
+      echo "" # dummy
    fi
-   sleep 1
-   echo "" # dummy
 fi
 #
 ### // NEW 'managed' lxc bootstrap ###
