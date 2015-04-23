@@ -151,7 +151,7 @@ fi
 #/ check port - empty argument
 if [ -z "$port" ]; then
    echo "" # dummy
-   echo "[ERROR] choose a port number or alternative use 'lxc-to-got create'"
+   echo "[ERROR] choose a port number or alternative use 'lxc-to-go create'"
    exit 1
 fi
 
