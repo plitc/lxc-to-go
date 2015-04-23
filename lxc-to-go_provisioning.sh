@@ -133,6 +133,8 @@ fi
 #/ check hooks - argument
 chooks="$(echo "$hooks" | sed 's/yes//g' | sed 's/no//g')"
 if [ -z "$chooks" ] ; then
+   : # dummy
+else
    echo "" # dummy
    echo "[ERROR] choose for hooks argument (yes/no)"
    exit 1
