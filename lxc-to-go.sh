@@ -526,6 +526,20 @@ fi
 sleep 1; : # dummy
 ### ### ###
 
+### NEW 'managed' lxc bootstrap // ###
+#
+CHECKBOOTSTRAPINSTALL1="/etc/lxc-to-go/INSTALLED"
+if [ -z "$CHECKBOOTSTRAPINSTALL1" ]; then
+   echo '[ERROR] previous "managed" lxc container bootstrap goes wrong'
+   : # dummy
+   read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
+   if [ "$LXCMANAGEDREMOVE" = "y" ]; then
+      lxc-destroy -n managed
+   fi
+fi
+#
+### // NEW 'managed' lxc bootstrap ###
+
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
 if [ "$CHECKLXCMANAGED" = "1" ]; then
     : # dummy
@@ -1507,6 +1521,13 @@ interface eth1
 # EOF
 CHECKMANAGEDIPV6CONFIGFILE
    lxc-attach -n managed -- service radvd restart
+
+### bootstrap finished file // ###
+#
+touch /etc/lxc-to-go/INSTALLED
+#
+### // bootstrap finished file ###
+
 fi
 
 ### ### ###
