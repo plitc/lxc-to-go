@@ -125,8 +125,9 @@ fi
 #/ check name - alphanumeric
 cname="$(echo "$name" | sed -e 's/[^[:alnum:]]//g')"
 if [ "$cname" != "$name" ] ; then
-    echo "[ERROR] string -name '"$name"' has characters which are not alphanumeric"
-    exit 1
+   echo "" # dummy
+   echo "[ERROR] string -name '"$name"' has characters which are not alphanumeric"
+   exit 1
 fi
 
 ### // PROVISIONING ###
