@@ -104,9 +104,10 @@ fi
 
 ### PROVISIONING // ###
 
-while getopts ":n:h:p:s:" opt; do
+while getopts ":n:t:h:p:s:" opt; do
   case "$opt" in
     n) name=$OPTARG ;;
+    t) template=$OPTARG ;;
     h) hooks=$OPTARG ;;
     p) port=$OPTARG ;;
     s) start=$OPTARG ;;
@@ -117,8 +118,8 @@ shift $(( OPTIND - 1 ))
 #/ show usage
 if [ -z "$name" ]; then
    echo "" # dummy
-   echo "usage:   ./lxc-to-go_provisioning.sh -n {name} -h {hooks} -p {port} -s {start}"
-   echo "example: -n example -h yes -p 60000 -s yes"
+   echo "usage:   ./lxc-to-go_provisioning.sh -n {name} -t {template} -h {hooks} -p {port} -s {start}"
+   echo "example: -n example -t deb8 -h yes -p 60000 -s yes"
    exit 0
 fi
 
@@ -130,6 +131,22 @@ if [ "$cname" != "$name" ] ; then
    exit 1
 fi
 
+#/ check template - empty argument
+if [ -z "$template" ]; then
+   echo "" # dummy
+   echo "[ERROR] choose for template argument (deb7/deb8)"
+   exit 1
+fi
+
+#/ check template - argument
+ctemplate="$(echo "$template" | sed 's/deb7//g' | sed 's/deb8//g')"
+if [ -z "$ctemplate" ] ; then
+   : # dummy
+else
+   echo "" # dummy
+   echo "[ERROR] choose for template argument (deb7/deb8)"
+   exit 1
+fi
 
 #/ check hooks - empty argument
 if [ -z "$hooks" ]; then
@@ -179,6 +196,29 @@ else
    echo "[ERROR] choose for start argument (yes/no)"
    exit 1
 fi
+
+### create // ###
+
+CHECKLXCEXIST=$(lxc-ls | grep -c "$name")
+if [ "$CHECKLXCEXIST" = "1" ]; then
+   echo "" # dummy
+   echo "[ERROR] lxc already exists!"
+   exit 1
+fi
+
+###
+
+if [ "$template" = "deb7" ]; then
+   lxc-clone -o deb7template -n "$name"
+fi
+
+if [ "$template" = "deb8" ]; then
+   lxc-clone -o deb8template -n "$name"
+fi
+
+
+
+### create // ###
 
 
 
