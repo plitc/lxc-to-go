@@ -277,7 +277,7 @@ if [ "$start" = "yes" ]; then
    screen -d -m -S "$name" -- lxc-start -n "$name"
    echo ""
    echo "... starting screen session ..."
-   sleep 1
+   sleep 2
    screen -list | grep "$name"
    echo ""
    if [ "$hooks" = "yes" ]; then
@@ -295,13 +295,18 @@ if [ "$start" = "yes" ]; then
          echo "" # dummy
       ###
       unset LXCCREATENAME
-      echo "$name : $port" >> /etc/lxc-to-go/portforwarding.conf
+   fi
 ### FORWARDING // ###
+#
+   echo "$name : $port" >> /etc/lxc-to-go/portforwarding.conf
 #
 CHECKFORWARDING=$(grep -s "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
 if [ -z "$CHECKFORWARDING" ]; then
    : # dummy
 else
+   echo "" # dummy
+   echo "---> activate FORWARDING"
+   sleep 5
    GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
    if [ -z "$GETIPV4" ]; then
       echo "[ERROR] Can't get IPv4 Address"
@@ -321,7 +326,6 @@ else
 fi
 #
 ### // FORWARDING ###
-   fi
 fi
 #
 ### // start ###
