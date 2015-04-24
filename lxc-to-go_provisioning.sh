@@ -181,6 +181,14 @@ if [ "$cport" != "$port" ] ; then
    exit 1
 fi
 
+#/ check port - length
+cportlength=$(echo -n "$port" | wc -c)
+if [ "$cportlength" -gt 5 ]; then
+   echo "" # dummy
+   echo "[ERROR] port number too high"
+   exit 1
+fi
+
 CHECKPORTRESERVATION=$(grep -sc "$port" /etc/lxc-to-go/portforwarding.conf)
 if [ "$CHECKPORTRESERVATION" = "1" ]; then
    echo "" # dummy
