@@ -229,7 +229,7 @@ if [ "$template" = "deb7" ]; then
       exit 1
    fi
       sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
-      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$name"'/' /var/lib/lxc/"$name"/config
+      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = "$name"/' /var/lib/lxc/"$name"/config
       sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
       echo "$name" > /var/lib/lxc/"$name"/rootfs/etc/hostname
@@ -247,7 +247,7 @@ if [ "$template" = "deb8" ]; then
       exit 1
    fi
       sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
-      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$name"'/' /var/lib/lxc/"$name"/config
+      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = "$name"/' /var/lib/lxc/"$name"/config
       sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
       echo "$name" > /var/lib/lxc/"$name"/rootfs/etc/hostname
