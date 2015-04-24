@@ -290,7 +290,7 @@ CHECKDEB7PREFERENCESFILE
    apt-get -y autoclean
    apt-get -y clean
    apt-get -y update
-      apt-get -y install --reinstall -t jessie lxc
+      apt-get -y install --no-install-recommends --reinstall -t jessie lxc
    fi
 fi
 ### // Wheezy - Jessie LXC ###
