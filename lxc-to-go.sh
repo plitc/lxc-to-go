@@ -196,6 +196,10 @@ CHECKDEB7WHEEZYBACKPORTSFILE
             apt-get -y autoclean
             apt-get -y clean
             apt-get -y update
+### Deb7 DIST-UPGRADE // ###
+            apt-get -y upgrade
+            apt-get -y dist-upgrade
+### // Deb7 DIST-UPGRADE ###
             CHECKDEB7ARCH=$(arch)
             if [ "$CHECKDEB7ARCH" = "686" ]; then
                apt-get -y install initramfs-tools=0.115*
@@ -1838,6 +1842,12 @@ echo "" # dummy
 echo "... LXC Container (screen sessions): ..."
 lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -list | grep "%"; }'
 ### ### ###
+
+### FORWARDING // ###
+#
+echo "" # dummy
+#
+### // FORWARDING ###
 
 ### ### ###
 echo "" # printf
