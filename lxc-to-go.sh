@@ -72,6 +72,29 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+### WARNING // ###
+#
+if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+   printf "\033[1;31mWARNING: lxc-to-go for wheezy is highly experimental and its not ready for production. Do it at your own risk.\033[0m\n"
+      read -p "continue: (yes/no) ? " WARNINGDEB7
+      if [ "$WARNINGDEB7" = "yes" ]; then
+         : # dummy
+      fi
+      if [ "$WARNINGDEB7" = "no" ]; then
+         echo "" # dummy
+         echo "[ABORT]"
+         exit 1
+      fi
+      if [ -z "$WARNINGDEB7" ]; then
+         echo "" # dummy
+         echo "[ABORT]"
+         exit 1
+      fi
+fi
+#
+### // WARNING ###
+
 mkdir -p /etc/lxc-to-go
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
