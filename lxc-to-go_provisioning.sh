@@ -330,7 +330,7 @@ CHECKFORWARDING=$(grep -s "$name" /etc/lxc-to-go/portforwarding.conf | awk '{pri
 if [ -z "$CHECKFORWARDING" ]; then
    : # dummy
 else
-   if [ "$hooks" = "yes" ]; then
+   if [ "$start" = "yes" -o "$hooks" = "yes" ]; then
       echo "" # dummy
       echo "... activate FORWARDING ..."
       sleep 5
