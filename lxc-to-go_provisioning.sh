@@ -185,7 +185,14 @@ fi
 cportlength=$(echo -n "$port" | wc -c)
 if [ "$cportlength" -gt 5 ]; then
    echo "" # dummy
-   echo "[ERROR] port number too high"
+   echo "[ERROR] port number (up to 5 numbers) too long"
+   exit 1
+fi
+
+#/ check port - high
+if [ "$port" -gt 65535 ]; then
+   echo "" # dummy
+   echo "[ERROR] port number too high (1-65535 are available, and ports in range 1-1023 are the privileged ones)"
    exit 1
 fi
 
