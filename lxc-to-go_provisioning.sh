@@ -305,7 +305,7 @@ if [ -z "$CHECKFORWARDING" ]; then
    : # dummy
 else
    echo "" # dummy
-   echo "---> activate FORWARDING"
+   echo "... activate FORWARDING ..."
    sleep 5
    GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
    if [ -z "$GETIPV4" ]; then
