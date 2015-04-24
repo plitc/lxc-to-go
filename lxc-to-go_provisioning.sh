@@ -272,14 +272,13 @@ fi
 ### // cleanup ###
 
 ### start // ###
-#
 if [ "$start" = "yes" ]; then
    screen -d -m -S "$name" -- lxc-start -n "$name"
-   echo ""
+   echo "" # dummy
    echo "... starting screen session ..."
    sleep 2
    screen -list | grep "$name"
-   echo ""
+   echo "" # dummy
    if [ "$hooks" = "yes" ]; then
       LXCCREATENAME="$name"
       export LXCCREATENAME
@@ -296,6 +295,33 @@ if [ "$start" = "yes" ]; then
       ###
       unset LXCCREATENAME
    fi
+fi
+if [ "$start" = "no" ]; then
+   if [ "$hooks" = "yes" ]; then
+   screen -d -m -S "$name" -- lxc-start -n "$name"
+   echo "" # dummy
+   echo "... starting screen session ..."
+   sleep 2
+   screen -list | grep "$name"
+   echo "" # dummy
+      LXCCREATENAME="$name"
+      export LXCCREATENAME
+      : # dummy
+      echo "" # dummy
+      echo "... please wait 15 seconds ..."
+      sleep 15
+      echo "" # dummy
+      : # dummy
+      ###
+         echo "" # dummy
+            ./hooks/hook_provisioning.sh
+         echo "" # dummy
+      ###
+      unset LXCCREATENAME
+   fi
+fi
+### start // ###
+
 ### FORWARDING // ###
 #
    echo "$name : $port" >> /etc/lxc-to-go/portforwarding.conf
@@ -304,31 +330,30 @@ CHECKFORWARDING=$(grep -s "$name" /etc/lxc-to-go/portforwarding.conf | awk '{pri
 if [ -z "$CHECKFORWARDING" ]; then
    : # dummy
 else
-   echo "" # dummy
-   echo "... activate FORWARDING ..."
-   sleep 5
-   GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-   if [ -z "$GETIPV4" ]; then
-      echo "[ERROR] Can't get IPv4 Address"
-         lxc-stop -n "$name" -k
-         lxc-destroy -n "$name"
-      exit 1
-   else
-      # iptables - managed
-      lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
-      lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
-      if [ "$CHECKENVIRONMENT" = "server" ]; then
-         # iptables - host
-         iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
-         iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+   if [ "$hooks" = "yes" ]; then
+      echo "" # dummy
+      echo "... activate FORWARDING ..."
+      sleep 5
+      GETIPV4=$(lxc-attach -n "$name" -- ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+      if [ -z "$GETIPV4" ]; then
+         echo "[ERROR] Can't get IPv4 Address"
+            lxc-stop -n "$name" -k
+            lxc-destroy -n "$name"
+         exit 1
+      else
+         # iptables - managed
+         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+         if [ "$CHECKENVIRONMENT" = "server" ]; then
+            # iptables - host
+            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+            iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+         fi
       fi
    fi
 fi
 #
 ### // FORWARDING ###
-fi
-#
-### // start ###
 
 ### // PROVISIONING ###
 
