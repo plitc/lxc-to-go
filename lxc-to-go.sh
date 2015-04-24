@@ -2077,7 +2077,7 @@ case $LXCCREATETEMPLATE in
          exit 1
       fi
       sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = $LXCNAME/' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
       sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
@@ -2096,7 +2096,7 @@ case $LXCCREATETEMPLATE in
          exit 1
       fi
       sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = $LXCNAME/' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
       sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
