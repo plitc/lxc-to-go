@@ -76,7 +76,9 @@ fi
 #
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
-   printf "\033[1;31mWARNING: lxc-to-go for wheezy is highly experimental and its not ready for production. Do it at your own risk.\033[0m\n"
+   CHECKLXCINSTALL0=$(/usr/bin/which lxc-checkconfig)
+   if [ -z "$CHECKLXCINSTALL0" ]; then
+      printf "\033[1;31mWARNING: lxc-to-go for wheezy is highly experimental and its not ready for production. Do it at your own risk.\033[0m\n"
       read -p "continue: (yes/no) ? " WARNINGDEB7
       if [ "$WARNINGDEB7" = "yes" ]; then
          : # dummy
@@ -91,6 +93,7 @@ if [ "$DEBVERSION" = "7" ]; then
          echo "[ABORT]"
          exit 1
       fi
+   fi
 fi
 #
 ### // WARNING ###
@@ -1789,8 +1792,8 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
-if [ -z "$CHECKLXCINSTALL" ]; then
+CHECKLXCINSTALL1=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL1" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
@@ -1889,8 +1892,8 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
-if [ -z "$CHECKLXCINSTALL" ]; then
+CHECKLXCINSTALL2=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL2" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
@@ -1968,8 +1971,8 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
-if [ -z "$CHECKLXCINSTALL" ]; then
+CHECKLXCINSTALL3=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL3" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
@@ -2170,8 +2173,8 @@ else
    exit 1
    fi
 fi
-CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
-if [ -z "$CHECKLXCINSTALL" ]; then
+CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL4" ]; then
    echo "" # dummy
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
