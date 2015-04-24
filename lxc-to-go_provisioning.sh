@@ -120,6 +120,7 @@ if [ -z "$name" ]; then
    echo "" # dummy
    echo "usage:   ./lxc-to-go_provisioning.sh -n {name} -t {template} -h {hooks} -p {port} -s {start}"
    echo "example: -n example -t deb8 -h yes -p 60000 -s yes"
+   echo "" # dummy
    exit 0
 fi
 

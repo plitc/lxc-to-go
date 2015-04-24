@@ -1846,6 +1846,32 @@ lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ 
 ### FORWARDING // ###
 #
 echo "" # dummy
+sleep 5
+CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
+if [ -e "$CHECKFORWARDINGFILE" ]; then
+   # ipv4
+   lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/lxc.ipv4.running.tmp
+   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/lxc.ipv4.running.list.tmp
+   GETFORWARDINGPORT=$(cat /etc/lxc-to-go/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/ /:/')
+
+
+cat /etc/lxc-to-go/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/ /:/'
+
+
+
+
+
+
+         # iptables - managed
+         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+         if [ "$CHECKENVIRONMENT" = "server" ]; then
+            # iptables - host
+            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+            iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port"
+         fi
+
+fi
 #
 ### // FORWARDING ###
 
