@@ -782,6 +782,7 @@ lxc.network.flags=up
 lxc.network.ipv4 = 192.168.253.254/24
 lxc.network.ipv4.gateway = 192.168.253.253
 lxc.network.ipv6 = fd00:aaaa:0253::254/64
+lxc.network.ipv6.gateway = fd00:aaaa:0253::253
 ###
 
 # vswitch1 / intern
