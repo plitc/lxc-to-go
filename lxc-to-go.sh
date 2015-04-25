@@ -42,9 +42,9 @@ case "$1" in
 case $DEBIAN in
 debian)
 ### stage2 // ###
-
-### // stage2 ###
 #
+### // stage2 ###
+
 ### stage3 // ###
 if [ "$MYNAME" = "root" ]; then
    : # dummy
@@ -66,14 +66,11 @@ else
    exit 1
    fi
 fi
-
-#
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###
 
 ### WARNING // ###
-#
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
    CHECKLXCINSTALL0=$(/usr/bin/which lxc-checkconfig)
@@ -95,82 +92,83 @@ if [ "$DEBVERSION" = "7" ]; then
       fi
    fi
 fi
-#
 ### // WARNING ###
 
 mkdir -p /etc/lxc-to-go
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
-         read -p "Choose your Environment: (desktop/server) ? " ENVIRONMENTVALUE
-         if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
-            echo "ENVIRONMENT=desktop" > /etc/lxc-to-go/lxc-to-go.conf
-         fi
-         if [ "$ENVIRONMENTVALUE" = "server" ]; then
-            echo "ENVIRONMENT=server" > /etc/lxc-to-go/lxc-to-go.conf
-         fi
-         if [ -z "$ENVIRONMENTVALUE" ]; then
-            echo "[ERROR] choose an environment"
-            exit 1
-         fi
+   read -p "Choose your Environment: (desktop/server) ? " ENVIRONMENTVALUE
+   if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
+   echo "ENVIRONMENT=desktop" > /etc/lxc-to-go/lxc-to-go.conf
+   fi
+   if [ "$ENVIRONMENTVALUE" = "server" ]; then
+      echo "ENVIRONMENT=server" > /etc/lxc-to-go/lxc-to-go.conf
+   fi
+   if [ -z "$ENVIRONMENTVALUE" ]; then
+      echo "[ERROR] choose an environment"
+      exit 1
+   fi
 fi
+
 GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
-    echo "<--- --- --->"
-    echo "need screen"
-    echo "<--- --- --->"
-    apt-get update
-    apt-get -y install screen
-    echo "<--- --- --->"
+   echo "<--- --- --->"
+   echo "need screen"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install screen
+   echo "<--- --- --->"
 fi
 
 LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
 if [ -z "$LXC" ]; then
-    echo "<--- --- --->"
-    echo "need lxc"
-    echo "<--- --- --->"
-    apt-get update
-    apt-get -y install lxc
-    echo "<--- --- --->"
+   echo "<--- --- --->"
+   echo "need lxc"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install lxc
+   echo "<--- --- --->"
 fi
 
 BRIDGEUTILS=$(/usr/bin/dpkg -l | grep bridge-utils | awk '{print $2}')
 if [ -z "$BRIDGEUTILS" ]; then
-    echo "<--- --- --->"
-    echo "need bridge-utils"
-    echo "<--- --- --->"
-    apt-get update
-    apt-get -y install bridge-utils
-    echo "<--- --- --->"
+   echo "<--- --- --->"
+   echo "need bridge-utils"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install bridge-utils
+   echo "<--- --- --->"
 fi
 
 NETTOOLS=$(/usr/bin/dpkg -l | grep net-tools | awk '{print $2}')
 if [ -z "$NETTOOLS" ]; then
-    echo "<--- --- --->"
-    echo "need net-tools"
-    echo "<--- --- --->"
-    apt-get update
-    apt-get -y install net-tools
-    echo "<--- --- --->"
+   echo "<--- --- --->"
+   echo "need net-tools"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install net-tools
+   echo "<--- --- --->"
 fi
 
 sleep 1
-    : # dummy
+
 CHECKCGROUP=$(mount | grep -c "cgroup")
 if [ "$CHECKCGROUP" = "1" ]; then
-    : # dummy
+   : # dummy
 else
-    mount cgroup -t cgroup /sys/fs/cgroup >/dev/null 2>&1
+   mount cgroup -t cgroup /sys/fs/cgroup >/dev/null 2>&1
 fi
-    lxc-checkconfig
-    if [ $? -eq 0 ]
-    then
-       : # dummy
-    else
-       echo "[ERROR] lxc-checkconfig failed!"
-       exit 1
-    fi
+lxc-checkconfig
+if [ $? -eq 0 ]
+then
+   : # dummy
+else
+    echo "[ERROR] lxc-checkconfig failed!"
+    exit 1
+fi
+
 sleep 1
 
 ### Wheezy KERNEL UPGRADE // ###
@@ -180,9 +178,9 @@ if [ "$DEBVERSION" = "7" ]; then
       CHECKDEB7KERNEL316=$(dpkg -l | grep -c "linux-headers-3.16")
       if [ "$CHECKDEB7KERNEL316" = "0" ]; then
          CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
-            if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
-               #/ echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
-               #/ echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
+         if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
+            #/ echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
+            #/ echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
 /bin/cat << CHECKDEB7WHEEZYBACKPORTSFILE > /etc/apt/sources.list.d/wheezy-backports.list
 ### ### ### lxc-to-go // ### ### ###
 
@@ -192,42 +190,41 @@ deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 CHECKDEB7WHEEZYBACKPORTSFILE
+         fi
+         apt-get -y autoclean
+         apt-get -y clean
+         apt-get -y update
+         ### Deb7 DIST-UPGRADE // ###
+         apt-get -y upgrade
+         apt-get -y dist-upgrade
+         ### // Deb7 DIST-UPGRADE ###
+         CHECKDEB7ARCH=$(arch)
+         if [ "$CHECKDEB7ARCH" = "686" ]; then
+            apt-get -y install initramfs-tools=0.115*
+            apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
+            apt-get -y install firmware-linux-nonfree
+            CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+            if [ "$CHECKDEB7VBOX" = "1" ]; then
+               apt-get -y install build-essential module-assistant
+               m-a prepare
+               apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
+               #/ apt-get -y install --reinstall virtualbox-guest-dkms
+               apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
             fi
-            apt-get -y autoclean
-            apt-get -y clean
-            apt-get -y update
-### Deb7 DIST-UPGRADE // ###
-            apt-get -y upgrade
-            apt-get -y dist-upgrade
-### // Deb7 DIST-UPGRADE ###
-            CHECKDEB7ARCH=$(arch)
-            if [ "$CHECKDEB7ARCH" = "686" ]; then
-               apt-get -y install initramfs-tools=0.115*
-               apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
-               apt-get -y install firmware-linux-nonfree
-               CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
-               if [ "$CHECKDEB7VBOX" = "1" ]; then
-                  apt-get -y install build-essential module-assistant
-                  m-a prepare
-                  apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
-                  #/ apt-get -y install --reinstall virtualbox-guest-dkms
-                  apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
-               fi
+         fi
+         if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
+            apt-get -y install initramfs-tools=0.115*
+            apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
+            apt-get -y install firmware-linux-nonfree
+            CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+            if [ "$CHECKDEB7VBOX" = "1" ]; then
+               apt-get -y install build-essential module-assistant
+               m-a prepare
+               apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
+               #/ apt-get -y install --reinstall virtualbox-guest-dkms
+               apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
             fi
-            if [ "$CHECKDEB7ARCH" = "x86_64" ]; then
-               apt-get -y install initramfs-tools=0.115*
-               apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
-               apt-get -y install firmware-linux-nonfree
-               CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
-               if [ "$CHECKDEB7VBOX" = "1" ]; then
-                  apt-get -y install build-essential module-assistant
-                  m-a prepare
-                  apt-get -y install --reinstall virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11 virtualbox-ose-guest-x11
-                  #/ apt-get -y install --reinstall virtualbox-guest-dkms
-                  apt-get -y install virtualbox-dkms -t wheezy-backports --no-install-recommends
-               fi
-            fi
-
+         fi
       fi
    fi
 fi
@@ -237,9 +234,7 @@ fi
 if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7JESSIELXC=$(grep -r "jessie" /etc/apt/sources.list* | grep -c "jessie")
    if [ "$CHECKDEB7JESSIELXC" = "0" ]; then
-
-mv -f /etc/apt/sources.list /etc/apt/sources.list_lxc-to-go_BK
-
+      mv -f /etc/apt/sources.list /etc/apt/sources.list_lxc-to-go_BK
 /bin/cat << CHECKDEB7WHEEZYFILE > /etc/apt/sources.list.d/wheezy.list
 ### ### ### lxc-to-go // ### ### ###
 deb http://ftp.de.debian.org/debian/ wheezy main contrib non-free
@@ -268,13 +263,11 @@ deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib no
 # EOF
 CHECKDEB7JESSIELXCFILE
 
-### // APT File ###
-#
-   CHECKDEB7APTCONF="/etc/apt/apt.conf"
-   if [ -e "$CHECKDEB7APTCONF" ]; then
-      mv -f /etc/apt/apt.conf /etc/apt/apt.conf_lxc-to-go_BK
-   fi
-
+      ### APT File // ###
+      CHECKDEB7APTCONF="/etc/apt/apt.conf"
+      if [ -e "$CHECKDEB7APTCONF" ]; then
+         mv -f /etc/apt/apt.conf /etc/apt/apt.conf_lxc-to-go_BK
+      fi
 /bin/cat << CHECKDEB7APTFILE > /etc/apt/apt.conf
 ### ### ### lxc-to-go // ### ### ###
 
@@ -283,11 +276,9 @@ APT::Default-Release "wheezy";
 ### ### ### // lxc-to-go  ### ### ###
 # EOF
 CHECKDEB7APTFILE
-#
-### // APT File ###
+      ### // APT File ###
 
-### APT Pinning // ###
-#
+      ### APT Pinning // ###
 /bin/cat << CHECKDEB7PREFERENCESFILE > /etc/apt/preferences
 ### ### ### lxc-to-go // ### ### ###
 
@@ -314,18 +305,17 @@ Pin-Priority: 999
 ### ### ### // lxc-to-go  ### ### ###
 # EOF
 CHECKDEB7PREFERENCESFILE
-#
-### // APT Pinning ###
+      ### // APT Pinning ###
 
-   apt-get -y autoclean
-   apt-get -y clean
-   apt-get -y update
+      apt-get -y autoclean
+      apt-get -y clean
+      apt-get -y update
       apt-get -y install --no-install-recommends --reinstall -t jessie lxc
    fi
 fi
 ### // Wheezy - Jessie LXC ###
 
-## modify grub
+##/ modify grub
 
 CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
 if [ "$CHECKGRUB1" = "1" ]; then
@@ -374,9 +364,7 @@ else
    exit 0
 fi
 
-### ### ###
-
-### check ip_tables/ip6_tables kernel module
+##/ check ip_tables/ip6_tables kernel module
 
 CHECKIPTABLES=$(lsmod | awk '{print $1}' | grep -c "ip_tables")
 if [ "$CHECKIPTABLES" = "1" ]; then
@@ -391,8 +379,6 @@ if [ "$CHECKIP6TABLES" = "1" ]; then
 else
     modprobe ip6_tables
 fi
-
-### ### ###
 
 CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
 if [ "$CREATEBRIDGE0" = "1" ]; then
@@ -448,110 +434,146 @@ else
       ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
    ### // NAT ###
    fi
-###
-   if [ "$GETENVIRONMENT" = "desktop" ]; then
-      : # dummy
-      #/ dhclient vswitch0
-### ### ###
-#
-### NEW IP - Desktop Environment // ###
-#/ ipv4
-      #/ killall dhclient
-      if [ -e "$UDEVNET" ]; then
-         #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
-         #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
-         if [ "$DEBVERSION" = "7" ]; then
-            pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         if [ "$DEBVERSION" = "8" ]; then
-            ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         ip addr flush "$GETBRIDGEPORT0"
-         echo "" # dummy
-         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
-      else
-         #/ dhclient eth0 >/dev/null 2>&1
-         #/ route del default dev eth0 >/dev/null 2>&1
-         if [ "$DEBVERSION" = "7" ]; then
-            pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         if [ "$DEBVERSION" = "8" ]; then
-            ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         ip addr flush eth0
-         echo "" # dummy
-         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
-      fi
-      dhclient vswitch0 >/dev/null 2>&1
-### fix //
-CHECKGETIPV4DEFAULTGATEWAY3=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
-if [ "$CHECKGETIPV4DEFAULTGATEWAY3" = "2" ]; then
-   route del default
 fi
-### // fix
-#/ ipv6
-      if [ -e "$UDEVNET" ]; then
-         #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
-         ip -6 route del ::/0 >/dev/null 2>&1
-         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
-      else
-         #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
-         ip -6 route del ::/0 >/dev/null 2>&1
-         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
-      fi
+
 ### NEW IP - Desktop Environment // ###
-#
-### ### ###
+if [ "$GETENVIRONMENT" = "desktop" ]; then
+   : # dummy
+   #/ ipv4
+   #/ killall dhclient
+   if [ -e "$UDEVNET" ]; then
+      #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
+      #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+      if [ "$DEBVERSION" = "7" ]; then
+         pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      if [ "$DEBVERSION" = "8" ]; then
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      ip addr flush "$GETBRIDGEPORT0"
+      echo "" # dummy
+      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
+   else
+      #/ dhclient eth0 >/dev/null 2>&1
+      #/ route del default dev eth0 >/dev/null 2>&1
+      if [ "$DEBVERSION" = "7" ]; then
+         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      if [ "$DEBVERSION" = "8" ]; then
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      ip addr flush eth0
+      echo "" # dummy
+      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
    fi
-   if [ "$GETENVIRONMENT" = "server" ]; then
-      : # dummy
-### ### ###
-netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
-chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
+   dhclient vswitch0 >/dev/null 2>&1
+   ### fix //
+   CHECKGETIPV4DEFAULTGATEWAY3=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+   if [ "$CHECKGETIPV4DEFAULTGATEWAY3" = "2" ]; then
+      route del default
+   fi
+   ### // fix
+   #/ ipv6
+   if [ -e "$UDEVNET" ]; then
+      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      ip -6 route del ::/0 >/dev/null 2>&1
+      echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+   else
+      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      ip -6 route del ::/0 >/dev/null 2>&1
+      echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+   fi
+   #/ container
+   #/ lxc-attach -n managed -- pkill dhclient
+   lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
+   lxc-attach -n managed -- ip addr flush eth0 >/dev/null 2>&1
+   lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
+   lxc-attach -n managed -- ip -6 route del ::/0 >/dev/null 2>&1
+   lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra
+   ### rc.local reload // ###
+   lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+   ### // rc.local reload ###
+fi
+### // NEW IP - Desktop Environment ###
+
+### NEW IP - Server Environment // ###
+if [ "$GETENVIRONMENT" = "server" ]; then
+   #/ ipv4
+   netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
+   chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
-   if [ "$GETENVIRONMENT" = "server" ]; then
-      ip addr add 192.168.253.253/24 dev vswitch0
-   fi
-### fix //
-CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
-if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
-   route del default
-fi
-### // fix
+      if [ "$GETENVIRONMENT" = "server" ]; then
+         ip addr add 192.168.253.253/24 dev vswitch0
+      fi
+      ### fix //
+      CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+      if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
+          route del default
+      fi
+      ### // fix
    else
       GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
       ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
+      if [ "$GETENVIRONMENT" = "server" ]; then
+         ip addr add 192.168.253.253/24 dev vswitch0
+      fi
+      ### fix //
+      CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+      if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
+         route del default
+      fi
+      ### // fix
+   fi
+   ### ### ###
+   #/ ipv6
    if [ "$GETENVIRONMENT" = "server" ]; then
-      ip addr add 192.168.253.253/24 dev vswitch0
+      netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I {} echo "IPV6DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV6GATEWAY.log
+      chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
+      if [ -e "$UDEVNET" ]; then
+         GETIPV6UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
+         ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0
+         if [ "$GETENVIRONMENT" = "server" ]; then
+            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0
+         fi
+         ### fix //
+         #
+         ### // fix
+      else
+         GETIPV6=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
+         ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0
+         if [ "$GETENVIRONMENT" = "server" ]; then
+            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0
+         fi
+         ### fix //
+         #
+         ### // fix
+      fi
+      ### ### ###
+      #/ container
+      ### rc.local reload // ###
+      lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+      ### // rc.local reload ###
    fi
-### fix //
-CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
-if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
-   route del default
 fi
-### // fix
-   fi
-### ### ###
-   fi
-###
-fi
+### // NEW IP - Server Environment ###
 
 ### ### ###
-sleep 1; : # dummy
+sleep 1
 ### ### ###
 
 ### NEW 'managed' lxc bootstrap // ###
-#
 CHECKBOOTSTRAPINSTALL0="/etc/lxc-to-go/STAGE1"
 if [ -e "$CHECKBOOTSTRAPINSTALL0" ]; then
    rm -f /etc/lxc-to-go/STAGE1
@@ -575,7 +597,6 @@ else
       echo "" # dummy
    fi
 fi
-#
 ### // NEW 'managed' lxc bootstrap ###
 
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
@@ -595,10 +616,6 @@ else
    fi
 fi
 
-### ### ###
-#/ sleep 1; : # dummy
-### ### ###
-
 CREATEBRIDGE1=$(ip a | grep -c "vswitch1:")
 if [ "$CREATEBRIDGE1" = "1" ]; then
     : # dummy
@@ -608,10 +625,6 @@ else
    sysctl -w net.ipv4.conf.vswitch1.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch1.forwarding=1 >/dev/null 2>&1
 fi
-
-### ### ###
-#/ sleep 1; : # dummy
-### ### ###
 
 touch /etc/lxc/fstab.empty
 
@@ -716,20 +729,18 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED1
-### ### ###
-#
-#/ if [ "$DEBVERSION" = "7" ]; then
-#/    sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
-#/    sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
-#/ fi
-#
-### randomized MAC address // ###
-RANDOM1=$(shuf -i 10-99 -n 1)
-RANDOM2=$(shuf -i 10-99 -n 1)
-sed -i 's/aa:bb:c0:0c:bb:aa/aa:bb:'"$RANDOM1"':'"$RANDOM2"':bb:aa/' /var/lib/lxc/managed/config
-### randomized MAC address // ###
-#
-### ### ###
+
+      #/ if [ "$DEBVERSION" = "7" ]; then
+      #/    sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
+      #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
+      #/ fi
+
+      ### randomized MAC address // ###
+      RANDOM1=$(shuf -i 10-99 -n 1)
+      RANDOM2=$(shuf -i 10-99 -n 1)
+      sed -i 's/aa:bb:c0:0c:bb:aa/aa:bb:'"$RANDOM1"':'"$RANDOM2"':bb:aa/' /var/lib/lxc/managed/config
+      ### // randomized MAC address ###
+
 /bin/cat << CHECKMANAGEDNETFILE1 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
 #
@@ -855,7 +866,7 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED2
-### ### ###
+
 /bin/cat << LXCCONFIGMANAGEDRESOLV > /var/lib/lxc/managed/rootfs/etc/resolv.conf
 ### ### ### lxc-to-go // ### ### ###
 domain privat.local
@@ -864,14 +875,12 @@ nameserver 74.82.42.42
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGEDRESOLV
-### ### ###
-#
-#/ if [ "$DEBVERSION" = "7" ]; then
-#/    sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
-#/    sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
-#/ fi
-#
-### ### ###
+
+      #/ if [ "$DEBVERSION" = "7" ]; then
+      #/    sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
+      #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
+      #/ fi
+
 /bin/cat << CHECKMANAGEDNETFILE2 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
 #
@@ -889,108 +898,98 @@ iface eth1 inet6 manual
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 CHECKMANAGEDNETFILE2
-### ### ###
    fi
 fi
-### ### ###
+
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
    : # dummy
 else
    echo "" # dummy
-if [ "$DEBVERSION" = "7" ]; then
-   lxc-clone -o managed -n deb7template
-else
-   lxc-clone -M -B dir -o managed -n deb7template
+   if [ "$DEBVERSION" = "7" ]; then
+      lxc-clone -o managed -n deb7template
+   else
+      lxc-clone -M -B dir -o managed -n deb7template
+   fi
+   sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
+   sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb7template/config
+   #/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb7template/config
+   sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb7template/config
+   sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
+   sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
+
+   #/ if [ "$DEBVERSION" = "7" ]; then
+   #/    sed -i '/lxc.autodev/d' /var/lib/lxc/deb7template/config
+   #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/deb7template/config
+   #/ fi
+
+   echo "" # dummy
+      ./hooks/hook_deb7.sh
+   echo "" # dummy
 fi
-### ### ###
-sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
-sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
-sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb7template/config
-sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb7template/config
-sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb7template/config
-sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb7template/config
-sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb7template/config
-#/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb7template/config
-sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb7template/config
-sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
-sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
-### ### ###
-#
-#/ if [ "$DEBVERSION" = "7" ]; then
-#/    sed -i '/lxc.autodev/d' /var/lib/lxc/deb7template/config
-#/    sed -i '/lxc.kmsg/d' /var/lib/lxc/deb7template/config
-#/ fi
-#
-### ### ###
-echo "" # dummy
-   ./hooks/hook_deb7.sh
-echo "" # dummy
-### ### ###
-fi
-### ### ###
 
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 
 if [ "$DEBVERSION" = "7" ]; then
 CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
 #/ CHECKMANAGED1=$(lxc-list | sed -e '/FROZEN/,+99d' | grep -c "managed") # lxc 0.8
-if [ "$CHECKMANAGED1" = "1" ]; then
-   echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
-else
-   echo "... LXC Container (screen session): managed starting ..."
-   screen -d -m -S managed -- lxc-start -n managed
-   sleep 1
-   screen -list | grep "managed"
-   ### ### ###
-   if [ "$GETENVIRONMENT" = "desktop" ]; then
-      : # dummy
-      echo "" # dummy
-      echo "... please wait 30 seconds ..."
-      sleep 30
-      echo "" # dummy
-      : # dummy
+   if [ "$CHECKMANAGED1" = "1" ]; then
+      echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
+   else
+      echo "... LXC Container (screen session): managed starting ..."
+      screen -d -m -S managed -- lxc-start -n managed
+      sleep 1
+      screen -list | grep "managed"
+      if [ "$GETENVIRONMENT" = "desktop" ]; then
+         : # dummy
+         echo "" # dummy
+         echo "... please wait 30 seconds ..."
+         sleep 30
+         echo "" # dummy
+         : # dummy
+      fi
+      if [ "$GETENVIRONMENT" = "server" ]; then
+         : # dummy
+         echo "" # dummy
+         echo "... please wait 15 seconds ..."
+         sleep 15
+         echo "" # dummy
+         : # dummy
+      fi
    fi
-   if [ "$GETENVIRONMENT" = "server" ]; then
-      : # dummy
-      echo "" # dummy
-      echo "... please wait 15 seconds ..."
-      sleep 15
-      echo "" # dummy
-      : # dummy
-   fi
-   ### ### ###
-fi
 fi
 
 if [ "$DEBVERSION" = "8" ]; then
 CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
-if [ "$CHECKMANAGED2" = "1" ]; then
-   echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
-else
-   echo "... LXC Container (screen session): managed starting ..."
-   screen -d -m -S managed -- lxc-start -n managed
-   sleep 1
-   screen -list | grep "managed"
-   ### ### ###
-   if [ "$GETENVIRONMENT" = "desktop" ]; then
-      : # dummy
-      echo "" # dummy
-      echo "... please wait 30 seconds ..."
-      sleep 30
-      echo "" # dummy
-      : # dummy
+   if [ "$CHECKMANAGED2" = "1" ]; then
+      echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
+   else
+      echo "... LXC Container (screen session): managed starting ..."
+      screen -d -m -S managed -- lxc-start -n managed
+      sleep 1
+      screen -list | grep "managed"
+      if [ "$GETENVIRONMENT" = "desktop" ]; then
+         : # dummy
+         echo "" # dummy
+         echo "... please wait 30 seconds ..."
+         sleep 30
+         echo "" # dummy
+         : # dummy
+      fi
+      if [ "$GETENVIRONMENT" = "server" ]; then
+         : # dummy
+         echo "" # dummy
+         echo "... please wait 15 seconds ..."
+         sleep 15
+         echo "" # dummy
+         : # dummy
+      fi
    fi
-   if [ "$GETENVIRONMENT" = "server" ]; then
-      : # dummy
-      echo "" # dummy
-      echo "... please wait 15 seconds ..."
-      sleep 15
-      echo "" # dummy
-      : # dummy
-   fi
-   ### ### ###
-fi
 fi
 
 CHECKUPDATELIST1=$(grep "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list | head -n 1 | grep -c "jessie")
@@ -1010,7 +1009,6 @@ deb-src http://ftp.de.debian.org/debian-security/ jessie/updates main contrib no
 ### ### ### PLITC ### ### ###
 # EOF
 CHECKUPDATELIST1IN
-
    lxc-attach -n managed -- apt-get clean
    lxc-attach -n managed -- apt-get update
    if [ "$?" != "0" ]; then
@@ -1090,52 +1088,43 @@ else
 
    lxc-stop -n managed
 
-### ### ###
-CHECKTEMPLATEDEB8=$(lxc-ls | grep -c "deb8template")
-if [ "$CHECKTEMPLATEDEB8" = "1" ]; then
-   : # dummy
-else
-   echo "" # dummy
-if [ "$DEBVERSION" = "7" ]; then
-   lxc-clone -o managed -n deb8template
-else
-   lxc-clone -M -B dir -o managed -n deb8template
-fi
-### ### ###
-sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
-sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
-sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb8template/config
-sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb8template/config
-sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb8template/config
-sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb8template/config
-sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb8template/config
-#/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb8template/config
-sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb8template/config
-sed -i 's/managed1/deb8temp/g' /var/lib/lxc/deb8template/config
-sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
-### ### ###
-#
-#/ if [ "$DEBVERSION" = "8" ]; then
-#/    sed -i '/lxc.autodev/d' /var/lib/lxc/deb8template/config
-#/    sed -i '/lxc.kmsg/d' /var/lib/lxc/deb8template/config
-#/ fi
-#
-### ### ###
-echo "" # dummy
-   ./hooks/hook_deb8.sh
-echo "" # dummy
-### ### ###
-fi
-### ### ###
+   CHECKTEMPLATEDEB8=$(lxc-ls | grep -c "deb8template")
+   if [ "$CHECKTEMPLATEDEB8" = "1" ]; then
+      : # dummy
+   else
+      echo "" # dummy
+      if [ "$DEBVERSION" = "7" ]; then
+         lxc-clone -o managed -n deb8template
+      else
+         lxc-clone -M -B dir -o managed -n deb8template
+      fi
+      sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
+      sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb8template/config
+      #/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb8template/config
+      sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb8template/config
+      sed -i 's/managed1/deb8temp/g' /var/lib/lxc/deb8template/config
+      sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
 
+      #/ if [ "$DEBVERSION" = "8" ]; then
+      #/    sed -i '/lxc.autodev/d' /var/lib/lxc/deb8template/config
+      #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/deb8template/config
+      #/ fi
+
+      echo "" # dummy
+         ./hooks/hook_deb8.sh
+      echo "" # dummy
+   fi
    echo "... LXC Container (screen session): managed restarting ..."
    screen -d -m -S managed -- lxc-start -n managed
    sleep 1
    screen -list | grep "managed"
    echo "" # dummy
 fi
-
-### ### ###
 
 CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c "iptables")
 if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
@@ -1167,8 +1156,6 @@ lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth1.forwarding=1 >/dev/null 2>
 lxc-attach -n managed -- sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
 lxc-attach -n managed -- sysctl -w net.ipv6.conf.eth1.forwarding=1 >/dev/null 2>&1
 lxc-attach -n managed -- sysctl -w net.ipv6.conf.all.forwarding=1 >/dev/null 2>&1
-
-### ### ###
 
 RCLOCALMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/rc.local | awk '{print $4}' | head -n 1)
 if [ X"$RCLOCALMANAGED" = X"lxc-to-go" ]; then
@@ -1308,7 +1295,7 @@ CHECKMANAGEDNETFILE
    echo "" # dummy
 fi
 
-### DHCP-Service
+##/ DHCP-Service
 
 CHECKMANAGEDDHCP=$(lxc-attach -n managed -- dpkg -l | grep -c "isc-dhcp-server")
 if [ "$CHECKMANAGEDDHCP" = "1" ]; then
@@ -1414,9 +1401,7 @@ CHECKMANAGEDDHCPCONFIGFILE
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
 fi
 
-### ### ###
-
-### DNS-Service (unbound)
+##/ DNS-Service (unbound)
 
 CHECKMANAGEDDNS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "unbound")
 if [ "$CHECKMANAGEDDNS" = "1" ]; then
@@ -1521,9 +1506,7 @@ CHECKMANAGEDDNSCONFIGFILE
    lxc-attach -n managed -- systemctl restart unbound
 fi
 
-### ### ###
-
-### RA-Service
+##/ RA-Service
 
 CHECKMANAGEDIPV6D=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "radvd")
 if [ "$CHECKMANAGEDIPV6D" = "1" ]; then
@@ -1559,19 +1542,12 @@ interface eth1
 # EOF
 CHECKMANAGEDIPV6CONFIGFILE
    lxc-attach -n managed -- service radvd restart
-#
-### bootstrap finished file // ###
-
-touch /etc/lxc-to-go/INSTALLED
-
-### // bootstrap finished file ###
-#
+   ### bootstrap finished file // ###
+   touch /etc/lxc-to-go/INSTALLED
+   ### // bootstrap finished file ###
 fi
 
-### ### ###
-
 ### network debug tools // ###
-#
 CHECKMANAGEDIPUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "iputils-ping")
 if [ "$CHECKMANAGEDIPUTILS" = "1" ]; then
    : # dummy
@@ -1599,118 +1575,138 @@ if [ "$CHECKMANAGEDMTRTINY" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install mtr-tiny
 fi
-#
 ### // network debug tools ###
 
-### ### ###
-
 ### NEW IP - Desktop Environment // ###
-   if [ "$GETENVIRONMENT" = "desktop" ]; then
-      : # dummy
-#/ ipv4
-      #/ killall dhclient
-      if [ -e "$UDEVNET" ]; then
-         #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
-         #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
-         if [ "$DEBVERSION" = "7" ]; then
-            pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         if [ "$DEBVERSION" = "8" ]; then
-            ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         ip addr flush "$GETBRIDGEPORT0"
-         echo "" # dummy
-         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
-      else
-         #/ dhclient eth0 >/dev/null 2>&1
-         #/ route del default dev eth0 >/dev/null 2>&1
-         if [ "$DEBVERSION" = "7" ]; then
-            pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         if [ "$DEBVERSION" = "8" ]; then
-            ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-            ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         fi
-         ip addr flush eth0
-         echo "" # dummy
-         echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
+if [ "$GETENVIRONMENT" = "desktop" ]; then
+   #/ ipv4
+   #/ killall dhclient
+   if [ -e "$UDEVNET" ]; then
+      #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
+      #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+      if [ "$DEBVERSION" = "7" ]; then
+         pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
       fi
-      dhclient vswitch0 >/dev/null 2>&1
-### fix //
-CHECKGETIPV4DEFAULTGATEWAY3=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
-if [ "$CHECKGETIPV4DEFAULTGATEWAY3" = "2" ]; then
-   route del default
+      if [ "$DEBVERSION" = "8" ]; then
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      ip addr flush "$GETBRIDGEPORT0"
+      echo "" # dummy
+      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
+   else
+      #/ dhclient eth0 >/dev/null 2>&1
+      #/ route del default dev eth0 >/dev/null 2>&1
+      if [ "$DEBVERSION" = "7" ]; then
+         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      if [ "$DEBVERSION" = "8" ]; then
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+      fi
+      ip addr flush eth0
+      echo "" # dummy
+      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
+   fi
+   dhclient vswitch0 >/dev/null 2>&1
+   ### fix //
+   CHECKGETIPV4DEFAULTGATEWAY3=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+   if [ "$CHECKGETIPV4DEFAULTGATEWAY3" = "2" ]; then
+      route del default
+   fi
+   ### // fix
+   #/ ipv6
+   if [ -e "$UDEVNET" ]; then
+      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      ip -6 route del ::/0 >/dev/null 2>&1
+      echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+   else
+      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      ip -6 route del ::/0 >/dev/null 2>&1
+      echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
+   fi
+   #/ container
+   #/ lxc-attach -n managed -- pkill dhclient
+   lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
+   lxc-attach -n managed -- ip addr flush eth0 >/dev/null 2>&1
+   lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
+   lxc-attach -n managed -- ip -6 route del ::/0 >/dev/null 2>&1
+   lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra
+   ### rc.local reload // ###
+   lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+   ### // rc.local reload ###
 fi
-### // fix
-#/ ipv6
-      if [ -e "$UDEVNET" ]; then
-         #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
-         ip -6 route del ::/0 >/dev/null 2>&1
-         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
-      else
-         #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
-         ip -6 route del ::/0 >/dev/null 2>&1
-         echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
-      fi
-#/ container
-      #/ lxc-attach -n managed -- pkill dhclient
-      lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
-      lxc-attach -n managed -- ip addr flush eth0 >/dev/null 2>&1
-      lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
-      lxc-attach -n managed -- ip -6 route del ::/0 >/dev/null 2>&1
-      lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra
-### rc.local reload // ###
-      lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
-### // rc.local reload ###
-   fi 
-### NEW IP - Desktop Environment // ###
+### // NEW IP - Desktop Environment ###
 
 ### NEW IP - Server Environment // ###
-   if [ "$GETENVIRONMENT" = "server" ]; then
-netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
-chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
+if [ "$GETENVIRONMENT" = "server" ]; then
+   #/ ipv4
+   netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
+   chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
       ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
-   if [ "$GETENVIRONMENT" = "server" ]; then
-      ip addr add 192.168.253.253/24 dev vswitch0
-   fi
-### fix //
-CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
-if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
-   route del default
-fi
-### // fix
+      if [ "$GETENVIRONMENT" = "server" ]; then
+         ip addr add 192.168.253.253/24 dev vswitch0
+      fi
+      ### fix //
+      CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+      if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
+         route del default
+      fi
+      ### // fix
    else
       GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tail -n 1 | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
       ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
+      if [ "$GETENVIRONMENT" = "server" ]; then
+         ip addr add 192.168.253.253/24 dev vswitch0
+      fi
+      ### fix //
+      CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
+      if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
+         route del default
+      fi
+      ### // fix
+   fi
+   ### ### ###
+   #/ ipv6
    if [ "$GETENVIRONMENT" = "server" ]; then
-      ip addr add 192.168.253.253/24 dev vswitch0
-   fi
-### fix //
-CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
-if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
-   route del default
-fi
-### // fix
-   fi
-### ### ###
-#/ ipv4
-      : # dummy
-#/ ipv6
-      : # dummy
-#/ container
-### rc.local reload // ###
+   netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I {} echo "IPV6DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV6GATEWAY.log
+   chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
+      if [ -e "$UDEVNET" ]; then
+         GETIPV6UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
+         ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0
+         if [ "$GETENVIRONMENT" = "server" ]; then
+            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0
+         fi
+         ### fix //
+         #
+         ### // fix
+      else
+         GETIPV6=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
+         ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0
+         if [ "$GETENVIRONMENT" = "server" ]; then
+            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0
+         fi
+         ### fix //
+         #
+         ### // fix
+      fi
+   ### ### ###
+   #/ container
+   ### rc.local reload // ###
       lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
-### // rc.local reload ###
+   ### // rc.local reload ###
    fi
+fi
 ### // NEW IP - Server Environment ###
 
 ### RP_FILTER // ###
@@ -1825,7 +1821,6 @@ lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ 
 ### ### ###
 
 ### FORWARDING // ###
-#
 echo "" # dummy
 sleep 5
 CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
@@ -1857,7 +1852,6 @@ cat /etc/lxc-to-go/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/ /:/
          fi
 
 fi
-#
 ### // FORWARDING ###
 
 ### ### ###
