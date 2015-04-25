@@ -1539,14 +1539,14 @@ interface eth1
         AdvSendAdvert on;
         MinRtrAdvInterval 3; 
         MaxRtrAdvInterval 10;
-        prefix fd00:aaaa:0001::/64
+        prefix fd00:aaaa:254::/64
 	{ 
                 AdvOnLink on; 
                 AdvAutonomous on; 
                 AdvRouterAddr on; 
         };
 	AdvDefaultPreference high;
-	RDNSS fd00:aaaa:0001::1 { };
+	RDNSS fd00:aaaa:254::254 { };
 };
 #
 ### ### ### // lxc-to-go ### ### ###
