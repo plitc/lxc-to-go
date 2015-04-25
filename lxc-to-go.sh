@@ -1688,7 +1688,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
          GETIPV6SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0
          if [ "$GETENVIRONMENT" = "server" ]; then
-            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0
+            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
          #
@@ -1698,7 +1698,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
          GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0
          if [ "$GETENVIRONMENT" = "server" ]; then
-            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0
+            ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
          #
