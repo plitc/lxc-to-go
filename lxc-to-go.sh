@@ -432,6 +432,9 @@ else
       ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
       #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
       #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
+      ### NDP // ###
+      sysctl -w net.ipv6.conf.all.forwarding=1 >/dev/null 2>&1
+      ### // NDP ###
       ### # EXAMPLE #/ lxc1
       ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
       ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
@@ -1210,8 +1213,10 @@ sysctl net.ipv6.conf.eth1.forwarding=1    # LXC
 sysctl net.ipv6.conf.all.forwarding=1     # LXC
 
 ##/ echo "stage1"
-##/ nat
+##/ ipv4 nat
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+##/ ipv6 nat
+ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 #/
 # lxc1
 ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
