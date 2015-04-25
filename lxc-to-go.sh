@@ -426,7 +426,10 @@ else
       sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
    ### // Proxy_ARP/NDP ###
    ### NAT // ###
+      #/ ipv4 nat
       iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      #/ ipv6 nat
+      ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
       #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
       #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
       ### # EXAMPLE #/ lxc1
