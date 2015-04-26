@@ -34,8 +34,16 @@
 DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
 DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 MYNAME=$(whoami)
+###
 #/ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-DIR=$(echo "${PWD}")
+PRG="$0"
+# need this for relative symlinks
+while [ -h "$PRG" ] ;
+   do
+   PRG=`readlink "$PRG"`
+   done
+DIR=`dirname "$PRG"`
+###
 ### // stage0 ###
 
 ### stage1 // ###
