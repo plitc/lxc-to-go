@@ -34,6 +34,7 @@
 DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
 DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 MYNAME=$(whoami)
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ### // stage0 ###
 
 ### stage1 // ###
@@ -306,7 +307,7 @@ if [ "$start" = "yes" ]; then
       : # dummy
       ###
          echo "" # dummy
-            ./hooks/hook_provisioning.sh
+            $DIR/hooks/hook_provisioning.sh
          echo "" # dummy
       ###
       unset LXCCREATENAME
@@ -330,7 +331,7 @@ if [ "$start" = "no" ]; then
       : # dummy
       ###
          echo "" # dummy
-            ./hooks/hook_provisioning.sh
+            $DIR/hooks/hook_provisioning.sh
          echo "" # dummy
       ###
       unset LXCCREATENAME
