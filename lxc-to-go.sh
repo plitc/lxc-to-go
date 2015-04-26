@@ -34,6 +34,7 @@
 DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
 DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 MYNAME=$(whoami)
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ### // stage0 ###
 
 case "$1" in
@@ -938,7 +939,7 @@ else
    #/ fi
 
    echo "" # dummy
-      ./hooks/hook_deb7.sh
+      $DIR/hooks/hook_deb7.sh
    echo "" # dummy
 fi
 
@@ -1125,7 +1126,7 @@ else
       #/ fi
 
       echo "" # dummy
-         ./hooks/hook_deb8.sh
+         $DIR/hooks/hook_deb8.sh
       echo "" # dummy
    fi
    echo "... LXC Container (screen session): managed restarting ..."
@@ -2135,7 +2136,7 @@ if [ "$FLAVOR" = "y" ]; then
    : # dummy
    ###
       echo "" # dummy
-         ./hooks/hook_flavor.sh
+         $DIR/hooks/hook_flavor.sh
       echo "" # dummy
    ###
    unset LXCCREATENAME
