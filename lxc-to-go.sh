@@ -2330,7 +2330,7 @@ fi
 
    echo "" # dummy
    echo "... shutdown & delete the lxc container ..."
-   lxc-stop -n "$LXCDESTROY" > /dev/null 2>&1
+   lxc-stop -n "$LXCDESTROY" -k > /dev/null 2>&1
    lxc-destroy -n "$LXCDESTROY"
 
 ### ### ###
