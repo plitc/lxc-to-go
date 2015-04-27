@@ -1851,27 +1851,27 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    # ipv4 //
    lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/lxc.ipv4.running.tmp
    awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/lxc.ipv4.running.list.tmp
-      ### set iptable rules // ###
-      (
-      while read -r line
-      do
-         set -- $line
-         #
-         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
-         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
-         #
-         CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
-         #
-         ### set iptable rules on HOST // ###
-         if [ "$CHECKENVIRONMENT" = "server" ]; then
-            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-            iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-         fi
-         ### set iptable rules on HOST // ###
-         #
-      done < "/etc/lxc-to-go/lxc.ipv4.running.list.tmp"
-      )
-      ### // set iptable rules ###
+   ### set iptable rules // ###
+   (
+   while read -r line
+   do
+      set -- $line
+      #
+      lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      #
+      CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+      #
+      ### set iptable rules on HOST // ###
+      if [ "$CHECKENVIRONMENT" = "server" ]; then
+         iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+      fi
+      ### // set iptable rules on HOST ###
+      #
+   done < "/etc/lxc-to-go/lxc.ipv4.running.list.tmp"
+   )
+   ### // set iptable rules ###
    # // ipv4
 fi
 ### // FORWARDING ###
@@ -1959,28 +1959,28 @@ CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
 if [ -e "$CHECKFORWARDINGFILE" ]; then
    # ipv4 //
    lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/lxc.ipv4.stop.tmp
-   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.stop.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168     " > /etc/lxc-to-go/lxc.ipv4.stop.list.tmp
-      ### set iptable rules // ###
-      (
-      while read -r line
-      do
-         set -- $line
-         #
-         lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
-         lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
-         #
-         CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
-         #
-         ### set iptable rules on HOST // ###
-         if [ "$CHECKENVIRONMENT" = "server" ]; then
-            iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-            iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-         fi
-         ### set iptable rules on HOST // ###
-         #
-      done < "/etc/lxc-to-go/lxc.ipv4.stop.list.tmp"
-      )
-      ### // set iptable rules ###
+   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.stop.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/lxc.ipv4.stop.list.tmp
+   ### set iptable rules // ###
+   (
+   while read -r line
+   do
+      set -- $line
+      #
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      #
+      CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+      #
+      ### set iptable rules on HOST // ###
+      if [ "$CHECKENVIRONMENT" = "server" ]; then
+         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+      fi
+      ### // set iptable rules on HOST ###
+      #
+   done < "/etc/lxc-to-go/lxc.ipv4.stop.list.tmp"
+   )
+   ### // set iptable rules ###
    # // ipv4
 fi
 ### // FORWARDING ###
@@ -2288,6 +2288,42 @@ if [ "$LXCDESTROY" = "deb8template" ]; then
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
+
+### FORWARDING // ###
+echo "" # dummy
+sleep 5
+CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
+if [ -e "$CHECKFORWARDINGFILE" ]; then
+   # ipv4 //
+   lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | grep "$LXCDESTROY" | egrep -v "-" > /etc/lxc-to-go/lxc.ipv4.del.tmp
+   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.del.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/lxc.ipv4.del.list.tmp
+   ### set iptable rules // ###
+   (
+   while read -r line
+   do
+      set -- $line
+      #
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      #
+      CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+      #
+      ### set iptable rules on HOST // ###
+      if [ "$CHECKENVIRONMENT" = "server" ]; then
+         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+      fi
+      ### // set iptable rules on HOST ###
+      #
+   done < "/etc/lxc-to-go/lxc.ipv4.del.list.tmp"
+   )
+   ### // set iptable rules ###
+   # // ipv4
+   ###
+   sed -i '/'"$LXCDESTROY"'/d' "$CHECKFORWARDINGFILE"
+   ###
+fi
+### // FORWARDING ###
 
    echo "" # dummy
    echo "... shutdown & delete the lxc container ..."
