@@ -1851,6 +1851,9 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    # ipv4 //
    lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/lxc.ipv4.running.tmp
    awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/lxc.ipv4.running.list.tmp
+###
+#
+###
    ### set iptable rules // ###
    (
    while read -r line
