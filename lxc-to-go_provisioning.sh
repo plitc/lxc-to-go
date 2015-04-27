@@ -381,7 +381,8 @@ fi
 #
 ### // FORWARDING ###
 
-echo "$port" > 
+echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
+
 ### // PROVISIONING ###
 
 ### ### ###
