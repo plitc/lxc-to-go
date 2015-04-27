@@ -1952,8 +1952,40 @@ echo "FOUND (active):"
 lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
+### FORWARDING // ###
+echo "" # dummy
+sleep 5
+CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
+if [ -e "$CHECKFORWARDINGFILE" ]; then
+   # ipv4 //
+   lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/lxc.ipv4.stop.tmp
+   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/lxc.ipv4.stop.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168     " > /etc/lxc-to-go/lxc.ipv4.stop.list.tmp
+      ### set iptable rules // ###
+      (
+      while read -r line
+      do
+         set -- $line
+         #
+         lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
+         lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
+         #
+         CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+         #
+         ### set iptable rules on HOST // ###
+         if [ "$CHECKENVIRONMENT" = "server" ]; then
+            iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+            iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         fi
+         ### set iptable rules on HOST // ###
+         #
+      done < "/etc/lxc-to-go/lxc.ipv4.stop.list.tmp"
+      )
+      ### // set iptable rules ###
+   # // ipv4
+fi
+### // FORWARDING ###
+
 lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ lxc-stop -n "%"; sleep 5; }'
-### ### ###
 
 ### ### ###
 echo "" # printf
