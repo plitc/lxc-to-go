@@ -316,6 +316,7 @@ if [ "$start" = "yes" ]; then
       : # dummy
       ###
          echo "" # dummy
+            echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
             $DIR/hooks/hook_provisioning.sh
          echo "" # dummy
       ###
@@ -340,6 +341,7 @@ if [ "$start" = "no" ]; then
       : # dummy
       ###
          echo "" # dummy
+            echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
             $DIR/hooks/hook_provisioning.sh
          echo "" # dummy
       ###
@@ -380,8 +382,6 @@ else
 fi
 #
 ### // FORWARDING ###
-
-echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
 
 ### // PROVISIONING ###
 
