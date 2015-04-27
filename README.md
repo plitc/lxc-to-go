@@ -234,6 +234,8 @@ Screencast
 
 Errata
 ======
+* 27.04.2015: [lxc-to-go < 0.25]: multiple start of "start function" generating unnecessary firewall rules
+
 * 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed
 ```
   locale: Cannot set LC_CTYPE to default locale: No such file or directory
