@@ -138,7 +138,7 @@ if [ -z "$LXC" ]; then
    echo "need lxc"
    echo "<--- --- --->"
    apt-get update
-   apt-get -y install lxc
+   DEBIAN_FRONTEND=noninteractive apt-get -y install lxc
    echo "<--- --- --->"
 fi
 
