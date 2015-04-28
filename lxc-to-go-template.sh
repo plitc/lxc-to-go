@@ -129,6 +129,7 @@ LISTTEMPLATEFILE1="/etc/lxc-to-go/tmp/choose_templ1.tmp"
 LISTTEMPLATEFILE2="/etc/lxc-to-go/tmp/choose_templ2.tmp"
 LISTTEMPLATEFILE3="/etc/lxc-to-go/tmp/choose_templ3.tmp"
 LISTTEMPLATEFILE4="/etc/lxc-to-go/tmp/choose_templ4.tmp"
+LISTTEMPLATEFILE5="/etc/lxc-to-go/tmp/choose_templ5.tmp"
 
 ls -t "$DIR"/hooks/templates/ > "$LISTTEMPLATEFILE1"
 nl "$LISTTEMPLATEFILE1" | sed 's/ //g' > "$LISTTEMPLATEFILE2"
@@ -140,6 +141,9 @@ case $list1 in
    0)
       echo "" # dummy
       echo "" # dummy
+      awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' "$LISTTEMPLATEFILE3" "$LISTTEMPLATEFILE4" | awk '{print $2}' | sed 's/"//g' > "$LISTTEMPLATEFILE5"
+      GETTEMPLATE=$(cat "$LISTTEMPLATEFILE5")
+      cp -prf "$DIR"/hooks/templates/"$GETTEMPLATE" "$DIR"/hooks/hook_provisioning.sh
       : # dummy
    ;;
    1)
