@@ -44,6 +44,8 @@ while [ -h "$PRG" ] ;
    done
 DIR=`dirname "$PRG"`
 ###
+ADIR="$PWD"
+###
 ### // stage0 ###
 
 ### stage1 // ###
@@ -121,6 +123,34 @@ else
 fi
 
 ### TEMPLATE // ###
+
+LISTTEMPLATEFILE1="/etc/lxc-to-go/tmp/choose_templ1.tmp"
+LISTTEMPLATEFILE2="/etc/lxc-to-go/tmp/choose_templ2.tmp"
+LISTTEMPLATEFILE3="/etc/lxc-to-go/tmp/choose_templ3.tmp"
+LISTTEMPLATEFILE4="/etc/lxc-to-go/tmp/choose_templ4.tmp"
+
+ls -t "$ADIR"/hooks/templates/ > "$LISTTEMPLATEFILE1"
+nl "$LISTTEMPLATEFILE1" | sed 's/ //g' > "$LISTTEMPLATEFILE2"
+/bin/sed 's/$/ off/' "$LISTTEMPLATEFILE2" > "$LISTTEMPLATEFILE3"
+
+dialog --radiolist "Choose one template:" 45 80 60 --file "$LISTTEMPLATEFILE3" 2>"$LISTTEMPLATEFILE4"
+list1=$?
+case $list1 in
+   0)
+      : # dummy
+   ;;
+   1)
+      echo "" # dummy
+      echo "" # dummy
+      exit 0
+   ;;
+   255)
+      echo "" # dummy
+      echo "" # dummy
+      echo "[ESC] key pressed."
+      exit 0
+   ;;
+esac
 
 ### // TEMPLATE ###
 
