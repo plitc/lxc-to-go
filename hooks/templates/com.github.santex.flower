@@ -53,7 +53,7 @@ run cpanm AI::MicroStructure;
 run cpanm Data::UUID;
 run cpanm Time::Duration;
 run git clone https://github.com/santex/flower.git
-run cd flower; perl Makefile.PL; make; make test; make install; cd /root
+run /bin/sh -c "cd flower; perl Makefile.PL; make; make test; make install"
 run mkdir /root/data
 run perl -I /root/flower/script /root/flower/script/perl_peer --ip 127.0.0.1 --filepath /root
 

@@ -51,7 +51,7 @@ run cpanm AI::MicroStructure;
 
 #/ --- AI-MicroStructure --- #/
 run git clone https://github.com/santex/AI-MicroStructure.git
-run cd AI-MicroStructure; dzil build; dzil test; dzil install; cd /root
+run /bin/sh -c "cd AI-MicroStructure; dzil build; dzil test; dzil install"
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
