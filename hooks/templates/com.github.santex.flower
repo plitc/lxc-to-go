@@ -1,0 +1,62 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+echo "<--- --- --- provisioning hooks // --- --- --->"
+
+run(){
+   # execute commands inside the lxc template
+   lxc-attach -n "$LXCCREATENAME" -- $*
+}
+
+run apt-get update
+run apt-get -y install curl
+run apt-get -y install vim
+run apt-get -y install git
+run apt-get -y install make
+run apt-get -y install gcc
+run apt-get -y install build-essential
+run apt-get -y install wordnet
+run apt-get -y install memcached
+run apt-get -y install cpanminus
+run apt-get -y install libssl-dev
+run apt-get -y install libio-pty-perl
+run curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious
+
+run cpanm Dist::Zilla;
+
+run cpanm Digest::SHA1;
+run cpanm Data::Printer;
+run cpanm Storable::CouchDB;
+run cpanm --force Search::ContextGraph;
+run cpanm Config::Auto;
+run cpanm Sysadm::Install;
+run cpanm Cache::Memcached::Fast;
+run cpanm Statistics::Basic;
+
+run cpanm Contextual::Return;
+run cpanm Math::Cephes;
+run cpanm Perl6::Form;
+run cpanm Statistics::Distributions;
+
+run cpanm --verbose IO::Pty;
+run cpanm Statistics::Distributions::Ancova;
+run cpanm AnyEvent::Subprocess::Easy;
+
+run cpanm Digest::MD5;
+run cpanm Getopt::Long;
+run cpanm Data::Dumper;
+run cpanm JSON::XS;
+run cpanm Try::Tiny;
+
+run cpanm AI::MicroStructure;
+
+#/ --- flower --- #/
+run cpanm Data::UUID;
+run cpanm Time::Duration;
+run git clone https://github.com/santex/flower.git
+run cd flower; perl Makefile.PL; make; make test; make install; cd /root
+run mkdir /root/data
+run perl -I /root/flower/script /root/flower/script/perl_peer --ip 127.0.0.1 --filepath /root
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
