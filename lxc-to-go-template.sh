@@ -89,6 +89,7 @@ if [ -z "$CHECKLXCINSTALL" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+DIALOG=$(/usr/bin/which dialog)
 if [ -z "$DIALOG" ]; then
    echo "<--- --- --->"
    echo "need dialog"
@@ -137,6 +138,8 @@ dialog --radiolist "Choose one template:" 45 80 60 --file "$LISTTEMPLATEFILE3" 2
 list1=$?
 case $list1 in
    0)
+      echo "" # dummy
+      echo "" # dummy
       : # dummy
    ;;
    1)
@@ -155,7 +158,8 @@ esac
 ### // TEMPLATE ###
 
 ### ### ###
-echo ""
+echo "" # dummy
+echo "" # dummy
 printf "\033[1;31mlxc-to-go template selection finished.\033[0m\n"
 ### ### ###
 
