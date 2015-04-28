@@ -1747,6 +1747,17 @@ if [ -e "$UDEVNET" ]; then
 fi
 ### // RP_FILTER ###
 
+### SYMBOLIC LINKS // ###
+CHECKSYMLINK1="/usr/sbin/lxc-to-go"
+if [ -e "$CHECKSYMLINK1" ]; then
+   : # dummy
+else
+   ln -sf "$DIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
+   ln -sf "$DIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
+   ln -sf "$DIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template.sh
+fi
+### // SYMBOLIC LINKS ###
+
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
