@@ -129,7 +129,7 @@ LISTTEMPLATEFILE2="/etc/lxc-to-go/tmp/choose_templ2.tmp"
 LISTTEMPLATEFILE3="/etc/lxc-to-go/tmp/choose_templ3.tmp"
 LISTTEMPLATEFILE4="/etc/lxc-to-go/tmp/choose_templ4.tmp"
 
-ls -t "$ADIR"/hooks/templates/ > "$LISTTEMPLATEFILE1"
+ls -t "$DIR"/hooks/templates/ > "$LISTTEMPLATEFILE1"
 nl "$LISTTEMPLATEFILE1" | sed 's/ //g' > "$LISTTEMPLATEFILE2"
 /bin/sed 's/$/ off/' "$LISTTEMPLATEFILE2" > "$LISTTEMPLATEFILE3"
 
