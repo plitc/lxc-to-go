@@ -44,6 +44,8 @@ while [ -h "$PRG" ] ;
    done
 DIR=`dirname "$PRG"`
 ###
+ADIR="$PWD"
+###
 ### // stage0 ###
 
 case "$1" in
@@ -1752,9 +1754,9 @@ CHECKSYMLINK1="/usr/sbin/lxc-to-go"
 if [ -e "$CHECKSYMLINK1" ]; then
    : # dummy
 else
-   ln -sf "$DIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
-   ln -sf "$DIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
-   ln -sf "$DIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template.sh
+   ln -sf "$ADIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
+   ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
+   ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template.sh
 fi
 ### // SYMBOLIC LINKS ###
 
