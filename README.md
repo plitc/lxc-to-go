@@ -85,6 +85,7 @@ Features
 
 * wlan bridge support
    * add support (in server variant) for native debian linux (use in future the modified version)
+
 usage:
 ```
    git clone https://github.com/plitc/lxc-to-go
@@ -100,6 +101,11 @@ usage:
 * simple "template/flavor hooks" for general purposes
 
 * provisioning
+   * provisioning templates
+
+```
+   # ./lxc-to-go-template.sh
+```
 
 Platform
 ========
