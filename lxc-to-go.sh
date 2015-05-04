@@ -144,6 +144,16 @@ if [ -z "$LXC" ]; then
    echo "<--- --- --->"
 fi
 
+### LXC TEMPLATE - WHEEZY // ###
+CHECKLXCTEMPLATEWHEEZY="/usr/share/lxc/templates/lxc-debian-wheezy"
+if [ -e "$CHECKLXCTEMPLATEWHEEZY" ]; then
+   : # dummy
+else
+   cp -prf /usr/share/lxc/templates/lxc-debian /usr/share/lxc/templates/lxc-debian-wheezy
+   sed -i 's/release=${release:-${current_release}}/release=$(echo "wheezy")/g' /usr/share/lxc/templates/lxc-debian-wheezy
+fi
+### // LXC TEMPLATE - WHEEZY ###
+
 BRIDGEUTILS=$(/usr/bin/dpkg -l | grep bridge-utils | awk '{print $2}')
 if [ -z "$BRIDGEUTILS" ]; then
    echo "<--- --- --->"
@@ -623,7 +633,7 @@ CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
 if [ "$CHECKLXCMANAGED" = "1" ]; then
     : # dummy
 else
-   lxc-create -n managed -t debian
+   lxc-create -n managed -t /usr/share/lxc/templates/lxc-debian-wheezy
    if [ "$?" != "0" ]; then
       : # dummy
       echo '[ERROR] create "managed" lxc container failed'
