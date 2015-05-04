@@ -4,7 +4,7 @@ echo "<--- --- --- debian 7 lxc template hooks // --- --- --->"
 
 run(){
    # execute commands inside the lxc template
-   lxc-attach -n deb7template -- $*
+   lxc-attach -n deb7template -- "$@"
 }
 
 ### EXAMPLE // ###

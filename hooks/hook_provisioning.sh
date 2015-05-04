@@ -4,7 +4,7 @@ echo "<--- --- --- provisioning hooks // --- --- --->"
 
 run(){
    # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- $*
+   lxc-attach -n "$LXCCREATENAME" -- "$@"
 }
 
 ### EXAMPLE // ###
