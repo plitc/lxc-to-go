@@ -1,11 +1,20 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
-echo "<--- --- --- provisioning hooks // --- --- --->"
 
 run(){
    # execute commands inside the lxc template
    lxc-attach -n "$LXCCREATENAME" -- $*
 }
+
+lull(){
+   # break
+   sleep 2
+   echo ""
+   echo "---> next step <---"
+   echo ""
+}
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
 
 run apt-get update
 run apt-get -y install curl
@@ -20,6 +29,8 @@ run apt-get -y install cpanminus
 run apt-get -y install libssl-dev
 run apt-get -y install libio-pty-perl
 run curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious
+
+lull
 
 run cpanm Dist::Zilla;
 
@@ -48,6 +59,8 @@ run cpanm JSON::XS;
 run cpanm Try::Tiny;
 
 run cpanm AI::MicroStructure;
+
+lull
 
 #/ --- AI-MicroStructure --- #/
 run git clone https://github.com/santex/AI-MicroStructure.git
