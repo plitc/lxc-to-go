@@ -15,6 +15,7 @@ lull(){
 }
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
+(
 
 run apt-get update
 run apt-get -y install curl
@@ -70,6 +71,7 @@ run /bin/sh -c "cd flower; perl Makefile.PL; make; make test; make install"
 run mkdir /root/data
 run perl -I /root/flower/script /root/flower/script/perl_peer --ip 127.0.0.1 --filepath /root
 
+)
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
 # EOF
