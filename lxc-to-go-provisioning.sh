@@ -315,7 +315,8 @@ if [ "$start" = "yes" ]; then
       ###
          echo "" # dummy
             echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
-            $DIR/hooks/hook_provisioning.sh
+            #/ $DIR/hooks/hook_provisioning.sh
+            /etc/lxc-to-go/hook_provisioning.sh
          echo "" # dummy
       ###
       unset LXCCREATENAME
@@ -340,7 +341,8 @@ if [ "$start" = "no" ]; then
       ###
          echo "" # dummy
             echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
-            $DIR/hooks/hook_provisioning.sh
+            #/ $DIR/hooks/hook_provisioning.sh
+            /etc/lxc-to-go/hook_provisioning.sh
          echo "" # dummy
       ###
       unset LXCCREATENAME

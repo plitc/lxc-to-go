@@ -141,7 +141,8 @@ case $list1 in
       echo "" # dummy
       awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' "$LISTTEMPLATEFILE3" "$LISTTEMPLATEFILE4" | awk '{print $2}' | sed 's/"//g' > "$LISTTEMPLATEFILE5"
       GETTEMPLATE=$(cat "$LISTTEMPLATEFILE5")
-      cp -prf "$DIR"/hooks/templates/"$GETTEMPLATE" "$DIR"/hooks/hook_provisioning.sh
+      #/ cp -prf "$DIR"/hooks/templates/"$GETTEMPLATE" "$DIR"/hooks/hook_provisioning.sh
+      cp -prf "$DIR"/hooks/templates/"$GETTEMPLATE" /etc/lxc-to-go/hook_provisioning.sh
       : # dummy
    ;;
    1)

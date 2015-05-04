@@ -107,6 +107,13 @@ fi
 mkdir -p /etc/lxc-to-go
 mkdir -p /etc/lxc-to-go/tmp
 
+CHECKHOOKPROVISIONINGFILE="/etc/lxc-to-go/hook_provisioning.sh"
+if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
+   : # dummy
+else
+   cp -prf "$ADIR"/hooks/hook_provisioning.sh /etc/lxc-to-go/hook_provisioning.sh
+fi
+
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
    read -p "Choose your Environment: (desktop/server) ? " ENVIRONMENTVALUE
