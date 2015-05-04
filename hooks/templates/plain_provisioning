@@ -15,6 +15,7 @@ lull(){
 }
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
+(
 
 ### EXAMPLE // ###
 #
@@ -26,6 +27,7 @@ run echo example
 #
 ### // EXAMPLE ###
 
+)
 echo "<--- --- --- // provisioning hooks --- --- --->"
 #/ exit 0
 ### ### ### // lxc-to-go ### ### ###

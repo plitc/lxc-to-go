@@ -15,6 +15,7 @@ lull(){
 }
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
+(
 
 run apt-get update
 run apt-get -y install curl
@@ -66,6 +67,7 @@ lull
 run git clone https://github.com/santex/AI-MicroStructure.git
 run /bin/sh -c "cd AI-MicroStructure; dzil build; dzil test; dzil install"
 
+)
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
 # EOF
