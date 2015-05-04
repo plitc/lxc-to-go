@@ -67,9 +67,18 @@ lull
 run cpanm Data::UUID;
 run cpanm Time::Duration;
 run git clone https://github.com/santex/flower.git
-run /bin/sh -c "cd flower; perl Makefile.PL; make; make test; make install"
+run /bin/sh -c "(cd flower; perl Makefile.PL; make; make test; make install)"
 run mkdir /root/data
-run perl -I /root/flower/script /root/flower/script/perl_peer --ip 127.0.0.1 --filepath /root
+
+GETIPV4PORTINSIDE=$(run cat /root/PORT)
+sed -i 's/2222/'"$GETIPV4PORTINSIDE"'/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/root/flower/script/perl_peer
+
+GETIPV4INSIDE=$(run ifconfig "eth0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+echo "#!/bin/sh" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+echo 'perl -I /root/flower/script /root/flower/script/perl_peer --ip "$GETIPV4INSIDE" --filepath /root' >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+echo "exit 0" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+echo "#EOF" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+run perl -I /root/flower/script /root/flower/script/perl_peer --ip "$GETIPV4INSIDE" --filepath /root
 
 )
 echo "<--- --- --- // provisioning hooks --- --- --->"
