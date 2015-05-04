@@ -1756,6 +1756,15 @@ else
    ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
    ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 fi
+#
+CHECKSYMLINK2="$DIR/lxc-to-go_wlan.sh"
+if [ -e "$CHECKSYMLINK2" ]; then
+   : # dummy
+else
+   ln -sf "$ADIR"/lxc-to-go_wlan.sh /usr/sbin/lxc-to-go_wlan
+   ln -sf "$ADIR"/lxc-to-go_wlan-provisioning.sh /usr/sbin/lxc-to-go_wlan-provisioning
+   ln -sf "$ADIR"/lxc-to-go_wlan-template.sh /usr/sbin/lxc-to-go_wlan-template
+fi
 ### // SYMBOLIC LINKS ###
 
 ### ### ### ### ### ### ### ### ###
