@@ -1763,7 +1763,6 @@ if [ -e "$CHECKSYMLINK2" ]; then
 else
    ln -sf "$ADIR"/lxc-to-go_wlan.sh /usr/sbin/lxc-to-go_wlan
    ln -sf "$ADIR"/lxc-to-go_wlan-provisioning.sh /usr/sbin/lxc-to-go_wlan-provisioning
-   ln -sf "$ADIR"/lxc-to-go_wlan-template.sh /usr/sbin/lxc-to-go_wlan-template
 fi
 ### // SYMBOLIC LINKS ###
 

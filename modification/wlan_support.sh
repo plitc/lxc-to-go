@@ -30,6 +30,22 @@ sed -i 's/wlan0.forwarding=1    # LXC/eth0.forwarding=1    # LXC/g' lxc-to-go_wl
 cp -prf lxc-to-go_wlan.sh ../lxc-to-go_wlan.sh
 rm -f lxc-to-go_wlan.sh
 
+### ### ###
+
+cp -prf ../lxc-to-go-provisioning.sh lxc-to-go_wlan-provisioning.sh
+
+### MOD2 // ###
+#
+sed -i 's/ifconfig eth0/ifconfig wlan0/g' lxc-to-go_wlan-provisioning.sh
+#
+sed -i 's/iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST/iptables -t nat -A PREROUTING -i wlan0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST/g' lxc-to-go_wlan-provisioning.sh
+sed -i 's/iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST/iptables -t nat -A PREROUTING -i wlan0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST/g' lxc-to-go_wlan-provisioning.sh
+#
+### // MOD2 ###
+
+cp -prf lxc-to-go_wlan-provisioning.sh ../lxc-to-go_wlan-provisioning.sh
+rm -f lxc-to-go_wlan-provisioning.sh
+
 echo "<--- --- --- // lxc-to-go (server variant) wlan support  --- --- --->"
 exit 0
 ### ### ### // lxc-to-go ### ### ###
