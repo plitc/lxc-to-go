@@ -107,6 +107,16 @@ usage:
    # ./lxc-to-go-template.sh
 ```
 
+* /usr/sbin symbolic link support
+
+```
+   lxc-to-go
+   lxc-to-go-provisioning
+   lxc-to-go-template
+   lxc-to-go_wlan
+   lxc-to-go_wlan-provisioning
+```
+
 Platform
 ========
 * Linux
@@ -240,6 +250,8 @@ Screencast
 
 Errata
 ======
+* 04.05.2015: [lxc-to-go < 0.26.5]: missing lxc debian wheezy template on debian jessie release HOST environment --- FIXED in [0.26.8]
+
 * 27.04.2015: [lxc-to-go < 0.25]: multiple start of "start function" generating unnecessary firewall rules
 
 * 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed
