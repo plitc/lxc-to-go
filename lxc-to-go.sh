@@ -111,7 +111,7 @@ CHECKHOOKPROVISIONINGFILE="/etc/lxc-to-go/hook_provisioning.sh"
 if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
    : # dummy
 else
-   cp -prf "$ADIR"/hooks/hook_provisioning.sh /etc/lxc-to-go/hook_provisioning.sh
+   cp -prf "$DIR"/hooks/hook_provisioning.sh /etc/lxc-to-go/hook_provisioning.sh
 fi
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
