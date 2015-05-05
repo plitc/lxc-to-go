@@ -75,7 +75,7 @@ run mkdir /root/data
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
 sed -i 's/2222/'"$GETIPV4PORTINSIDE"'/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/root/flower/script/perl_peer
 
-/bin/cat << RCLOCAL > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+/bin/cat <<"RCLOCAL" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
 
