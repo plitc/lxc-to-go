@@ -81,7 +81,7 @@ sed -i 's/2222/'"$GETIPV4PORTINSIDE"'/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/ro
 
 /bin/sh -c 'cd /root/flower && git pull'
 GETIPV4NEWINSIDE=$(ifconfig eth0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-/bin/sh -c 'cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4NEWINSIDE &'
+/bin/sh -c "cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4NEWINSIDE &"
 
 exit 0
 ### ### ### // lxc-to-go ### ### ###
@@ -89,7 +89,7 @@ exit 0
 RCLOCAL
 
 GETIPV4INSIDE=$(lxc-ls --active --fancy | grep "RUNNING" | grep "$LXCCREATENAME" | awk '{print $3}' | egrep -v "-")
-run /bin/sh -c 'cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4INSIDE &'
+run /bin/sh -c "cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4INSIDE &"
 
 lull
 
