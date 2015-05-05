@@ -63,11 +63,12 @@ run cpanm AI::MicroStructure;
 
 lull
 
+)
 #/ --- flower --- #/
 run cpanm Data::UUID;
 run cpanm Time::Duration;
 run git clone https://github.com/santex/flower.git
-run /bin/sh -c 'cd /root/flower; perl Makefile.PL; make; make test; make install'
+run /bin/sh -c 'cd /root/flower && perl Makefile.PL && make && make test && make install'
 run mkdir /root/data
 
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
@@ -76,13 +77,12 @@ sed -i 's/2222/'"$GETIPV4PORTINSIDE"'/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/ro
 GETIPV4INSIDE=$(lxc-ls --active --fancy | grep "RUNNING" | grep "$LXCCREATENAME" | awk '{print $3}' | egrep -v "-")
 echo "#!/bin/sh" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 echo "#" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "nohup perl -I /root/flower/script /root/flower/script/perl_peer --ip '"$GETIPV4INSIDE"' --filepath /root/data" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+echo "nohup perl -I /root/flower/script /root/flower/script/perl_peer --ip $GETIPV4INSIDE --filepath /root/data" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 echo "#" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 echo "exit 0" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 echo "#EOF" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 run perl -I /root/flower/script /root/flower/script/perl_peer --ip "$GETIPV4INSIDE" --filepath /root/data &
 
-)
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
 # EOF
