@@ -89,9 +89,7 @@ exit 0
 RCLOCAL
 
 GETIPV4INSIDE=$(lxc-ls --active --fancy | grep "RUNNING" | grep "$LXCCREATENAME" | awk '{print $3}' | egrep -v "-")
-(
 run /bin/sh -c 'cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4INSIDE &'
-)
 
 lull
 
