@@ -64,6 +64,7 @@ run cpanm AI::MicroStructure;
 lull
 
 )
+
 #/ --- flower --- #/
 run cpanm Data::UUID;
 run cpanm Time::Duration;
@@ -74,19 +75,27 @@ run mkdir /root/data
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
 sed -i 's/2222/'"$GETIPV4PORTINSIDE"'/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/root/flower/script/perl_peer
 
+/bin/cat << RCLOCAL > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+
+/bin/sh -c 'cd /root/flower && git pull'
+GETIPV4NEWINSIDE=$(ifconfig eth0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+/bin/sh -c 'cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4NEWINSIDE &'
+
+exit 0
+### ### ### // lxc-to-go ### ### ###
+# EOF
+RCLOCAL
+
 GETIPV4INSIDE=$(lxc-ls --active --fancy | grep "RUNNING" | grep "$LXCCREATENAME" | awk '{print $3}' | egrep -v "-")
-echo "#!/bin/sh" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "#" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "/bin/sh -c 'cd /root/flower && git pull'" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "#" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "GETIPV4NEWINSIDE=$(ifconfig eth0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "#" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-#/ echo "nohup perl -I /root/flower/script /root/flower/script/perl_peer --ip $GETIPV4NEWINSIDE --filepath /root/data" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "/bin/sh -c 'cd /root/flower && perl -I /root/flower/script /root/flower/script/perl_peer --ip $GETIPV4NEWINSIDE --filepath /root/data &'" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "#" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "exit 0" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-echo "#EOF" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
-run /bin/sh -c 'cd /root/flower && perl -I /root/flower/script /root/flower/script/perl_peer --ip $GETIPV4INSIDE --filepath /root/data &'
+(
+run /bin/sh -c 'cd /root/flower && nohup perl -I /root/flower/script /root/flower/script/perl_peer --filepath /root/data --ip $GETIPV4INSIDE &'
+)
+
+lull
+
+run tail -n 50 /root/flower/nohup.out
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
