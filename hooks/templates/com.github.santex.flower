@@ -17,6 +17,8 @@ lull(){
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
+#/ version: 1
+
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 

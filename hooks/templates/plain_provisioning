@@ -17,6 +17,8 @@ lull(){
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
+#/ version: 1
+
 ### EXAMPLE // ###
 #
 
