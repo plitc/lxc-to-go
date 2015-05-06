@@ -22,10 +22,14 @@ run apt-get -y install openssh-server ca-certificates
 
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 
+lull
+
 ### FIX // ###
 run sed -i 's/privat.local./privat.local/g' /etc/postfix/main.cf
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install --reinstall postfix"
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 ### // FIX ###
+
+lull
 
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSION" = "7" ]; then
