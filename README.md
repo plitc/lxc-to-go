@@ -234,8 +234,8 @@ Example
     lxc-to-go provisioning finished.
 ```
 
-Template Support
-================
+Provisioning Template Support
+=============================
 * plain_provisioning (default)
 * ![com.github.santex.flower](https://github.com/santex/flower)
    * (works with deb7/deb8 lxc)

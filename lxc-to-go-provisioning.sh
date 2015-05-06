@@ -303,15 +303,13 @@ if [ "$start" = "yes" ]; then
    sleep 2
    screen -list | grep "$name"
    echo "" # dummy
+   echo "... please wait 15 seconds ..."
+   sleep 15
+   echo "" # dummy
+   : # dummy
    if [ "$hooks" = "yes" ]; then
       LXCCREATENAME="$name"
       export LXCCREATENAME
-      : # dummy
-      echo "" # dummy
-      echo "... please wait 15 seconds ..."
-      sleep 15
-      echo "" # dummy
-      : # dummy
       ###
          echo "" # dummy
             echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
