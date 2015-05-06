@@ -60,14 +60,14 @@ HOST (Package) Dependencies
 
 * Debian 8 Jessie HOST
 ```
-   #
+   [JESSIE]: screen bridge-utils lxc
 ```
 
 Features
 ========
 * create basic templates
+   * deb8 template (recommended)
    * deb7 template
-   * deb8 template
 
 * create "managed" lxc for:
    * routing (layer 3)
