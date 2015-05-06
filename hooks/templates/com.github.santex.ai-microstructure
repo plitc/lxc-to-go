@@ -71,7 +71,12 @@ lull
 
 #/ --- AI-MicroStructure --- #/
 run git clone https://github.com/santex/AI-MicroStructure.git
-run /bin/sh -c "cd /root/AI-MicroStructure && dzil build && dzil test && dzil install"
+lull
+run /bin/sh -c "cd /root/AI-MicroStructure && dzil build"
+lull
+run /bin/sh -c "cd /root/AI-MicroStructure && dzil test"
+lull
+run /bin/sh -c "cd /root/AI-MicroStructure && dzil install"
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
