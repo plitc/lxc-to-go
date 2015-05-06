@@ -17,6 +17,7 @@ lull(){
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
+run apt-get -y install cron
 run apt-get -y install wget
 run apt-get -y install openssh-server ca-certificates
 
