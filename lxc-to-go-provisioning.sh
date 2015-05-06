@@ -305,7 +305,6 @@ if [ "$start" = "yes" ]; then
    echo "" # dummy
    echo "... please wait 15 seconds ..."
    sleep 15
-   echo "" # dummy
    : # dummy
    if [ "$hooks" = "yes" ]; then
       LXCCREATENAME="$name"
