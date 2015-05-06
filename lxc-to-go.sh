@@ -2461,10 +2461,128 @@ esac
 #
 ### // stage1 ###
 ;;
+'login')
+### stage1 // ###
+case $DEBIAN in
+debian)
+### stage2 // ###
+
+### // stage2 ###
+#
+### stage3 // ###
+if [ "$MYNAME" = "root" ]; then
+   : # dummy
+else
+   : # dummy
+   : # dummy
+   echo "[ERROR] You must be root to run this script"
+   exit 1
+fi
+if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+else
+   if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+   else
+   : # dummy
+   : # dummy
+   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
+   exit 1
+   fi
+fi
+CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL4" ]; then
+   echo "" # dummy
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
+DIALOG=$(/usr/bin/which dialog)
+if [ -z "$DIALOG" ]; then
+   echo "<--- --- --->"
+   echo "need dialog"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install dialog
+   echo "<--- --- --->"
+fi
+#
+### stage4 // ###
+#
+### ### ### ### ### ### ### ### ###
+
+CHECKCONTAINER1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+if [ "$CHECKCONTAINER1" = "0" ]; then
+   echo "" # dummy
+   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
+   exit 1
+fi
+
+CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
+if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
+   : # dummy
+else
+   echo "" # dummy
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
+
+CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+if [ "$CHECKLXCSTART1" = "0" ]; then
+   echo "" # dummy
+   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
+   exit 1
+fi
+
+### ### ###
+
+LOGINLIST=$(lxc-ls --active | egrep -v "deb7template|deb8template" | tr ' ' '\n')
+dialog --radiolist "Choose one template:" 45 80 60 "$LOGINLIST" 2>LOGINLISTCHOOSE
+loginlist1=$?
+case $loginlist1 in
+    0)
+       : # dummy
+    ;;
+    1)
+       echo "" # dummy
+       echo "" # dummy
+       exit 0
+    ;;
+    255)
+       echo "" # dummy
+       echo "" # dummy
+       echo "[ESC] key pressed."
+       exit 0
+    ;;
+esac
+
+### ### ###
+echo ""
+printf "\033[1;31mlxc-to-go login finished.\033[0m\n"
+### ### ###
+
+### ### ### ### ### ### ### ### ###
+#
+### // stage4 ###
+#
+### // stage3 ###
+#
+### // stage2 ###
+;;
+*)
+   # error 1
+   : # dummy
+   : # dummy
+   echo "[ERROR] Plattform = unknown"
+   exit 1
+   ;;
+esac
+#
+### // stage1 ###
+;;
 *)
 printf "\033[1;31mWARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.\033[0m\n"
 echo "" # usage
-echo "usage: $0 { bootstrap | start | stop | create | delete | show }"
+echo "usage: $0 { bootstrap | start | stop | create | delete | show | login }"
 ;;
 esac
 exit 0
