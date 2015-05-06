@@ -2537,12 +2537,13 @@ fi
 
 lxc-ls --active | egrep -v "deb7template|deb8template" | tr ' ' '\n' | nl | sed 's/$/ off/' > /etc/lxc-to-go/tmp/loginlist1.tmp
 
-dialog --radiolist "Choose one lxc container:" 45 80 60 --file /etc/lxc-to-go/tmp/loginlist1.tmp 2>LOGINLIST
+dialog --radiolist "Choose one lxc container:" 45 80 60 --file /etc/lxc-to-go/tmp/loginlist1.tmp 2>/etc/lxc-to-go/tmp/loginlist2.tmp
 loginlist1=$?
 case $loginlist1 in
     0)
        : # dummy
-       lxc-attach -n "$LOGINLIST"
+       awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' /etc/lxc-to-go/tmp/loginlist1.tmp /etc/lxc-to-go/tmp/loginlist2.tmp | awk '{print $2}' | sed 's/"//g' > /etc/lxc-to-go/tmp/loginlist3.tmp
+       lxc-attach -n $(cat /etc/lxc-to-go/tmp/loginlist3.tmp)
     ;;
     1)
        echo "" # dummy
