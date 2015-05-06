@@ -162,26 +162,29 @@ esac
 
 ### TEMPLATE BUILD STATUS // ###
 
-#/ 1
-if [ "$GETTEMPLATE" = "plain_provisioning" ]; then
+TEMPLATESTATUS1=$(cat "$DIR"/hooks/template-status | sed -n '/OK/,/WARNING/p' | grep "$GETTEMPLATE")
+TEMPLATESTATUS2=$(cat "$DIR"/hooks/template-status | sed -n '/WARNING/,/FAIL/p' | grep "$GETTEMPLATE")
+TEMPLATESTATUS3=$(cat "$DIR"/hooks/template-status | sed -n '/FAIL/,//p' | grep "$GETTEMPLATE")
+
+if [ "$GETTEMPLATE" = "$TEMPLATESTATUS1" ]; then
    echo "" # dummy
    echo "STATUS:"
    printf "\033[1;32mBuilding process could be OK\033[0m\n"
 fi
-#/ 2
-if [ "$GETTEMPLATE" = "com.github.santex.flower" ]; then
+
+if [ "$GETTEMPLATE" = "$TEMPLATESTATUS2" ]; then
    echo "" # dummy
    echo "STATUS:"
    printf "\033[1;33mBuilding process could be with warnings\033[0m\n"
 fi
-#/ 3
-if [ "$GETTEMPLATE" = "com.github.santex.ai-microstructure" ]; then
+
+if [ "$GETTEMPLATE" = "$TEMPLATESTATUS3" ]; then
    echo "" # dummy
    echo "STATUS:"
    printf "\033[1;31mBuilding process could be faulty\033[0m\n"
 fi
 
-### TEMPLATE BUILD STATUS // ###
+### // TEMPLATE BUILD STATUS ###
 
 ### ### ###
 echo "" # dummy
