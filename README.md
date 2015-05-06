@@ -297,7 +297,9 @@ Errata
 
 TODO
 ====
-* 17.04.2015: useful ipv6 routing (ra/proxy_ndp)
+* 06.05.2015: ipv6 portforwarding
+
+* 17.04.2015: useful ipv6 routing (ra/proxy_ndp) --- FIXED in [0.28.4]
 
 * 16.04.2015: support for zfs/btrfs lxc-clone templates
 
