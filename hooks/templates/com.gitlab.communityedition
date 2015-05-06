@@ -51,8 +51,6 @@ run gitlab-ctl reconfigure
 
 lull
 
-run gitlab-ctl stop
-
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
 
 run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/gitlab.'"$LXCCREATENAME"'.privat.local:'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb
@@ -60,6 +58,10 @@ run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27
 
 run gitlab-ctl reconfigure
 
+lull
+run gitlab-ctl stop
+lull
+run gitlab-ctl start
 lull
 
 echo "Username: root"
