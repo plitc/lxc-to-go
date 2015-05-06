@@ -2535,8 +2535,9 @@ fi
 
 ### ### ###
 
-LOGINLIST=$(lxc-ls --active | egrep -v "deb7template|deb8template" | tr ' ' '\n' | nl | sed 's/$/ off/')
-dialog --radiolist "Choose one template:" 45 80 60 "$LOGINLIST" 2>LOGINLISTCHOOSE
+lxc-ls --active | egrep -v "deb7template|deb8template" | tr ' ' '\n' | nl | sed 's/$/ off/' > /etc/lxc-to-go/tmp/loginlist1.tmp
+
+dialog --radiolist "Choose one template:" 45 80 60 --file /etc/lxc-to-go/tmp/loginlist1.tmp 2>LOGINLIST
 loginlist1=$?
 case $loginlist1 in
     0)
