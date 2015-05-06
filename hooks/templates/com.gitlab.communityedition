@@ -17,6 +17,11 @@ lull(){
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
+run apt-get -y update
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+
+lull
+
 run apt-get -y install cron
 run apt-get -y install wget
 run apt-get -y install openssh-server ca-certificates
