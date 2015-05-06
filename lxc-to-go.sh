@@ -2537,11 +2537,12 @@ fi
 
 lxc-ls --active | egrep -v "deb7template|deb8template" | tr ' ' '\n' | nl | sed 's/$/ off/' > /etc/lxc-to-go/tmp/loginlist1.tmp
 
-dialog --radiolist "Choose one template:" 45 80 60 --file /etc/lxc-to-go/tmp/loginlist1.tmp 2>LOGINLIST
+dialog --radiolist "Choose one lxc container:" 45 80 60 --file /etc/lxc-to-go/tmp/loginlist1.tmp 2>LOGINLIST
 loginlist1=$?
 case $loginlist1 in
     0)
        : # dummy
+       lxc-attach -n "$LOGINLIST"
     ;;
     1)
        echo "" # dummy
