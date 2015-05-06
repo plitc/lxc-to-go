@@ -175,13 +175,13 @@ fi
 if [ "$GETTEMPLATE" = "$TEMPLATESTATUS2" ]; then
    echo "" # dummy
    echo "STATUS:"
-   printf "\033[1;33mBuilding process could be with warnings\033[0m\n"
+   printf "\033[1;33mBuilding process could be with warnings (please read the github.com/plitc/lxc-to-go README)\033[0m\n"
 fi
 
 if [ "$GETTEMPLATE" = "$TEMPLATESTATUS3" ]; then
    echo "" # dummy
    echo "STATUS:"
-   printf "\033[1;31mBuilding process could be faulty\033[0m\n"
+   printf "\033[1;31mBuilding process could be faulty (please read the github.com/plitc/lxc-to-go README)\033[0m\n"
 fi
 
 ### // TEMPLATE BUILD STATUS ###
