@@ -18,7 +18,7 @@ echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
 run apt-get -y install wget
-run DEBIAN_FRONTEND=noninteractive apt-get -y install openssh-server ca-certificates postfix
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install openssh-server ca-certificates postfix"
 
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSION" = "7" ]; then
