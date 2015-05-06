@@ -61,12 +61,17 @@ run cpanm Try::Tiny;
 
 run cpanm AI::MicroStructure;
 
+run cpanm LWP::UserAgent;
+run cpanm --force LWP::Protocol::https;
+run cpanm Dist::Zilla::App;
+
 lull
 
 )
+
 #/ --- AI-MicroStructure --- #/
 run git clone https://github.com/santex/AI-MicroStructure.git
-run /bin/sh -c 'cd /root/AI-MicroStructure && dzil build && dzil test && dzil install'
+run /bin/sh -c "cd /root/AI-MicroStructure && dzil build && dzil test && dzil install"
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
