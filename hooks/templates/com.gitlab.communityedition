@@ -64,6 +64,7 @@ lull
 
 echo "Username: root"
 echo "Password: 5iveL!fe"
+echo "Port:     $GETIPV4PORTINSIDE"
 echo ""
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
