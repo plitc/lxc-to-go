@@ -30,6 +30,8 @@ run sed -i 's/privat.local./privat.local/g' /etc/postfix/main.cf
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 ### // FIX ###
 
+run apt-get -y autoremove
+
 lull
 
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
@@ -45,6 +47,16 @@ run dpkg -i gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
 )
 
 #/ --- gitlab ce --- #/
+run gitlab-ctl reconfigure
+
+lull
+
+run gitlab-ctl stop
+
+run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/gitlab.'"$LXCCREATENAME"'.privat.local\x27/' /etc/gitlab/gitlab.rb
+GETIPV4PORTINSIDE=$(run cat /root/PORT)
+run sed -i '/external_url \x27http/a external_port \x27'"$GETIPV4PORTINSIDE"'\x27' /etc/gitlab/gitlab.rb
+
 run gitlab-ctl reconfigure
 
 lull
