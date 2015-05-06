@@ -128,7 +128,7 @@ Usage
 ```
     WARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
-    # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete }
+    # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete | show }
 ```
 
 Example
@@ -232,6 +232,17 @@ Example
 
 
     lxc-to-go provisioning finished.
+```
+
+* show
+```
+    # ./lxc-to-go.sh show
+    NAME          STATE    IPV4                              IPV6                                    AUTOSTART  PID    MEMORY    RAM       SWAP
+    ---------------------------------------------------------------------------------------------------------------------------------------------
+    managed       RUNNING  192.168.253.254, 192.168.254.254  fd00:aaaa:253::254, fd00:aaaa:254::254  NO         1124   8.16MB    8.16MB    0.0MB
+    test1         RUNNING  192.168.254.126                   fd00:aaaa:254:0:aaa:1                   NO         10639  3.7MB     3.68MB    0.02MB
+    test2         RUNNING  192.168.254.125                   fd00:aaaa:254:0:aaa:2                   NO         8309   4.05MB    4.04MB    0.01MB
+    test3         STOPPED  -                                 -                                       NO         -      -         -         -
 ```
 
 Provisioning Template Support
