@@ -2545,7 +2545,7 @@ case $loginlist1 in
        awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' /etc/lxc-to-go/tmp/loginlist1.tmp /etc/lxc-to-go/tmp/loginlist2.tmp | awk '{print $2}' | sed 's/"//g' > /etc/lxc-to-go/tmp/loginlist3.tmp
        echo "" # dummy
        echo "" # dummy
-       lxc-attach -n $(cat /etc/lxc-to-go/tmp/loginlist3.tmp) && exit 0
+       setsid lxc-attach -n $(cat /etc/lxc-to-go/tmp/loginlist3.tmp) & exit 0
     ;;
     1)
        echo "" # dummy
