@@ -252,6 +252,8 @@ Provisioning Template Support
    * (works with deb7/deb8 lxc)
 * ![com.github.santex.ai-microstructure](https://github.com/santex/AI-MicroStructure)
    * (works only with deb7 lxc)
+* ![com.gitlab.communityedition](https://about.gitlab.com/downloads/)
+   * (works with deb7/deb8 lxc)
 
 Diagram
 =======

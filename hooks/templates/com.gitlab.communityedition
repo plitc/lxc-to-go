@@ -1,0 +1,44 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+
+run(){
+   # execute commands inside the lxc template
+   lxc-attach -n "$LXCCREATENAME" -- "$@"
+}
+
+lull(){
+   # break
+   sleep 2
+   echo ""
+   echo "---> next step <---"
+   echo ""
+}
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+(
+
+run apt-get -y install openssh-server ca-certificates postfix
+
+DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSION" = "7" ]; then
+   run wget https://downloads-packages.s3.amazonaws.com/debian-7.8/gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
+fi
+if [ "$DEBVERSION" = "8" ]; then
+   run wget https://downloads-packages.s3.amazonaws.com/debian-8.0/gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
+fi
+
+run dpkg -i gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
+
+)
+
+#/ --- gitlab ce --- #/
+run gitlab-ctl reconfigure
+
+lull
+
+echo "Username: root"
+echo "Password: 5iveL!fe"
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
