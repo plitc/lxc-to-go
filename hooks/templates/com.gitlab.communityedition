@@ -17,7 +17,7 @@ lull(){
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
-#/ version: 1
+#/ version: 2
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
@@ -59,10 +59,7 @@ run gitlab-ctl reconfigure
 lull
 
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
-
-run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/gitlab.'"$LXCCREATENAME"'.privat.local:'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb
-#/ run sed -i '/external_url \x27http/a external_port \x27'"$GETIPV4PORTINSIDE"'\x27' /etc/gitlab/gitlab.rb
-
+run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/'"$LXCCREATENAME"'.privat.local:'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb
 run gitlab-ctl reconfigure
 
 lull
