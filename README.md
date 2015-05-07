@@ -254,6 +254,7 @@ Provisioning Template Support
    * (works only with deb7 lxc)
 * ![com.gitlab.communityedition](https://about.gitlab.com/downloads/)
    * (works with deb7/deb8 lxc)
+   * (on your clients: echo "ip HOSTNAME.privat.local" >> /etc/hosts)
 
 Diagram
 =======
