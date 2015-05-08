@@ -183,6 +183,10 @@ fi
 
 sleep 1
 
+### LXC inside LXC // ###
+CHECKLXCINSIDELXC=$(echo $container | grep -c "lxc")
+### // LXC inside LXC ###
+
 CHECKCGROUP=$(mount | grep -c "cgroup")
 if [ "$CHECKCGROUP" = "1" ]; then
    : # dummy
@@ -195,13 +199,10 @@ then
    : # dummy
 else
     echo "[ERROR] lxc-checkconfig failed!"
-### LXC inside LXC // ###
-    CHECKLXCINSIDELXC=$(echo $container | grep -c "lxc")
     if [ "$CHECKLXCINSIDELXC" = "1" ]; then
        echo "" # dummy
        echo "[ERROR] copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your current lxc container /boot"
     fi
-### // LXC inside LXC ###
     exit 1
 fi
 
@@ -356,7 +357,7 @@ fi
 if [ "$CHECKLXCINSIDELXC" = "1" ]; then
    : # dummy
 else
-   # 
+   #
 CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
 if [ "$CHECKGRUB1" = "1" ]; then
     : # dummy
