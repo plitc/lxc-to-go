@@ -120,6 +120,51 @@ usage:
 
 * LXC inside LXC
    * allow lxc-to-go to run within a container
+   * works only with a debian 8 container and special permission settings:
+```
+lxc.utsname=lxctogo
+
+# vswitch0 / untagged
+lxc.network.type=veth
+lxc.network.link=vswitch0
+lxc.network.name=eth0
+lxc.network.hwaddr=aa:aa:aa:aa:aa:aa
+lxc.network.veth.pair=lxctogo
+lxc.network.flags=up
+
+lxc.mount=/etc/lxc/fstab.empty
+lxc.rootfs=/lxc-container/lxctogo
+
+# mounts point
+lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry = sysfs sys sysfs defaults  0 0
+
+### LXC - lxctogo/systemd hacks // ###
+lxc.autodev = 1
+lxc.kmsg = 0
+#
+#!# lxc.cap.drop = sys_admin
+#!# lxc.cap.drop = mknod
+#!# lxc.cap.drop = audit_control
+#!# lxc.cap.drop = audit_write
+#!# lxc.cap.drop = setfcap
+#!# lxc.cap.drop = setpcap
+#!# lxc.cap.drop = sys_resource
+#
+lxc.cap.drop = sys_module
+lxc.cap.drop = mac_admin
+lxc.cap.drop = mac_override
+lxc.cap.drop = sys_time
+lxc.cap.drop = sys_boot
+lxc.cap.drop = sys_pacct
+lxc.cap.drop = sys_rawio
+lxc.cap.drop = sys_tty_config
+#
+lxc.tty=2
+lxc.pts = 1024
+##/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
+#### // LXC - lxctogo/systemd hacks ###
+```
 
 Platform
 ========
