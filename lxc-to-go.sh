@@ -221,7 +221,7 @@ else
     echo "[ERROR] lxc-checkconfig failed!"
     if [ "$CHECKLXCINSIDELXC" = "1" ]; then
        echo "" # dummy
-       printf "\033[1;31m[ERROR] LXC inside LXC: copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your lxc-to-go container /boot\033[0m\n"
+       printf "\033[1;31m[ERROR] LXC inside LXC: copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your lxc-to-go container /boot directory\033[0m\n"
     fi
     exit 1
 fi

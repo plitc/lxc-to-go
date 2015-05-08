@@ -121,7 +121,7 @@ usage:
 * LXC inside LXC
    * allow lxc-to-go to run within a container
    * works only with a debian 8 container and special permission settings:
-      * step 1: copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your lxc-to-go container
+      * step 1: copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your lxc-to-go container /boot directory
       * step 2: copy the /var/cache/lxc/debian/rootfs-wheezy-amd64 to your lxc-to-go/var/cache/lxc/debian directory
       * step 3: change the lxc-to-go container config, see below
 ```
@@ -165,7 +165,7 @@ lxc.cap.drop = sys_pacct
 lxc.cap.drop = sys_rawio
 lxc.cap.drop = sys_tty_config
 #
-##/ lxc.tty=2
+lxc.tty=99
 lxc.pts = 1024
 ##/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
 #### // LXC - lxctogo/systemd hacks ###
