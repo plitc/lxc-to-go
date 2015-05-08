@@ -23,6 +23,7 @@ Dependencies
    * (kernel compatibility for lxc)
    * (grub environment)
    * sh (as dash/bash)
+   * iptables / ip6tables
    * bridge-utils
    * screen
    * lxc
@@ -116,6 +117,9 @@ usage:
    lxc-to-go_wlan
    lxc-to-go_wlan-provisioning
 ```
+
+* LXC inside LXC
+   * allow lxc-to-go to run within a container
 
 Platform
 ========

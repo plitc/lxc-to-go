@@ -141,6 +141,26 @@ if [ -z "$SCREEN" ]; then
    echo "<--- --- --->"
 fi
 
+IPTABLES=$(/usr/bin/which iptables)
+if [ -z "$IPTABLES" ]; then
+   echo "<--- --- --->"
+   echo "need iptables"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install iptables
+   echo "<--- --- --->"
+fi
+
+IP6TABLES=$(/usr/bin/which ip6tables)
+if [ -z "$IP6TABLES" ]; then
+   echo "<--- --- --->"
+   echo "need ip6tables"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install ip6tables
+   echo "<--- --- --->"
+fi
+
 LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
 if [ -z "$LXC" ]; then
    echo "<--- --- --->"
@@ -355,45 +375,43 @@ fi
 ##/ modify grub
 
 if [ "$CHECKLXCINSIDELXC" = "1" ]; then
-   : # dummy
+   : ### LXC inside LXC ###
 else
-   #
-CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
-if [ "$CHECKGRUB1" = "1" ]; then
-    : # dummy
-else
-    cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
-    sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
-    sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
-
-   ### grub update
-
-   : # dummy
-   sleep 2
-   grub-mkconfig
-   : # dummy
-   sleep 2
-   update-grub
-   if [ "$?" != "0" ]; then
+   CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+   if [ "$CHECKGRUB1" = "1" ]; then
       : # dummy
-      sleep 5
-      echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
-      cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
+   else
+      cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
+      sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
+      sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+
+      ### grub update
+
       : # dummy
       sleep 2
       grub-mkconfig
       : # dummy
       sleep 2
       update-grub
-      exit 1
+      if [ "$?" != "0" ]; then
+         : # dummy
+         sleep 5
+         echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
+         cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
+         : # dummy
+         sleep 2
+         grub-mkconfig
+         : # dummy
+         sleep 2
+         update-grub
+         exit 1
+      fi
+      : # dummy
+      touch /etc/lxc-to-go/STAGE1
+      echo "" # dummy
+      printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
+      exit 0
    fi
-   : # dummy
-   touch /etc/lxc-to-go/STAGE1
-   echo "" # dummy
-   printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
-   exit 0
-fi
-   #
 fi
 
 CHECKGRUB2=$(grep "cgroup_enable=memory" /proc/cmdline | grep -c "swapaccount=1")
@@ -409,18 +427,22 @@ fi
 
 ##/ check ip_tables/ip6_tables kernel module
 
-CHECKIPTABLES=$(lsmod | awk '{print $1}' | grep -c "ip_tables")
-if [ "$CHECKIPTABLES" = "1" ]; then
-    : # dummy
+if [ "$CHECKLXCINSIDELXC" = "1" ]; then
+   : ### LXC inside LXC ###
 else
-    modprobe ip_tables
-fi
+   CHECKIPTABLES=$(lsmod | awk '{print $1}' | grep -c "ip_tables")
+   if [ "$CHECKIPTABLES" = "1" ]; then
+      : # dummy
+   else
+      modprobe ip_tables
+   fi
 
-CHECKIP6TABLES=$(lsmod | awk '{print $1}' | grep -c "ip6_tables")
-if [ "$CHECKIP6TABLES" = "1" ]; then
-    : # dummy
-else
-    modprobe ip6_tables
+   CHECKIP6TABLES=$(lsmod | awk '{print $1}' | grep -c "ip6_tables")
+   if [ "$CHECKIP6TABLES" = "1" ]; then
+      : # dummy
+   else
+      modprobe ip6_tables
+   fi
 fi
 
 CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
