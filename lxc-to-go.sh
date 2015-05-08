@@ -196,8 +196,8 @@ then
 else
     echo "[ERROR] lxc-checkconfig failed!"
 ### LXC inside LXC // ###
-    CHECKLXCINSIDELXC=$(echo $container)
-    if [ "$CHECKLXCINSIDELXC" = lxc ]; then
+    CHECKLXCINSIDELXC=$(echo $container | grep -c "lxc")
+    if [ "$CHECKLXCINSIDELXC" = "1" ]; then
        echo "" # dummy
        echo "[ERROR] copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your current lxc container /boot"
     fi
@@ -353,7 +353,7 @@ fi
 
 ##/ modify grub
 
-if [ "$CHECKLXCINSIDELXC" = lxc ]; then
+if [ "$CHECKLXCINSIDELXC" = "1" ]; then
    : # dummy
 else
    # 
