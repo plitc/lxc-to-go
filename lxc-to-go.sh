@@ -195,6 +195,13 @@ then
    : # dummy
 else
     echo "[ERROR] lxc-checkconfig failed!"
+### LXC inside LXC // ###
+    CHECKLXCINSIDELXC=$(echo $container)
+    if [ "$CHECKLXCINSIDELXC" = lxc ]; then
+       echo "" # dummy
+       echo "[ERROR] copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your current lxc container /boot"
+    fi
+### // LXC inside LXC ###
     exit 1
 fi
 
@@ -346,6 +353,10 @@ fi
 
 ##/ modify grub
 
+if [ "$CHECKLXCINSIDELXC" = lxc ]; then
+   : # dummy
+else
+   # 
 CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
 if [ "$CHECKGRUB1" = "1" ]; then
     : # dummy
@@ -380,6 +391,8 @@ else
    echo "" # dummy
    printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
    exit 0
+fi
+   #
 fi
 
 CHECKGRUB2=$(grep "cgroup_enable=memory" /proc/cmdline | grep -c "swapaccount=1")
