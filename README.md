@@ -121,6 +121,10 @@ usage:
 * LXC inside LXC
    * allow lxc-to-go to run within a container
    * works only with a debian 8 container and special permission settings:
+      * operation:
+      * step 1: copy your current kernel config (for example /boot/config-3.16.0-4-amd64) to your lxc-to-go container
+      * step 2: copy the /var/cache/lxc/debian/rootfs-wheezy-amd64 to your lxc-to-go/var/cache/lxc/debian directory
+      * step 3: change the lxc-to-go container config, see below
 ```
 lxc.utsname=lxctogo
 
