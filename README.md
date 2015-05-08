@@ -125,6 +125,8 @@ usage:
       * step 2: copy the /var/cache/lxc/debian/rootfs-wheezy-amd64 to your lxc-to-go/var/cache/lxc/debian directory
       * step 3: change the lxc-to-go container config, see below
 ```
+### LXC inside LXC // ###
+
 lxc.utsname=lxctogo
 
 # vswitch0 / untagged
@@ -167,6 +169,8 @@ lxc.cap.drop = sys_tty_config
 lxc.pts = 1024
 ##/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
 #### // LXC - lxctogo/systemd hacks ###
+
+### // LXC inside LXC ###
 ```
 
 Platform
