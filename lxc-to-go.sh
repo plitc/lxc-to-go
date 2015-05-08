@@ -44,6 +44,22 @@ while [ -h "$PRG" ] ;
 DIR=`dirname "$PRG"`
 #
 ADIR="$PWD"
+#
+#/ spinner
+spinner()
+{
+    local pid=$1
+    local delay=0.75
+    local spinstr='|/-\'
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+}
 ### // stage0 ###
 
 case "$1" in
@@ -1030,8 +1046,7 @@ CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
       if [ "$GETENVIRONMENT" = "server" ]; then
          : # dummy
          echo "" # dummy
-         echo "... please wait 15 seconds ..."
-         sleep 15
+         (echo "... please wait 15 seconds ..."; sleep 15) & spinner $!
          echo "" # dummy
          : # dummy
       fi
@@ -1058,8 +1073,7 @@ CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
       if [ "$GETENVIRONMENT" = "server" ]; then
          : # dummy
          echo "" # dummy
-         echo "... please wait 15 seconds ..."
-         sleep 15
+         (echo "... please wait 15 seconds ..."; sleep 15) & spinner $!
          echo "" # dummy
          : # dummy
       fi
@@ -2248,8 +2262,7 @@ if [ "$FLAVOR" = "y" ]; then
    export LXCCREATENAME
    : # dummy
    echo "" # dummy
-   echo "... please wait 15 seconds ..."
-   sleep 15
+   (echo "... please wait 15 seconds ..."; sleep 15) & spinner $!
    echo "" # dummy
    : # dummy
    ###
