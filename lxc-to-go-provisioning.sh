@@ -42,6 +42,22 @@ while [ -h "$PRG" ] ;
       PRG=`readlink "$PRG"`
    done
 DIR=`dirname "$PRG"`
+#
+#/ spinner
+spinner()
+{
+   local pid=$1
+   local delay=0.75
+   local spinstr='|/-\'
+   while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+         local temp=${spinstr#?}
+         printf " [%c]  " "$spinstr"
+         local spinstr=$temp${spinstr%"$temp"}
+         sleep $delay
+         printf "\b\b\b\b\b\b"
+   done
+   printf "    \b\b\b\b"
+}
 ### // stage0 ###
 
 ### stage1 // ###
@@ -303,8 +319,7 @@ if [ "$start" = "yes" ]; then
    sleep 2
    screen -list | grep "$name"
    echo "" # dummy
-   echo "... please wait 15 seconds ..."
-   sleep 15
+   (sleep 15) & spinner $!
    : # dummy
    if [ "$hooks" = "yes" ]; then
       LXCCREATENAME="$name"
@@ -331,9 +346,7 @@ if [ "$start" = "no" ]; then
       export LXCCREATENAME
       : # dummy
       echo "" # dummy
-      echo "... please wait 15 seconds ..."
-      sleep 15
-      echo "" # dummy
+      (sleep 15) & spinner $!
       : # dummy
       ###
          echo "" # dummy

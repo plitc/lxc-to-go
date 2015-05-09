@@ -48,17 +48,17 @@ ADIR="$PWD"
 #/ spinner
 spinner()
 {
-    local pid=$1
-    local delay=0.75
-    local spinstr='|/-\'
-    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        local temp=${spinstr#?}
-        printf " [%c]  " "$spinstr"
-        local spinstr=$temp${spinstr%"$temp"}
-        sleep $delay
-        printf "\b\b\b\b\b\b"
-    done
-    printf "    \b\b\b\b"
+   local pid=$1
+   local delay=0.75
+   local spinstr='|/-\'
+   while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+         local temp=${spinstr#?}
+         printf " [%c]  " "$spinstr"
+         local spinstr=$temp${spinstr%"$temp"}
+         sleep $delay
+         printf "\b\b\b\b\b\b"
+   done
+   printf "    \b\b\b\b"
 }
 ### // stage0 ###
 
@@ -1038,9 +1038,7 @@ CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
       if [ "$GETENVIRONMENT" = "desktop" ]; then
          : # dummy
          echo "" # dummy
-         echo "... please wait 30 seconds ..."
-         sleep 30
-         echo "" # dummy
+         (sleep 30) & spinner $!
          : # dummy
       fi
       if [ "$GETENVIRONMENT" = "server" ]; then
@@ -1065,9 +1063,7 @@ CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
       if [ "$GETENVIRONMENT" = "desktop" ]; then
          : # dummy
          echo "" # dummy
-         echo "... please wait 30 seconds ..."
-         sleep 30
-         echo "" # dummy
+         (sleep 30) & spinner $!
          : # dummy
       fi
       if [ "$GETENVIRONMENT" = "server" ]; then
