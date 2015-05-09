@@ -1943,6 +1943,9 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    do
       set -- $line
       #
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
+      #
       lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
       lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
       #
@@ -1950,6 +1953,9 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       #
       ### set iptable rules on HOST // ###
       if [ "$CHECKENVIRONMENT" = "server" ]; then
+         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         #
          iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
          iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
       fi
@@ -2052,15 +2058,15 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    do
       set -- $line
       #
-      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
-      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
+      lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
       #
       CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
       #
       ### set iptable rules on HOST // ###
       if [ "$CHECKENVIRONMENT" = "server" ]; then
-         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
       ### // set iptable rules on HOST ###
       #
