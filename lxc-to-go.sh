@@ -1915,8 +1915,8 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
 fi
 
 ### ### ###
-echo "FOUND:"
-lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
+#/ echo "FOUND:"
+#/ lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
 lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
@@ -2034,8 +2034,8 @@ if [ "$CHECKCONTAINER2" = "0" ]; then
 fi
 
 ### ### ###
-echo "FOUND (active):"
-lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
+#/ echo "FOUND (active):"
+#/ lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
 ### FORWARDING // ###
