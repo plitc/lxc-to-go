@@ -1046,7 +1046,7 @@ CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
       if [ "$GETENVIRONMENT" = "server" ]; then
          : # dummy
          echo "" # dummy
-         (echo "... please wait 15 seconds ..."; sleep 15) & spinner $!
+         (sleep 15) & spinner $!
          echo "" # dummy
          : # dummy
       fi
@@ -1073,7 +1073,7 @@ CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
       if [ "$GETENVIRONMENT" = "server" ]; then
          : # dummy
          echo "" # dummy
-         (echo "... please wait 15 seconds ..."; sleep 15) & spinner $!
+         (sleep 15) & spinner $!
          echo "" # dummy
          : # dummy
       fi
@@ -2262,7 +2262,7 @@ if [ "$FLAVOR" = "y" ]; then
    export LXCCREATENAME
    : # dummy
    echo "" # dummy
-   (echo "... please wait 15 seconds ..."; sleep 15) & spinner $!
+   (sleep 15) & spinner $!
    echo "" # dummy
    : # dummy
    ###
