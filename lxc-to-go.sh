@@ -1933,11 +1933,16 @@ CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
 if [ -e "$CHECKFORWARDINGFILE" ]; then
    # ipv4 //
    lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
-   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp
+   #/ single port support
+   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | sed '/,/d' | grep "192.168" > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.s.tmp
+   #/ multi port support
+   awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "," | grep "192.168" > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.m.tmp
+   #
 ###
 #
 ###
    ### set iptable rules // ###
+   #/ single port support
    (
    while read -r line
    do
@@ -1961,7 +1966,11 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       fi
       ### // set iptable rules on HOST ###
       #
-   done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp"
+   done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.s.tmp"
+   )
+   #/ multi port support
+   (
+   #
    )
    ### // set iptable rules ###
    # // ipv4
