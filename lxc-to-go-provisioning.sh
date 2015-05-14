@@ -208,8 +208,8 @@ fi
 #/ check port - length
 cportlength=$(echo -n "$port" | wc -c)
 if [ "$cportlength" -gt 5 ]; then
-   cportmulti=$(echo "$port" | grep -c ",")
-   if [ "$cportmulti" = "1" ]; then
+   cportmulti1=$(echo "$port" | grep -c ",")
+   if [ "$cportmulti1" = "1" ]; then
       : # dummy
    else
       echo "" # dummy
@@ -218,11 +218,16 @@ if [ "$cportlength" -gt 5 ]; then
    fi
 fi
 
-#/ check port - high
-if [ "$port" -gt 65535 ]; then
-   echo "" # dummy
-   echo "[ERROR] port number too high (1-65535 are available, and ports in range 1-1023 are the privileged ones)"
-   exit 1
+cportmulti2=$(echo "$port" | grep -c ",")
+if [ "$cportmulti2" = "1" ]; then
+   : # dummy
+else
+   #/ check port - high
+   if [ "$port" -gt 65535 ]; then
+      echo "" # dummy
+      echo "[ERROR] port number too high (1-65535 are available, and ports in range 1-1023 are the privileged ones)"
+      exit 1
+   fi
 fi
 
 CHECKPORTRESERVATION=$(grep -sc "$port" /etc/lxc-to-go/portforwarding.conf)
