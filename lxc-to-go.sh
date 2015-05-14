@@ -1969,9 +1969,14 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.s.tmp"
    )
    #/ multi port support
-   (
-   #
-   )
+   MULTIPORTSUPPORTFILE="/etc/lxc-to-go/tmp/lxc.ipv4.running.list.m.tmp"
+   if [ -z "$MULTIPORTSUPPORTFILE" ]; then
+      : # dummy
+   else
+      (
+      : # dummy
+      )
+   fi
    ### // set iptable rules ###
    # // ipv4
 fi
