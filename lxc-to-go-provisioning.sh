@@ -389,13 +389,26 @@ else
             lxc-destroy -n "$name"
          exit 1
       else
-         # iptables - managed
-         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
-         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
-         if [ "$CHECKENVIRONMENT" = "server" ]; then
-            # iptables - host
-            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST
-            iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST
+            #/ single port support
+         if [ "$cportmulti2" = "0" ]; then
+            # iptables - managed
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
+            if [ "$CHECKENVIRONMENT" = "server" ]; then
+               # iptables - host
+               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST
+               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST
+            fi
+         else
+            #/ multi port support
+            grep -s "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}' | tr ',' '\n' > /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp
+            cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "%" -j DNAT --to-destination "$GETIPV4":"%"
+            cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "%" -j DNAT --to-destination "$GETIPV4":"%"
+            if [ "$CHECKENVIRONMENT" = "server" ]; then
+               # iptables - host
+               cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "%" -j DNAT --to-destination 192.168.253.254:"%" # HOST
+               cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % iptables -t nat -A PREROUTING -i eth0 -p udp --dport "%" -j DNAT --to-destination 192.168.253.254:"%" # HOST
+            fi
          fi
       fi
    fi
