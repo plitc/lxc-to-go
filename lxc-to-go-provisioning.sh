@@ -198,7 +198,7 @@ if [ -z "$port" ]; then
 fi
 
 #/ check port - numeric
-cport="$(echo "$port" | sed 's/[^0-9]*//g')"
+cport="$(echo "$port" | sed 's/[^0-9,]*//g')"
 if [ "$cport" != "$port" ] ; then
    echo "" # dummy
    echo "[ERROR] string -port '"$port"' has characters which are not numeric"
@@ -208,9 +208,14 @@ fi
 #/ check port - length
 cportlength=$(echo -n "$port" | wc -c)
 if [ "$cportlength" -gt 5 ]; then
-   echo "" # dummy
-   echo "[ERROR] port number (up to 5 numbers) too long"
-   exit 1
+   cportmulti=$(echo "$port" | grep -c ",")
+   if [ "$cportmulti" = "1" ]; then
+      : # dummy
+   else
+      echo "" # dummy
+      echo "[ERROR] port number (up to 5 numbers) too long"
+      exit 1
+   fi
 fi
 
 #/ check port - high
