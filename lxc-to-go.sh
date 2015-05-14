@@ -1973,8 +1973,119 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    if [ -z "$MULTIPORTSUPPORTFILE" ]; then
       : # dummy
    else
+      #/ dirty but functional (up to 5 ports)
+      cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.m.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.m.dirty.tmp
       (
-      : # dummy
+      while read -r line
+      do
+         set -- $line
+         ###/ delete MPORTS /###
+         #/ MPORT 1
+         lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2" > /dev/null 2>&1
+         lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$1":"$2" > /dev/null 2>&1
+         #/ MPORT 2
+         if [ ! -z "$3" ]; then
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination "$1":"$3" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination "$1":"$3" > /dev/null 2>&1
+         fi
+         #/ MPORT 3
+         if [ ! -z "$4" ]; then
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination "$1":"$4" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination "$1":"$4" > /dev/null 2>&1
+         fi
+         #/ MPORT 4
+         if [ ! -z "$5" ]; then
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination "$1":"$5" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination "$1":"$5" > /dev/null 2>&1
+         fi
+         #/ MPORT 5
+         if [ ! -z "$6" ]; then
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination "$1":"$6" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination "$1":"$6" > /dev/null 2>&1
+         fi
+         ###/ add MPORTS /###
+         #/ MPORT 1
+         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2"
+         lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$1":"$2"
+         #/ MPORT 2
+         if [ ! -z "$3" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination "$1":"$3" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination "$1":"$3" > /dev/null 2>&1
+         fi
+         #/ MPORT 3
+         if [ ! -z "$4" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination "$1":"$4" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination "$1":"$4" > /dev/null 2>&1
+         fi
+         #/ MPORT 4
+         if [ ! -z "$5" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination "$1":"$5" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination "$1":"$5" > /dev/null 2>&1
+         fi
+         #/ MPORT 5
+         if [ ! -z "$6" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination "$1":"$6" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination "$1":"$6" > /dev/null 2>&1
+         fi
+         #
+         CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+         #
+         ### set iptable rules on HOST // ###
+         if [ "$CHECKENVIRONMENT" = "server" ]; then
+            ###/ delete MPORTS /###
+            #/ MPORT 1
+            iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+            iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+            #/ MPORT 2
+            if [ ! -z "$3" ]; then
+               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+            fi
+            #
+            #/ MPORT 3
+            if [ ! -z "$4" ]; then
+               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+            fi
+            #
+            #/ MPORT 4
+            if [ ! -z "$5" ]; then
+               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+            fi
+            #/ MPORT 5
+            if [ ! -z "$6" ]; then
+               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+            fi
+            ###/ add MPORTS /###
+            #/ MPORT 1
+            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+            iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+            #/ MPORT 2
+            if [ ! -z "$3" ]; then
+               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+            fi
+            #/ MPORT 3
+            if [ ! -z "$4" ]; then
+               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+            fi
+            #/ MPORT 4
+            if [ ! -z "$5" ]; then
+               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+            fi
+            #/ MPORT 5
+            if [ ! -z "$6" ]; then
+               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+            fi
+         fi
+         ### // set iptable rules on HOST ###
+         #
+      done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.m.dirty.tmp"
       )
    fi
    ### // set iptable rules ###
