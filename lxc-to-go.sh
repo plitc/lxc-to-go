@@ -49,7 +49,7 @@ ADIR="$PWD"
 spinner()
 {
    local pid=$1
-   local delay=0.05
+   local delay=0.01
    local spinstr='|/-\'
    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
          local temp=${spinstr#?}
@@ -1943,7 +1943,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    (
    while read -r line
    do
-      set -- "$line"
+      set -- $line
       #
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
@@ -1975,7 +1975,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       (
       while read -r line
       do
-         set -- "$line"
+         set -- $line
          ###/ delete MPORTS /###
          #/ MPORT 1
          lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2" > /dev/null 2>&1
@@ -2481,7 +2481,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    (
    while read -r line
    do
-      set -- "$line"
+      set -- $line
       #
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
@@ -2507,7 +2507,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
        (
        while read -r line
        do
-          set -- "$line"
+          set -- $line
           ###/ delete MPORTS /###
           #/ MPORT 1
           lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2" > /dev/null 2>&1
@@ -3037,7 +3037,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    (
    while read -r line
    do
-      set -- "$line"
+      set -- $line
       #
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
