@@ -2403,8 +2403,8 @@ else
    echo "[WARNING] some port forwarding rules are duplicated!"
    echo "" # dummy
    echo "[SOLUTION]:"
-   echo "--1--> check the /etc/lxc-to-go/portforwarding.conf file"
-   echo "--2--> lxc-to-go stop"
+   echo "--1--> lxc-to-go stop"
+   echo "--2--> check the /etc/lxc-to-go/portforwarding.conf file"
    echo "--3--> iptables -t nat -F"
    echo "--4--> lxc-attach -n managed -- iptables -t nat -F"
    echo "--5--> lxc-to-go bootstrap"
