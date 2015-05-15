@@ -103,7 +103,7 @@ usage:
 
 * provisioning
    * provisioning templates
-   * multiport support
+   * multiport support (up to 20)
 
 ```
    # ./lxc-to-go-template.sh
