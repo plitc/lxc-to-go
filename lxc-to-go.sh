@@ -2394,6 +2394,24 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
 fi
 ### // FORWARDING ###
 
+### CHECK FORWARDING RULES // ###
+CHECKFORWARDINGRULES=$(cat /etc/lxc-to-go/portforwarding.conf | awk '{print $3}' | sed 's/,/ /g' | tr ' ' '\n' | awk 'array[$0]++' | grep -sc "")
+if [ "$CHECKFORWARDINGRULES" = "0" ]; then
+   : # dummy
+else
+   echo "" # dummy
+   echo "[WARNING] some port forwarding rules are duplicated!"
+   echo "" # dummy
+   echo "[SOLUTION]:"
+   echo "--1--> check the /etc/lxc-to-go/portforwarding.conf file"
+   echo "--2--> lxc-to-go stop"
+   echo "--3--> iptables -t nat -F"
+   echo "--4--> lxc-attach -n managed -- iptables -t nat -F"
+   echo "--5--> lxc-to-go bootstrap"
+   echo "--6--> lxc-to-go start"
+fi
+### // CHECK FORWARDING RULES ###
+
 cleanup
 ### ### ###
 echo "" # printf
