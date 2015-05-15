@@ -37,11 +37,11 @@ MYNAME=$(whoami)
 #
 PRG="$0"
 ##/ need this for relative symlinks
-while [ -h "$PRG" ] ;
+   while [ -h "$PRG" ] ;
    do
-      PRG=`readlink "$PRG"`
+         PRG=$(readlink "$PRG")
    done
-DIR=`dirname "$PRG"`
+DIR=$(dirname "$PRG")
 #
 ADIR="$PWD"
 #
@@ -246,7 +246,7 @@ sleep 1
 
 ### Wheezy KERNEL UPGRADE // ###
 if [ "$DEBVERSION" = "7" ]; then
-   CHECKDEB7KERNEL=$(cat /proc/sys/kernel/osrelease | grep -c "3.2")
+   CHECKDEB7KERNEL=$(grep -c "3.2" /proc/sys/kernel/osrelease)
    if [ "$CHECKDEB7KERNEL" = "1" ]; then
       CHECKDEB7KERNEL316=$(dpkg -l | grep -c "linux-headers-3.16")
       if [ "$CHECKDEB7KERNEL316" = "0" ]; then
@@ -532,12 +532,12 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
       #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
       #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
-         pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
-         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       ip addr flush "$GETBRIDGEPORT0"
       echo "" # dummy
@@ -546,12 +546,12 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
       #/ dhclient eth0 >/dev/null 2>&1
       #/ route del default dev eth0 >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
-         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
-         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       ip addr flush eth0
       echo "" # dummy
@@ -566,11 +566,11 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
    ### // fix
    #/ ipv6
    if [ -e "$UDEVNET" ]; then
-      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    else
-      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    fi
@@ -590,7 +590,7 @@ fi
 ### NEW IP - Server Environment // ###
 if [ "$GETENVIRONMENT" = "server" ]; then
    #/ ipv4
-   netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
+   netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I % echo "IPV4DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV4GATEWAY.log
    chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
@@ -624,7 +624,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
    ### ### ###
    #/ ipv6
    if [ "$GETENVIRONMENT" = "server" ]; then
-      netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I {} echo "IPV6DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV6GATEWAY.log
+      netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I % echo "IPV6DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV6GATEWAY.log
       chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
       if [ -e "$UDEVNET" ]; then
          GETIPV6UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
@@ -1671,12 +1671,12 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
       #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
       #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
-         pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
-         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       ip addr flush "$GETBRIDGEPORT0"
       echo "" # dummy
@@ -1685,12 +1685,12 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
       #/ dhclient eth0 >/dev/null 2>&1
       #/ route del default dev eth0 >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
-         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
-         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
-         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I {} kill -9 {} > /dev/null 2>&1
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       ip addr flush eth0
       echo "" # dummy
@@ -1705,11 +1705,11 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
    ### // fix
    #/ ipv6
    if [ -e "$UDEVNET" ]; then
-      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    else
-      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I {} ifconfig vswitch0 inet6 add {} >/dev/null 2>&1
+      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    fi
@@ -1729,7 +1729,7 @@ fi
 ### NEW IP - Server Environment // ###
 if [ "$GETENVIRONMENT" = "server" ]; then
    #/ ipv4
-   netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I {} echo "IPV4DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV4GATEWAY.log
+   netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I % echo "IPV4DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV4GATEWAY.log
    chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
    if [ -e "$UDEVNET" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
@@ -1763,7 +1763,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
    ### ### ###
    #/ ipv6
    if [ "$GETENVIRONMENT" = "server" ]; then
-      netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I {} echo "IPV6DEFAULTGATEWAY={}" > /tmp/lxc-to-go_IPV6GATEWAY.log
+      netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I % echo "IPV6DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV6GATEWAY.log
       chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
       if [ -e "$UDEVNET" ]; then
          GETIPV6UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
