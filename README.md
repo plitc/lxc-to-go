@@ -307,9 +307,9 @@ Provisioning Template Support
 * plain_provisioning (default)
 * [com.github.santex.flower](https://github.com/santex/flower)
    * (works with deb7/deb8 lxc)
-* ![com.github.santex.ai-microstructure](https://github.com/santex/AI-MicroStructure)
+* [com.github.santex.ai-microstructure](https://github.com/santex/AI-MicroStructure)
    * (works only with deb7 lxc)
-* ![com.gitlab.communityedition](https://about.gitlab.com/downloads/)
+* [com.gitlab.communityedition](https://about.gitlab.com/downloads/)
    * (works with deb7/deb8 lxc)
    * (on your clients: echo "ip HOSTNAME.privat.local" >> /etc/hosts)
 
