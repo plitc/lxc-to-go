@@ -1019,7 +1019,7 @@ else
    #/ fi
 
    echo "" # dummy
-      $DIR/hooks/hook_deb7.sh
+      "$DIR"/hooks/hook_deb7.sh
    echo "" # dummy
 fi
 
@@ -1200,7 +1200,7 @@ else
       #/ fi
 
       echo "" # dummy
-         $DIR/hooks/hook_deb8.sh
+         "$DIR"/hooks/hook_deb8.sh
       echo "" # dummy
    fi
    echo "... LXC Container (screen session): managed restarting ..."
@@ -1943,7 +1943,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    (
    while read -r line
    do
-      set -- $line
+      set -- "$line"
       #
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
@@ -1975,7 +1975,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       (
       while read -r line
       do
-         set -- $line
+         set -- "$line"
          ###/ delete MPORTS /###
          #/ MPORT 1
          lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2" > /dev/null 2>&1
@@ -2481,7 +2481,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    (
    while read -r line
    do
-      set -- $line
+      set -- "$line"
       #
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2" > /dev/null 2>&1
@@ -2507,7 +2507,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
        (
        while read -r line
        do
-          set -- $line
+          set -- "$line"
           ###/ delete MPORTS /###
           #/ MPORT 1
           lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2" > /dev/null 2>&1
@@ -2913,7 +2913,7 @@ if [ "$FLAVOR" = "y" ]; then
    : # dummy
    ###
       echo "" # dummy
-         $DIR/hooks/hook_flavor.sh
+         "$DIR"/hooks/hook_flavor.sh
       echo "" # dummy
    ###
    unset LXCCREATENAME
@@ -3037,7 +3037,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    (
    while read -r line
    do
-      set -- $line
+      set -- "$line"
       #
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$3":"$2"
       lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$3":"$2"
@@ -3240,7 +3240,7 @@ case $loginlist1 in
        awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' /etc/lxc-to-go/tmp/loginlist1.tmp /etc/lxc-to-go/tmp/loginlist2.tmp | awk '{print $2}' | sed 's/"//g' > /etc/lxc-to-go/tmp/loginlist3.tmp
        echo "" # dummy
        echo "" # dummy
-       lxc-attach -n $(cat /etc/lxc-to-go/tmp/loginlist3.tmp)
+       lxc-attach -n "$(cat /etc/lxc-to-go/tmp/loginlist3.tmp)"
     ;;
     1)
        echo "" # dummy

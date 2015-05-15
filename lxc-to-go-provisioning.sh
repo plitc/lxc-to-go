@@ -37,11 +37,11 @@ MYNAME=$(whoami)
 #
 PRG="$0"
 ##/ need this for relative symlinks
-while [ -h "$PRG" ] ;
+   while [ -h "$PRG" ] ;
    do
-      PRG=`readlink "$PRG"`
+         PRG=$(readlink "$PRG")
    done
-DIR=`dirname "$PRG"`
+DIR=$(dirname "$PRG")
 #
 #/ spinner
 spinner()
