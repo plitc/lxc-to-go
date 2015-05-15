@@ -62,7 +62,7 @@ spinner()
 }
 #
 #/ function cleanup tmp
-function cleanup-tmp(){
+cleanup(){
    rm -rf /etc/lxc-to-go/tmp/*
 }
 ### // stage0 ###
@@ -1834,7 +1834,7 @@ else
 fi
 ### // SYMBOLIC LINKS ###
 
-cleanup-tmp
+cleanup
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
@@ -2394,7 +2394,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
 fi
 ### // FORWARDING ###
 
-cleanup-tmp
+cleanup
 ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go start finished.\033[0m\n"
@@ -2731,7 +2731,7 @@ fi
 
 lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
 
-cleanup-tmp
+cleanup
 ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go stop finished.\033[0m\n"
@@ -2938,7 +2938,7 @@ else
   printf "\033[1;31mlxc-to-go create finished.\033[0m\n"
 fi
 
-cleanup-tmp
+cleanup
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
@@ -3300,7 +3300,7 @@ fi
    lxc-stop -n "$LXCDESTROY" -k > /dev/null 2>&1
    lxc-destroy -n "$LXCDESTROY"
 
-cleanup-tmp
+cleanup
 ### ### ###
 echo ""
 printf "\033[1;31mlxc-to-go delete finished.\033[0m\n"
