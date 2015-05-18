@@ -1,0 +1,91 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+
+run(){
+   # execute commands inside the lxc template
+   lxc-attach -n "$LXCCREATENAME" -- "$@"
+}
+
+lull(){
+   # break
+   sleep 2
+   echo ""
+   echo "---> next step <---"
+   echo ""
+}
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+(
+
+#/ version: 1
+
+run apt-get -y update
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+
+lull
+
+run apt-get -y install freeradius
+
+lull
+
+#/ --- configuration --- #/
+
+CONFIGUSERS="/etc/freeradius/users"
+run echo "#" >> "$CONFIGUSERS"
+run echo "### ### ### lxc-to-go // ### ### ###" >> "$CONFIGUSERS"
+run echo "#" >> "$CONFIGUSERS"
+run echo "public         Cleartext-Password := \"public\"" >> "$CONFIGUSERS"
+run echo "#" >> "$CONFIGUSERS"
+run echo "### ### ### // lxc-to-go ### ### ###" >> "$CONFIGUSERS"
+run echo "# EOF" >> "$CONFIGUSERS"
+
+CONFIGRADIUSD="/etc/freeradius/radiusd.conf"
+run sed 's/auth = no/auth = yes/g' "$CONFIGRADIUSD"
+run sed 's/#       interface = eth0/        interface = eth0/g' "$CONFIGRADIUSD"
+
+CONFIGCLIENTS="/etc/freeradius/clients.conf"
+run echo "#" >> "$CONFIGCLIENTS"
+run echo "### ### ### lxc-to-go // ### ### ###" >> "$CONFIGCLIENTS"
+run echo "#" >> "$CONFIGCLIENTS"
+run echo "client 0.0.0.0/0 {" >> "$CONFIGCLIENTS"
+run echo "        secret                        = public" >> "$CONFIGCLIENTS"
+run echo "        require_message_authenticator = no" >> "$CONFIGCLIENTS"
+run echo "}" >> "$CONFIGCLIENTS"
+run echo "#" >> "$CONFIGCLIENTS"
+run echo "### ### ### // lxc-to-go ### ### ###" >> "$CONFIGCLIENTS"
+run echo "# EOF" >> "$CONFIGCLIENTS"
+
+lull
+
+run service freeradius restart
+run service freeradius status
+
+lull
+
+
+DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+fi
+if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+fi
+
+)
+
+#/ --- info --- #/
+
+GETHOSTIP4=$(ifconfig vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETPORTS=$(grep "$LXCCREATENAME" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
+echo "IP:               $GETHOSTIP4"
+echo "Port:             $GETPORTS"
+echo "Radius Secret:    public"
+echo "Username:         public"
+echo "Password:         public"
+echo ""
+echo "OpenWRT Installation: opkg update; opkg remove wpad-mini; opkg install wpad; select in the LUCI Webinterface WPA2-EAP!"
+echo ""
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
