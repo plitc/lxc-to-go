@@ -312,8 +312,8 @@ Provisioning Template Support
 * [com.gitlab.communityedition](https://about.gitlab.com/downloads/)
    * (works with deb7/deb8 lxc)
    * (on your clients: echo "ip HOSTNAME.privat.local" >> /etc/hosts)
-* org.openwrt.freeradius.public
-   * (EXAMPLE: lxc-to-go-provisioning -n radius -t deb8 -h yes -p 1645,1646,1812,1813,1814 -s yes)
+* [org.openwrt.freeradius.public](http://wiki.openwrt.org/doc/howto/wireless.security.8021x)
+   * (lxc-to-go-provisioning -n radius -t deb8 -h yes -p 1812,1813,1814 -s yes)
 
 Diagram
 =======
