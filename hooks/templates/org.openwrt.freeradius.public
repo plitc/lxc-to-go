@@ -57,6 +57,9 @@ run /bin/sh -c ' echo "# EOF" >> /etc/freeradius/clients.conf '
 
 lull
 
+#/ #/ --- new keys --- #/
+
+run /bin/sh -c ' echo "" > /var/log/freeradius/radius.log '
 run service freeradius restart
 run service freeradius status
 
