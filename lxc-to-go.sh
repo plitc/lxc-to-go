@@ -1002,9 +1002,9 @@ if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
 else
    echo "" # dummy
    if [ "$DEBVERSION" = "7" ]; then
-      lxc-clone -o managed -n deb7template
+      (lxc-clone -o managed -n deb7template) & spinner $!
    else
-      lxc-clone -M -B dir -o managed -n deb7template
+      (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
    fi
    sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
    sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
@@ -1183,9 +1183,9 @@ else
    else
       echo "" # dummy
       if [ "$DEBVERSION" = "7" ]; then
-         lxc-clone -o managed -n deb8template
+         (lxc-clone -o managed -n deb8template) & spinner $!
       else
-         lxc-clone -M -B dir -o managed -n deb8template
+         (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
       fi
       sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
       sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
@@ -2859,7 +2859,7 @@ read LXCCREATETEMPLATE;
    fi
 case $LXCCREATETEMPLATE in
    1) echo "select: wheezy"
-      lxc-clone -o deb7template -n "$LXCNAME"
+      (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
       if [ $? -eq 0 ]
       then
          : # dummy
@@ -2878,7 +2878,7 @@ case $LXCCREATETEMPLATE in
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
    2) echo "select: jessie"
-      lxc-clone -o deb8template -n "$LXCNAME"
+      (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
       if [ $? -eq 0 ]
       then
          : # dummy
