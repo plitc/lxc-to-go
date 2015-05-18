@@ -76,9 +76,8 @@ fi
 #/ --- info --- #/
 
 GETHOSTIP4=$(ifconfig vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-GETPORTS=$(grep "$LXCCREATENAME" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}')
 echo "IP:               $GETHOSTIP4"
-echo "Port:             $GETPORTS"
+echo "Port:             1812,1813,1814"
 echo "Radius Secret:    public"
 echo "Username:         public"
 echo "Password:         public"
