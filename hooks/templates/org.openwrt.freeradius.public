@@ -62,6 +62,9 @@ run service freeradius status
 
 lull
 
+run cat /var/log/freeradius/radius.log
+
+lull
 
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSION" = "7" ]; then
