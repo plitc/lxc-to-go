@@ -40,8 +40,8 @@ run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/freeradius/
 run /bin/sh -c ' echo "# EOF" >> /etc/freeradius/users '
 
 #/ CONFIGRADIUSD="/etc/freeradius/radiusd.conf"
-run /bin/sh -c ' sed "s/auth = no/auth = yes/g" /etc/freeradius/radiusd.conf '
-run /bin/sh -c ' sed "s/#       interface = eth0/        interface = eth0/g" /etc/freeradius/radiusd.conf '
+run /bin/sh -c ' sed -i "s/auth = no/auth = yes/g" /etc/freeradius/radiusd.conf '
+run /bin/sh -c ' sed -i "s/#       interface = eth0/        interface = eth0/g" /etc/freeradius/radiusd.conf '
 
 #/ CONFIGCLIENTS="/etc/freeradius/clients.conf"
 run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
