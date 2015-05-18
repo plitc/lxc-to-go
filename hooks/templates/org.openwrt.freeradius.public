@@ -41,7 +41,7 @@ run /bin/sh -c ' echo "# EOF" >> /etc/freeradius/users '
 
 #/ CONFIGRADIUSD="/etc/freeradius/radiusd.conf"
 run /bin/sh -c ' sed -i "s/auth = no/auth = yes/g" /etc/freeradius/radiusd.conf '
-run /bin/sh -c ' sed -i "1,/interface = eth0/s/#//" /etc/freeradius/radiusd.conf '
+#/ run /bin/sh -c ' sed -i "1,/interface = eth0/s/#//" /etc/freeradius/radiusd.conf '
 
 #/ CONFIGCLIENTS="/etc/freeradius/clients.conf"
 run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
