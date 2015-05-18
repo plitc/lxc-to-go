@@ -31,29 +31,29 @@ lull
 #/ --- configuration --- #/
 
 CONFIGUSERS="/etc/freeradius/users"
-run echo "#" >> "$CONFIGUSERS"
-run echo "### ### ### lxc-to-go // ### ### ###" >> "$CONFIGUSERS"
-run echo "#" >> "$CONFIGUSERS"
-run echo "public         Cleartext-Password := \"public\"" >> "$CONFIGUSERS"
-run echo "#" >> "$CONFIGUSERS"
-run echo "### ### ### // lxc-to-go ### ### ###" >> "$CONFIGUSERS"
-run echo "# EOF" >> "$CONFIGUSERS"
+run /bin/sh -c ' echo "#" >> $CONFIGUSERS '
+run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> $CONFIGUSERS '
+run /bin/sh -c ' echo "#" >> $CONFIGUSERS '
+run /bin/sh -c ' echo "public         Cleartext-Password := \"public\"" >> $CONFIGUSERS '
+run /bin/sh -c ' echo "#" >> $CONFIGUSERS '
+run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> $CONFIGUSERS '
+run /bin/sh -c ' echo "# EOF" >> $CONFIGUSERS '
 
 CONFIGRADIUSD="/etc/freeradius/radiusd.conf"
-run sed 's/auth = no/auth = yes/g' "$CONFIGRADIUSD"
-run sed 's/#       interface = eth0/        interface = eth0/g' "$CONFIGRADIUSD"
+run /bin/sh -c ' sed "s/auth = no/auth = yes/g" $CONFIGRADIUSD '
+run /bin/sh -c ' sed "s/#       interface = eth0/        interface = eth0/g" $CONFIGRADIUSD '
 
 CONFIGCLIENTS="/etc/freeradius/clients.conf"
-run echo "#" >> "$CONFIGCLIENTS"
-run echo "### ### ### lxc-to-go // ### ### ###" >> "$CONFIGCLIENTS"
-run echo "#" >> "$CONFIGCLIENTS"
-run echo "client 0.0.0.0/0 {" >> "$CONFIGCLIENTS"
-run echo "        secret                        = public" >> "$CONFIGCLIENTS"
-run echo "        require_message_authenticator = no" >> "$CONFIGCLIENTS"
-run echo "}" >> "$CONFIGCLIENTS"
-run echo "#" >> "$CONFIGCLIENTS"
-run echo "### ### ### // lxc-to-go ### ### ###" >> "$CONFIGCLIENTS"
-run echo "# EOF" >> "$CONFIGCLIENTS"
+run /bin/sh -c ' echo "#" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "#" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "client 0.0.0.0/0 {" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "        secret                        = public" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "        require_message_authenticator = no" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "}" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "#" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> $CONFIGCLIENTS '
+run /bin/sh -c ' echo "# EOF" >> $CONFIGCLIENTS '
 
 lull
 
