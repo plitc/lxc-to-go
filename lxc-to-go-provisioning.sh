@@ -266,7 +266,7 @@ fi
 ###
 
 if [ "$template" = "deb7" ]; then
-   lxc-clone -o deb7template -n "$name"
+   (lxc-clone -o deb7template -n "$name") & spinner $!
    if [ $? -eq 0 ]
    then
       : # dummy
@@ -285,7 +285,7 @@ if [ "$template" = "deb7" ]; then
 fi
 
 if [ "$template" = "deb8" ]; then
-   lxc-clone -o deb8template -n "$name"
+   (lxc-clone -o deb8template -n "$name")& spinner $!
    if [ $? -eq 0 ]
    then
       : # dummy
