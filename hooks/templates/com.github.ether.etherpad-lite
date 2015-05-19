@@ -42,7 +42,13 @@ run git clone git://github.com/ether/etherpad-lite.git
 lull
 
 #/ run /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root '
-run /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root"
+#/ run /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root"
+#/ run /bin/sh -c ' su -m etherpad -c "screen -d -m -S etherpad -- /lxc-to-go/etherpad-lite/bin/run.sh" '
+
+run useradd etherpad-lite
+run mkdir -p /lxc-to-go
+run mv -f /root/etherpad-lite /lxc-to-go
+run chown -R etherpad-lite:etherpad-lite /lxc-to-go
 
 #/ --- configuration --- #/
 
@@ -51,7 +57,23 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 fi
 if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+   #/ systemd service file
+   run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "[Unit]" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "Description=Run Etherpad-lite, the collaborative editor." >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "After=syslog.target network.target" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /lib/systemd/system/etherpad-lite.service '
+   run /bin/sh -c ' echo "# EOF" >> /lib/systemd/system/etherpad-lite.service '
+
+   run systemctl enable etherpad-lite.service
+   run systemctl start etherpad-lite.service
 fi
 
 )
