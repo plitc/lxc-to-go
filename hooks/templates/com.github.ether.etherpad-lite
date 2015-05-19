@@ -26,7 +26,7 @@ lull
 
 run apt-get -y install vim
 run apt-get -y install gzip git curl python libssl-dev pkg-config build-essential
-run apt-get -y install nodejs
+run apt-get -y install nodejs npm
 
 
 lull
