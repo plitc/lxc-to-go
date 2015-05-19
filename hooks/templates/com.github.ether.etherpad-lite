@@ -58,9 +58,10 @@ fi
 #/ --- info --- #/
 
 GETHOSTIP4=$(ifconfig vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETIPV4PORTINSIDE=$(run cat /root/PORT)
 echo ""
 echo "IP:               $GETHOSTIP4"
-echo "Port:             9001"
+echo "Port:             $GETIPV4PORTINSIDE"
 echo ""
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
