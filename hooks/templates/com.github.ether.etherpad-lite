@@ -1,0 +1,63 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+
+run(){
+   # execute commands inside the lxc template
+   lxc-attach -n "$LXCCREATENAME" -- "$@"
+}
+
+lull(){
+   # break
+   sleep 2
+   echo ""
+   echo "---> next step <---"
+   echo ""
+}
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+(
+
+#/ version: 1.1
+
+run apt-get -y update
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+
+lull
+
+run apt-get -y install vim
+run apt-get -y install gzip git curl python libssl-dev pkg-config build-essential
+run apt-get -y install nodejs
+
+
+lull
+
+#/ --- etherpad-lite --- #/
+
+run git clone git://github.com/ether/etherpad-lite.git
+
+lull
+
+run /root/etherpad-lite/bin/run.sh
+
+#/ --- configuration --- #/
+
+DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+fi
+if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+fi
+
+)
+
+#/ --- info --- #/
+
+GETHOSTIP4=$(ifconfig vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+echo "IP:               $GETHOSTIP4"
+echo "Port:             9001"
+echo ""
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
