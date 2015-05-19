@@ -41,7 +41,8 @@ run git clone git://github.com/ether/etherpad-lite.git
 
 lull
 
-run /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root '
+#/ run /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root '
+run /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root"
 
 #/ --- configuration --- #/
 
