@@ -306,27 +306,22 @@ Provisioning Template Support
 =============================
 
 * plain_provisioning (default)
-
 * [com.github.santex.flower](https://github.com/santex/flower)
    * (lxc-to-go-provisioning -n flower -t deb8 -h yes -p 2222 -s yes)
       * (works with deb7/deb8 lxc)
-
 * [com.github.santex.ai-microstructure](https://github.com/santex/AI-MicroStructure)
    * (lxc-to-go-provisioning -n micro -t deb7 -h yes -p 10001 -s yes)
-      * (works only with deb7 lxc)
-
+      * (works currently only with deb7 lxc)
 * [com.gitlab.communityedition](https://about.gitlab.com/downloads/)
    * (lxc-to-go-provisioning -n gitlab -t deb8 -h yes -p 80 -s yes)
       * (works with deb7/deb8 lxc)
       * (on your clients: echo "ip HOSTNAME.privat.local" >> /etc/hosts)
-
 * [org.openwrt.freeradius.public](http://wiki.openwrt.org/doc/howto/wireless.security.8021x)
    * (lxc-to-go-provisioning -n radius -t deb8 -h yes -p 1812,1813,1814 -s yes)
-      * (works with deb7/deb8 lxc)
-
+      * (works currently only with deb8 lxc)
 * [com.github.ether.etherpad-lite](https://github.com/ether/etherpad-lite)
    * (lxc-to-go-provisioning -n etherpad -t deb8 -h yes -p 9001 -s yes)
-      * (works with deb7/deb8 lxc)
+      * (works currently only with deb8 lxc)
 
 Diagram
 =======
