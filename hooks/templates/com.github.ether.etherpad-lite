@@ -72,11 +72,11 @@ if [ "$DEBVERSION" = "8" ]; then
    run /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '
    run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /lib/systemd/system/etherpad-lite.service '
    run /bin/sh -c ' echo "# EOF" >> /lib/systemd/system/etherpad-lite.service '
-
-   lull
-
+lull
    run systemctl enable etherpad-lite.service
    run systemctl start etherpad-lite.service
+lull
+   run systemctl status etherpad-lite.service
 fi
 
 )
