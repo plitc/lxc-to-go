@@ -319,6 +319,10 @@ Provisioning Template Support
 * [org.openwrt.freeradius.public](http://wiki.openwrt.org/doc/howto/wireless.security.8021x)
    * (lxc-to-go-provisioning -n radius -t deb8 -h yes -p 1812,1813,1814 -s yes)
       * (works currently only with deb8 lxc)
+* [org.openwrt.freeradius.anonymous-eap-ttls](http://wiki.openwrt.org/doc/howto/wireless.security.8021x)
+   * (lxc-to-go-provisioning -n radius -t deb8 -h yes -p 1645,1646 -s yes)
+   * !!! allow any radius login credentials !!!
+      * (works currently only with deb8 lxc)
 * [com.github.ether.etherpad-lite](https://github.com/ether/etherpad-lite)
    * (lxc-to-go-provisioning -n etherpad -t deb8 -h yes -p 9001 -s yes)
       * (works currently only with deb8 lxc)
