@@ -34,7 +34,7 @@ lull
 run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
 run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/freeradius/users '
 run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "public         Cleartext-Password := \"public\"" >> /etc/freeradius/users '
+run /bin/sh -c ' echo "anonymous         Cleartext-Password := \"anonymous\"" >> /etc/freeradius/users '
 run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
 run /bin/sh -c ' echo "#/ wildcard, accept any credentials" >> /etc/freeradius/users '
 run /bin/sh -c ' echo "DEFAULT    FreeRADIUS-Proxied-To == 127.0.0.1, Auth-Type := Accept" >> /etc/freeradius/users '
@@ -51,7 +51,7 @@ run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
 run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/freeradius/clients.conf '
 run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
 run /bin/sh -c ' echo "client 0.0.0.0/0 {" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "        secret                        = public" >> /etc/freeradius/clients.conf '
+run /bin/sh -c ' echo "        secret                        = anonymous" >> /etc/freeradius/clients.conf '
 run /bin/sh -c ' echo "        require_message_authenticator = no" >> /etc/freeradius/clients.conf '
 run /bin/sh -c ' echo "}" >> /etc/freeradius/clients.conf '
 run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
@@ -94,7 +94,7 @@ GETIPV4PORTINSIDE=$(run cat /root/PORT)
 
 echo "IP:               $GETHOSTIP4"
 echo "Port:             $GETIPV4PORTINSIDE"
-echo "Radius Secret:    public"
+echo "Radius Secret:    anonymous"
 echo "Username:         *accept any credentials"
 echo "Password:         *accept any credentials"
 echo ""
