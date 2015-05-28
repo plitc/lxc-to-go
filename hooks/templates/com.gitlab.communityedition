@@ -17,7 +17,14 @@ lull(){
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
-#/ version: 2
+### ### ### CUSTOM // ### ### ###
+
+DOMAINNAME="privat.local"
+
+### ### ### // CUSTOM ### ### ###
+
+#/ version: 2.1
+
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
@@ -33,7 +40,7 @@ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 lull
 
 ### FIX // ###
-run sed -i 's/privat.local./privat.local/g' /etc/postfix/main.cf
+run sed -i 's/privat.local./'"$DOMAINNAME"'/g' /etc/postfix/main.cf
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 ### // FIX ###
 
@@ -59,7 +66,7 @@ run gitlab-ctl reconfigure
 lull
 
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
-run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/'"$LXCCREATENAME"'.privat.local:'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb
+run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/'"$LXCCREATENAME"'.'"$DOMAINNAME"':'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb
 run gitlab-ctl reconfigure
 
 lull
@@ -68,9 +75,10 @@ lull
 run gitlab-ctl start
 lull
 
-echo "Username: root"
-echo "Password: 5iveL!fe"
-echo "Port:     $GETIPV4PORTINSIDE"
+echo "Username:   root"
+echo "Password:   5iveL!fe"
+echo "Port:       $GETIPV4PORTINSIDE"
+echo "DomainName: $DOMAINNAME"
 echo ""
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
