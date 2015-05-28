@@ -14,17 +14,14 @@ lull(){
    echo ""
 }
 
+### ### ### CUSTOM // ### ### ###
+DOMAINNAME=privat.local
+### ### ### // CUSTOM ### ### ###
+
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
-### ### ### CUSTOM // ### ### ###
-
-DOMAINNAME="privat.local"
-
-### ### ### // CUSTOM ### ### ###
-
-#/ version: 2.1
-
+#/ version: 2.2
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
