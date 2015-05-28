@@ -90,6 +90,9 @@ if [ "$DEBVERSION" = "8" ]; then
 lull
    run systemctl enable etherpad-lite.service
    run systemctl start etherpad-lite.service
+   echo "" # dummy
+   echo "... starting etherpad-lite.service ..."
+   echo "" # dummy
    (sleep 120) & spinner $!
 lull
    run systemctl status etherpad-lite.service
