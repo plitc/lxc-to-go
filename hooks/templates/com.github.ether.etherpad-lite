@@ -14,6 +14,21 @@ lull(){
    echo ""
 }
 
+spinner(){
+   # spinner
+   local pid=$1
+   local delay=0.01
+   local spinstr='|/-\'
+   while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+         local temp=${spinstr#?}
+         printf " [%c]  " "$spinstr"
+         local spinstr=$temp${spinstr%"$temp"}
+         sleep $delay
+         printf "\b\b\b\b\b\b"
+   done
+   printf "    \b\b\b\b"
+}
+
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
@@ -75,7 +90,7 @@ if [ "$DEBVERSION" = "8" ]; then
 lull
    run systemctl enable etherpad-lite.service
    run systemctl start etherpad-lite.service
-   sleep 30
+   (sleep 30) & spinner $!
 lull
    run systemctl status etherpad-lite.service
 fi
