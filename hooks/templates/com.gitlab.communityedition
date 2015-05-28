@@ -15,7 +15,7 @@ lull(){
 }
 
 ### ### ### CUSTOM // ### ### ###
-DOMAINNAME=privat.local
+DOMAINNAME=federation.network
 ### ### ### // CUSTOM ### ### ###
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
