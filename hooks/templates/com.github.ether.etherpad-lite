@@ -77,6 +77,11 @@ lull
    run systemctl start etherpad-lite.service
 lull
    run systemctl status etherpad-lite.service
+lull
+   sleep 10
+   run systemctl restart etherpad-lite.service
+lull
+   run systemctl status etherpad-lite.service
 fi
 
 )
