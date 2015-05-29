@@ -1825,12 +1825,12 @@ else
    ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 fi
 #
-CHECKSYMLINK2="$DIR/lxc-to-go_wlan.sh"
+CHECKSYMLINK2="$DIR/lxc-to-go-ci.sh"
 if [ -e "$CHECKSYMLINK2" ]; then
    : # dummy
 else
-   ln -sf "$ADIR"/lxc-to-go_wlan.sh /usr/sbin/lxc-to-go_wlan
-   ln -sf "$ADIR"/lxc-to-go_wlan-provisioning.sh /usr/sbin/lxc-to-go_wlan-provisioning
+   ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
+   ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
 fi
 ### // SYMBOLIC LINKS ###
 

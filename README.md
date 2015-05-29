@@ -91,10 +91,10 @@ usage:
 ```
    git clone https://github.com/plitc/lxc-to-go
    cd lxc-to-go/modification
-   ./wlan_support.sh
+   ./custom-interface-support.sh
    cd ..
 
-   ./lxc-to-go_wlan.sh
+   ./lxc-to-go-ci.sh
 ```
 
 * rp_filter enabled by default
