@@ -1818,22 +1818,22 @@ fi
 ### SYMBOLIC LINKS // ###
 CHECKSYMLINK1="/usr/sbin/lxc-to-go"
 if [ -e "$CHECKSYMLINK1" ]; then
-   ln -sf "$ADIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
-   ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
-   ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
+   ln -sf "$DIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
+   ln -sf "$DIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
+   ln -sf "$DIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 else
-   ln -sf "$ADIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
-   ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
-   ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
+   ln -sf "$DIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
+   ln -sf "$DIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
+   ln -sf "$DIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 fi
 #
 CHECKSYMLINK2="$DIR/lxc-to-go-ci.sh"
 if [ -e "$CHECKSYMLINK2" ]; then
-   ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
-   ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
+   ln -sf "$DIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
+   ln -sf "$DIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
 else
-   ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
-   ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
+   ln -sf "$DIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
+   ln -sf "$DIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
 fi
 ### // SYMBOLIC LINKS ###
 
