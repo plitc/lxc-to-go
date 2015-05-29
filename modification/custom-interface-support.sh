@@ -1,7 +1,9 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
 
-CUSTOMINTERFACE="wlan"
+### ### ### CUSTOM // ### ### ###
+CUSTOMINTERFACE=$(echo "wlan0")
+### ### ### // CUSTOM ### ### ###
 
 echo "<--- --- --- lxc-to-go (server variant) custom interface support // --- --- --->"
 
