@@ -185,7 +185,7 @@ Usage
 ```
     WARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
-    # usage: ./lxc-to-go.sh { bootstrap | start | stop | create | delete | show }
+    # usage: ./lxc-to-go.sh { bootstrap | start | stop | shutdown | create | delete | show }
 ```
 
 Example
@@ -226,6 +226,14 @@ Example
     test1 test2 test3 test4 test5 
 
     lxc-to-go stop finished.
+```
+
+* shutdown
+```
+    # ./lxc-to-go.sh shutdown
+
+
+    lxc-to-go shutdown finished.
 ```
 
 * create
