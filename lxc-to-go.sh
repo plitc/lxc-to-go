@@ -3111,6 +3111,13 @@ ip link del vswitch1 > /dev/null 2>&1
 sysctl -a | grep "proxy_arp" | awk '{print $1}' | xargs -L1 -I % sysctl -w %=0 > /dev/null 2>&1
 sysctl -a | grep "proxy_ndp" | awk '{print $1}' | xargs -L1 -I % sysctl -w %=0 > /dev/null 2>&1
 
+### NAT // ###
+#/ ipv4 nat
+iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE >/dev/null 2>&1
+#/ ipv6 nat
+ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE >/dev/null 2>&1
+### // NAT ###
+
 ### RP_FILTER // ###
 sysctl -w net.ipv4.conf.all.rp_filter=0 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.default.rp_filter=0 >/dev/null 2>&1
