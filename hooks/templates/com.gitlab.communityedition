@@ -21,7 +21,7 @@ DOMAINNAME=$(echo "federation.network")
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
-#/ version: 2.2
+#/ version: 2.3
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
@@ -29,6 +29,7 @@ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 lull
 
 run apt-get -y install cron
+run apt-get -y install curl
 run apt-get -y install wget
 run apt-get -y install openssh-server ca-certificates
 
@@ -47,13 +48,17 @@ lull
 
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSION" = "7" ]; then
-   run wget https://downloads-packages.s3.amazonaws.com/debian-7.8/gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
+   run curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+   run chmod 0755 /root/script.deb.sh
+   run /root/script.deb.sh
 fi
 if [ "$DEBVERSION" = "8" ]; then
-   run wget https://downloads-packages.s3.amazonaws.com/debian-8.0/gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
+   run curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+   run chmod 0755 /root/script.deb.sh
+   run /root/script.deb.sh
 fi
 
-run dpkg -i gitlab-ce_7.10.1~omnibus.2-1_amd64.deb
+run apt-get install gitlab-ce
 
 )
 
