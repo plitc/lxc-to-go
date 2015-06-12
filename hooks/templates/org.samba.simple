@@ -21,7 +21,7 @@ DOMAINNAME=$(echo "federation.network")
 echo "<--- --- --- provisioning hooks // --- --- --->"
 (
 
-#/ version: 1.0
+#/ version: 1.1
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
@@ -66,6 +66,8 @@ fi
    map to guest = bad user
    usershare allow guests = yes
 
+   disable spoolss = Yes
+
 [public]
    comment = public
    path = /DATA
@@ -73,6 +75,7 @@ fi
    browseable = yes
    create mask = 0666
    directory mask = 0777
+   read only = no
 
 ### ### ### // lxc-to-go ### ### ###
 # EOF
