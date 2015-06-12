@@ -91,6 +91,10 @@ if [ "$DEBVERSION" = "8" ]; then
    run systemctl start samba-ad-dc
    run systemctl start smbd
    run systemctl start nmbd
+   run sleep 1
+   run systemctl status samba-ad-dc
+   run systemctl status smbd
+   run systemctl status nmbd
 fi
 
 )
