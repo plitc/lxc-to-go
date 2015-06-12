@@ -334,6 +334,9 @@ Provisioning Template Support
 * [com.github.ether.etherpad-lite](https://github.com/ether/etherpad-lite)
    * (lxc-to-go-provisioning -n etherpad -t deb8 -h yes -p 9001 -s yes)
       * (works currently only with deb8 lxc)
+* [org.samba.simple](https://www.samba.org)
+   * (lxc-to-go-provisioning -n samba -t deb8 -h yes -p 53,88,135,136,137,138,139,389,445,464,636,1024,3268,3269 -s yes)
+      * (works with deb7/deb8 lxc)
 
 Diagram
 =======

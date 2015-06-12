@@ -1,0 +1,52 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+
+run(){
+   # execute commands inside the lxc template
+   lxc-attach -n "$LXCCREATENAME" -- "$@"
+}
+
+lull(){
+   # break
+   sleep 2
+   echo ""
+   echo "---> next step <---"
+   echo ""
+}
+
+### ### ### CUSTOM // ### ### ###
+DOMAINNAME=$(echo "federation.network")
+### ### ### // CUSTOM ### ### ###
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+(
+
+#/ version: 1.0
+
+run apt-get -y update
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+
+lull
+
+run apt-get -y install samba
+#/ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
+
+lull
+
+DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSION" = "7" ]; then
+   : # dummy
+fi
+if [ "$DEBVERSION" = "8" ]; then
+   : # dummy
+fi
+
+)
+
+#/ --- samba --- #/
+
+GETIPV4PORTINSIDE=$(run cat /root/PORT)
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
