@@ -337,9 +337,10 @@ Provisioning Template Support
 * [org.samba.simple](https://www.samba.org)
    * (lxc-to-go-provisioning -n samba -t deb8 -h yes -p 135,136,137,138,139,445 -s yes)
       * (works currently only with deb8 lxc)
-* [org.samba.active-directory](https://www.samba.org)
-   * (lxc-to-go-provisioning -n ads -t deb8 -h yes -p 53,88,135,136,137,138,139,389,445,464,636,1024,3268,3269 -s yes)
-      * (works currently only with deb8 lxc)
+
+#/ * [org.samba.active-directory](https://www.samba.org)
+#/    * (lxc-to-go-provisioning -n ads -t deb8 -h yes -p 53,88,135,136,137,138,139,389,445,464,636,1024,3268,3269 -s yes)
+#/       * (works currently only with deb8 lxc)
 
 Diagram
 =======
