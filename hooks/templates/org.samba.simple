@@ -29,23 +29,68 @@ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 lull
 
 run apt-get -y install samba
-#/ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 
 lull
 
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSION" = "7" ]; then
-   : # dummy
+   cp -prfv /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf_ORI
+   mkdir -p /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
+   chmod 0777 /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
 fi
 if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+   cp -prfv /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf_ORI
+   mkdir -p /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
+   chmod 0777 /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
+fi
+
+/bin/cat <<"SMBCONFIG" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf
+### ### ### lxc-to-go // ### ### ###
+
+[global]
+   workgroup = PRIVAT.LOCAL
+   dns proxy = no
+
+   log file = /var/log/samba/log.%m
+   max log size = 1000
+   syslog = 0
+   panic action = /usr/share/samba/panic-action %d
+
+   server role = standalone server
+   passdb backend = tdbsam
+   obey pam restrictions = yes
+   unix password sync = yes
+   passwd program = /usr/bin/passwd %u
+   passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+   pam password change = yes
+   map to guest = bad user
+   usershare allow guests = yes
+
+[public]
+   comment = public
+   path = /DATA
+   guest ok = yes
+   browseable = yes
+   create mask = 0666
+   directory mask = 0777
+
+### ### ### // lxc-to-go ### ### ###
+# EOF
+SMBCONFIG
+
+if [ "$DEBVERSION" = "8" ]; then
+   systemctl stop samba-ad-dc
+   systemctl stop smbd
+   systemctl stop nmbd
+   sleep 1
+   systemctl start samba-ad-dc
+   systemctl start smbd
+   systemctl start nmbd
 fi
 
 )
 
 #/ --- samba --- #/
-
-GETIPV4PORTINSIDE=$(run cat /root/PORT)
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
