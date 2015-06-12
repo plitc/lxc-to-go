@@ -79,15 +79,15 @@ fi
 SMBCONFIG
 
 if [ "$DEBVERSION" = "8" ]; then
-   systemctl enable samba
-   sleep 1
-   systemctl stop samba-ad-dc
-   systemctl stop smbd
-   systemctl stop nmbd
-   sleep 1
-   systemctl start samba-ad-dc
-   systemctl start smbd
-   systemctl start nmbd
+   run systemctl enable samba
+   run sleep 1
+   run systemctl stop samba-ad-dc
+   run systemctl stop smbd
+   run systemctl stop nmbd
+   run sleep 1
+   run systemctl start samba-ad-dc
+   run systemctl start smbd
+   run systemctl start nmbd
 fi
 
 )
