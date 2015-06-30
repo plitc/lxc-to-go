@@ -362,6 +362,8 @@ Screencast
 
 Errata
 ======
+* 30.06.2015: [lxc-to-go < 0.26.5]: issue with [ulatencyd](https://packages.debian.org/stretch/ulatencyd)
+
 * 04.05.2015: [lxc-to-go < 0.26.5]: missing lxc debian wheezy template on debian jessie release HOST environment --- FIXED in [0.26.8]
 
 * 27.04.2015: [lxc-to-go < 0.25]: multiple start of "start function" generating unnecessary firewall rules
