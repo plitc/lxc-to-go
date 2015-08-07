@@ -359,6 +359,10 @@ Diagram
 
 Screencast
 ==========
+* github plitc lxc-to-go [VERSION: 07.08.2015]
+   * a short introduction (bootstrap, start, stop, create, delete, shutdown, login)
+
+[![github plitc lxc-to-go](https://img.youtube.com/vi/ITG8C9U3Q6E/0.jpg)](https://www.youtube.com/watch?v=ITG8C9U3Q6E)
 
 Errata
 ======
