@@ -1402,6 +1402,14 @@ CHECKMANAGEDNETFILE
    echo "" # dummy
 fi
 
+##/ less for systemd
+CHECKMANAGEDLESS=$(lxc-attach -n managed -- dpkg -l | grep -c "less")
+if [ "$CHECKMANAGEDLESS" = "1" ]; then
+   : # dummy
+else
+   lxc-attach -n managed -- apt-get -y install less
+fi
+
 ##/ DHCP-Service
 
 CHECKMANAGEDDHCP=$(lxc-attach -n managed -- dpkg -l | grep -c "isc-dhcp-server")
