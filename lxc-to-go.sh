@@ -4076,6 +4076,7 @@ then
       lxc-attach -n managed -- rm -rf /srv/lwp
       exit 1
    fi
+   (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc) & spinner $!
    "$DIR"/lxc-to-go.sh stop
    "$DIR"/lxc-to-go.sh shutdown
 else
