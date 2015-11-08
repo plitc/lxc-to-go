@@ -3968,10 +3968,152 @@ esac
 #
 ### // stage1 ###
 ;;
+'webpanel')
+### stage1 // ###
+case $DEBIAN in
+debian)
+### stage2 // ###
+
+### // stage2 ###
+#
+### stage3 // ###
+if [ "$MYNAME" = "root" ]; then
+   : # dummy
+else
+   : # dummy
+   : # dummy
+   echo "[ERROR] You must be root to run this script"
+   exit 1
+fi
+#/if [ "$DEBVERSION" = "7" ]; then
+#/   : # dummy
+#/else
+   if [ "$DEBVERSION" = "8" ]; then
+      : # dummy
+   else
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
+   fi
+#/fi
+CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL4" ]; then
+   echo "" # dummy
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
+DIALOG=$(/usr/bin/which dialog)
+if [ -z "$DIALOG" ]; then
+   echo "<--- --- --->"
+   echo "need dialog"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install dialog
+   echo "<--- --- --->"
+fi
+#
+### stage4 // ###
+#
+### ### ### ### ### ### ### ### ###
+
+CHECKCONTAINER1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+if [ "$CHECKCONTAINER1" = "0" ]; then
+   echo "" # dummy
+   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
+   exit 1
+fi
+
+CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
+if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
+   : # dummy
+else
+   echo "" # dummy
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
+
+CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+if [ "$CHECKLXCSTART1" = "0" ]; then
+   echo "" # dummy
+   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
+   exit 1
+fi
+
+### ### ###
+
+# install LXC-Web-Panel
+lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then rm -f /NOWEBPANEL; else touch /NOWEBPANEL; fi'
+CHECKWEBPANEL="/var/lib/lxc/managed/rootfs/NOWEBPANEL"
+if [ -e "$CHECKWEBPANEL" ]
+then
+   echo "" # dummy
+   echo "... installing LXC-Web-Panel for LXC-inside-LXC Scheme ..."
+   echo "" # dummy
+   # LXC-Web-Panel Package
+   lxc-attach -n managed -- apt-get -y update
+   lxc-attach -n managed -- apt-get -y install git python-dev
+   lxc-attach -n managed -- /bin/sh -c 'mkdir -p /github; cd /github; git clone https://github.com/plitc/LXC-Web-Panel.git; cd /github/LXC-Web-Panel; chmod 0755 /github/LXC-Web-Panel/install.sh; /github/LXC-Web-Panel/install.sh'
+   # LXC-inside-LXC
+   echo "" # dummy
+   echo "... prepare LXC-inside-LXC ..."
+   echo "" # dummy
+   sed -i 's/lxc.tty=2/lxc.tty=99/g' /var/lib/lxc/managed/config
+   sed -i '/lxc.cgroup.devices/d' /var/lib/lxc/managed/config
+   # prepare LXC Environment
+   GETKERNELRELEASE=$(uname -r)
+   cp -prf /boot/config-"$GETKERNELRELEASE" /var/lib/lxc/managed/rootfs/boot
+   if [ $? -eq 0 ]
+   then
+      lxc-attach -n managed -- apt-get -y update
+      lxc-attach -n managed -- apt-get -y install lxc
+   else
+      echo "[ERROR] can't copy config-$GETKERNELRELEASE to /var/lib/lxc/managed/rootfs/boot"
+      # clean up
+      lxc-attach -n managed -- /etc/init.d/lwp stop
+      lxc-attach -n managed -- rm -rf /srv/lwp
+      exit 1
+   fi
+   "$DIR"/lxc-to-go.sh stop
+   "$DIR"/lxc-to-go.sh shutdown
+else
+   : # dummy
+   #/iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
+   #/iptables -t nat -D PREROUTING -i eth0 -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
+   #/iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
+   #/iptables -t nat -A PREROUTING -i eth0 -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
+fi
+
+### ### ###
+echo ""
+printf "\033[1;31mlxc-to-go webpanel (lxc-inside-lxc) finished.\033[0m\n"
+### ### ###
+
+### ### ### ### ### ### ### ### ###
+#
+### // stage4 ###
+#
+### // stage3 ###
+#
+### // stage2 ###
+;;
+*)
+   # error 1
+   : # dummy
+   : # dummy
+   echo "[ERROR] Plattform = unknown"
+   exit 1
+   ;;
+esac
+#
+### // stage1 ###
+;;
 *)
 printf "\033[1;31mWARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.\033[0m\n"
 echo "" # usage
-echo "usage: $0 { bootstrap | start | stop | shutdown | create | delete | show | login }"
+echo "usage: $0 { bootstrap | start | stop | shutdown | create | delete | show | login | webpanel }"
 ;;
 esac
 exit 0
