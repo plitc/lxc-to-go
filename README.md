@@ -275,6 +275,8 @@ Example
     LXC-Web-Panel:   http://192.168.253.254:5000
     Username:        admin
     Password:        admin
+
+    default gateway: 192.168.252.254 (for the lxc-inside-lxc containers)
 ```
 
 Provisioning Template Support
