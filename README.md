@@ -64,6 +64,11 @@ HOST (Package) Dependencies
    [JESSIE]: screen bridge-utils lxc
 ```
 
+* Debian 9 Testing (Stretch/Sid) HOST
+```
+   [STRETCH]: screen bridge-utils lxc
+```
+
 Features
 ========
 * create basic templates
@@ -177,6 +182,7 @@ lxc.pts = 1024
 Platform
 ========
 * Linux
+   * Debian 9 / Testing Stretch/Sid (recommended)
    * Debian 8 / Jessie (recommended)
    * Debian 7 / Wheezy
 
@@ -185,7 +191,7 @@ Usage
 ```
     WARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
-    # usage: ./lxc-to-go.sh { bootstrap | start | stop | shutdown | create | delete | show }
+    # usage: ./lxc-to-go.sh { bootstrap | start | stop | shutdown | create | delete | show | login }
 ```
 
 Example
@@ -310,6 +316,11 @@ Example
     test3         STOPPED  -                                 -                                       NO         -      -         -         -
 ```
 
+* login
+```
+    [DIALOG]
+```
+
 Provisioning Template Support
 =============================
 
@@ -396,9 +407,11 @@ Errata
 
 TODO
 ====
-* 06.05.2015: ipv6 portforwarding
+* 08.11.2015: deb9 testing template --- OPEN
+
+* 06.05.2015: ipv6 portforwarding --- OPEN
 
 * 17.04.2015: useful ipv6 routing (ra/proxy_ndp) --- FIXED in [0.28.4]
 
-* 16.04.2015: support for zfs/btrfs lxc-clone templates
+* 16.04.2015: support for zfs/btrfs lxc-clone templates --- OPEN
 
