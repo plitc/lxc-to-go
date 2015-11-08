@@ -4068,7 +4068,7 @@ then
    if [ $? -eq 0 ]
    then
       lxc-attach -n managed -- apt-get -y update
-      lxc-attach -n managed -- apt-get -y install lxc
+      lxc-attach -n managed -- apt-get -y install lxc bridge-utils screen
    else
       echo "[ERROR] can't copy config-$GETKERNELRELEASE to /var/lib/lxc/managed/rootfs/boot"
       # clean up
@@ -4084,6 +4084,10 @@ else
    #/iptables -t nat -D PREROUTING -i eth0 -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
    #/iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
    #/iptables -t nat -A PREROUTING -i eth0 -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
+   echo "" # dummy
+   printf "\033[1;32m LXC-Web-Panel:   http://192.168.253.254:5000 \033[0m\n"
+   printf "\033[1;32m Username:        admin \033[0m\n"
+   printf "\033[1;32m Password:        admin \033[0m\n"
 fi
 
 ### ### ###
