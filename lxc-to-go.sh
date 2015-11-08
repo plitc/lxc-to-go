@@ -81,8 +81,6 @@ debian)
 if [ "$MYNAME" = "root" ]; then
    : # dummy
 else
-   : # dummy
-   : # dummy
    echo "[ERROR] You must be root to run this script"
    exit 1
 fi
@@ -563,6 +561,10 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
          ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+      fi
       ip addr flush "$GETBRIDGEPORT0"
       echo "" # dummy
       echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
@@ -574,6 +576,10 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+      fi
+      if [ "$DEBTESTVERSION" = "1" ]; then
          ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
@@ -1050,8 +1056,8 @@ fi
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 
 if [ "$DEBVERSION" = "7" ]; then
-CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
-#/ CHECKMANAGED1=$(lxc-list | sed -e '/FROZEN/,+99d' | grep -c "managed") # lxc 0.8
+   CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
+   #/ CHECKMANAGED1=$(lxc-list | sed -e '/FROZEN/,+99d' | grep -c "managed") # lxc 0.8
    if [ "$CHECKMANAGED1" = "1" ]; then
       echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
    else
@@ -1073,10 +1079,10 @@ CHECKMANAGED1=$(lxc-ls --active | grep -c "managed")
          : # dummy
       fi
    fi
-fi
-
-if [ "$DEBVERSION" = "8" ]; then
-CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
+else
+   #/if [ "$DEBVERSION" = "8" ]; then
+   #/if [ "$DEBTESTVERSION" = "1" ]; then
+   CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
    if [ "$CHECKMANAGED2" = "1" ]; then
       echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
    else
@@ -1710,6 +1716,10 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
          ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         ps -ax | grep "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+      fi
       ip addr flush "$GETBRIDGEPORT0"
       echo "" # dummy
       echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
@@ -1721,6 +1731,10 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
+         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+      fi
+      if [ "$DEBTESTVERSION" = "1" ]; then
          ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
@@ -1905,12 +1919,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL1=$(/usr/bin/which lxc-checkconfig)
@@ -2485,12 +2501,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL2=$(/usr/bin/which lxc-checkconfig)
@@ -2822,12 +2840,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL2=$(/usr/bin/which lxc-checkconfig)
@@ -3195,12 +3215,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL3=$(/usr/bin/which lxc-checkconfig)
@@ -3397,12 +3419,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
@@ -3764,12 +3788,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
@@ -3830,12 +3856,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
