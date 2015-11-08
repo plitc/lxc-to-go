@@ -331,6 +331,11 @@ Screencast
 
 [![github plitc lxc-to-go](https://img.youtube.com/vi/ITG8C9U3Q6E/0.jpg)](https://www.youtube.com/watch?v=ITG8C9U3Q6E)
 
+* github plitc lxc-to-go webpanel [VERSION: 08.11.2015]
+   * lxc-inside-lxc webpanel
+
+[![github plitc lxc-to-go-webpanel](https://img.youtube.com/vi/zc0Mog-z4AQ/0.jpg)](https://www.youtube.com/watch?v=zc0Mog-z4AQ)
+
 Errata
 ======
 * 30.06.2015: [lxc-to-go < 0.26.5]: issue with [ulatencyd](https://packages.debian.org/stretch/ulatencyd)
