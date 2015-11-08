@@ -1884,6 +1884,7 @@ fi
 ### // SYMBOLIC LINKS ###
 
 ### LXC-inside-LXC // ###
+echo "" # dummy
 echo "... prepare LXC-inside-LXC (if necessary) ..."
 #/lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; brctl addif lxc-in-lxc eth1 >/dev/null 2>&1; ifconfig lxc-in-lxc up; else :; fi'
 lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; ip link set dev lxc-in-lxc up; else :; fi'

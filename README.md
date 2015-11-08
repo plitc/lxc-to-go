@@ -140,7 +140,7 @@ Usage
 ```
     WARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
-    # usage: ./lxc-to-go.sh { bootstrap | start | stop | shutdown | create | delete | show | login }
+    # usage: ./lxc-to-go.sh { bootstrap | start | stop | shutdown | create | delete | show | login | lxc-in-lxc-webpanel }
 ```
 
 Example
@@ -268,6 +268,13 @@ Example
 * login
 ```
     [DIALOG]
+```
+
+* lxc-in-lxc-webpanel
+```
+    LXC-Web-Panel:   http://192.168.253.254:5000
+    Username:        admin
+    Password:        admin
 ```
 
 Provisioning Template Support
