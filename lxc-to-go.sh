@@ -4065,7 +4065,8 @@ then
    # LXC-Web-Panel Package
    lxc-attach -n managed -- apt-get -y update
    lxc-attach -n managed -- apt-get -y install git python-dev
-   lxc-attach -n managed -- /bin/sh -c 'mkdir -p /github; cd /github; git clone https://github.com/plitc/LXC-Web-Panel.git; cd /github/LXC-Web-Panel; chmod 0755 /github/LXC-Web-Panel/install.sh; /github/LXC-Web-Panel/install.sh'
+   #/lxc-attach -n managed -- /bin/sh -c 'mkdir -p /github; cd /github; git clone https://github.com/plitc/LXC-Web-Panel.git; cd /github/LXC-Web-Panel; chmod 0755 /github/LXC-Web-Panel/install.sh; /github/LXC-Web-Panel/install.sh'
+   lxc-attach -n managed -- /bin/sh -c 'mkdir -p /github; cd /github; git clone https://github.com/plitc/lxc-to-go-webpanel.git; cd /github/lxc-to-go-webpanel; chmod 0755 /github/lxc-to-go-webpanel/install.sh; /github/lxc-to-go-webpanel/install.sh'
    # LXC-inside-LXC
    echo "" # dummy
    echo "... prepare LXC-inside-LXC ..."
