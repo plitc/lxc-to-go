@@ -33,6 +33,7 @@
 ### stage0 // ###
 DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
 DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+DEBTESTVERSION=$(grep -s "PRETTY_NAME" /etc/os-release | awk '{print $3}' | sed 's/"//g' | grep -c "stretch/sid")
 MYNAME=$(whoami)
 #
 PRG="$0"
@@ -89,12 +90,14 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
    if [ "$DEBVERSION" = "8" ]; then
-   : # dummy
+      : # dummy
    else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You need Debian 7 (Wheezy) or 8 (Jessie) Version"
-   exit 1
+      if [ "$DEBTESTVERSION" = "1" ]; then
+         : # dummy
+      else
+         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+         exit 1
+      fi
    fi
 fi
 ### stage4 // ###
