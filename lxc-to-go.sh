@@ -4079,6 +4079,10 @@ then
    (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc) & spinner $!
    "$DIR"/lxc-to-go.sh stop
    "$DIR"/lxc-to-go.sh shutdown
+   echo "" # dummy
+   printf "\033[1;32m LXC-Web-Panel:   http://192.168.253.254:5000 \033[0m\n"
+   printf "\033[1;32m Username:        admin \033[0m\n"
+   printf "\033[1;32m Password:        admin \033[0m\n"
 else
    : # dummy
    #/iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
