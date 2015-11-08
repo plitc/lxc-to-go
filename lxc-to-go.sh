@@ -1884,6 +1884,7 @@ fi
 ### // SYMBOLIC LINKS ###
 
 ### LXC-inside-LXC // ###
+echo "... prepare LXC-inside-LXC (if necessary) ..."
 #/lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; brctl addif lxc-in-lxc eth1 >/dev/null 2>&1; ifconfig lxc-in-lxc up; else :; fi'
 lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; ip link set dev lxc-in-lxc up; else :; fi'
 lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then ip addr add 192.168.252.254/24 dev lxc-in-lxc >/dev/null 2>&1; else :; fi'
@@ -3976,7 +3977,7 @@ esac
 #
 ### // stage1 ###
 ;;
-'webpanel')
+'lxc-in-lxc-webpanel')
 ### stage1 // ###
 case $DEBIAN in
 debian)
@@ -4105,7 +4106,7 @@ fi
 
 ### ### ###
 echo ""
-printf "\033[1;31mlxc-to-go webpanel (lxc-inside-lxc) finished.\033[0m\n"
+printf "\033[1;31mlxc-to-go (lxc-inside-lxc) webpanel finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -4130,7 +4131,7 @@ esac
 *)
 printf "\033[1;31mWARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.\033[0m\n"
 echo "" # usage
-echo "usage: $0 { bootstrap | start | stop | shutdown | create | delete | show | login | webpanel }"
+echo "usage: $0 { bootstrap | start | stop | shutdown | create | delete | show | login | lxc-in-lxc-webpanel }"
 ;;
 esac
 exit 0
