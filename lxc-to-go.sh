@@ -1885,6 +1885,8 @@ fi
 
 ### LXC-inside-LXC // ###
 lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; brctl addif lxc-in-lxc eth1 >/dev/null 2>&1; ifconfig lxc-in-lxc up; else :; fi'
+lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv4.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
+lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv6.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
 ### // LXC-inside-LXC ###
 
 cleanup
