@@ -547,8 +547,12 @@ else
    ### // Proxy_ARP/NDP ###
    ### NAT // ###
       #/ ipv4 nat
+      iptables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
+      iptables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       iptables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
       #/ ipv6 nat
+      ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
+      ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
       #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
       #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
