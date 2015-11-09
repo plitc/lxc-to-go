@@ -138,12 +138,12 @@ fi
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
-   read -p "Choose your Environment: (desktop/server) ? " ENVIRONMENTVALUE
-   if [ "$ENVIRONMENTVALUE" = "desktop" ]; then
-   echo "ENVIRONMENT=desktop" > /etc/lxc-to-go/lxc-to-go.conf
+   read -p "Choose your Environment: (bridge/proxy) ? " ENVIRONMENTVALUE
+   if [ "$ENVIRONMENTVALUE" = "bridge" ]; then
+   echo "ENVIRONMENT=bridge" > /etc/lxc-to-go/lxc-to-go.conf
    fi
-   if [ "$ENVIRONMENTVALUE" = "server" ]; then
-      echo "ENVIRONMENT=server" > /etc/lxc-to-go/lxc-to-go.conf
+   if [ "$ENVIRONMENTVALUE" = "proxy" ]; then
+      echo "ENVIRONMENT=proxy" > /etc/lxc-to-go/lxc-to-go.conf
    fi
    if [ -z "$ENVIRONMENTVALUE" ]; then
       echo "[ERROR] choose an environment"
@@ -152,6 +152,23 @@ if [ -z "$CHECKENVIRONMENT" ]; then
 fi
 
 GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+
+CHECKINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+if [ -z "$CHECKINTERFACE" ]; then
+   read -p "Choose your Interface: (eth0/wlan0) ? " INTERFACEVALUE
+   if [ -z "$INTERFACEVALUE" ]; then
+      echo "[ERROR] choose an interface"
+      exit 1
+   fi
+   CHECKINTERFACEVALUE=$(ifconfig | grep -c "$INTERFACEVALUE")
+   if [ "$CHECKINTERFACEVALUE" = "0" ]; then
+      echo "[ERROR] can't find the interface"
+      exit 1
+   fi
+   echo "INTERFACE=$INTERFACEVALUE" >> /etc/lxc-to-go/lxc-to-go.conf
+fi
+
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
@@ -473,7 +490,7 @@ if [ "$CREATEBRIDGE0" = "1" ]; then
 else
    brctl addbr vswitch0
 
-   #/ if [ "$GETENVIRONMENT" = "desktop" ]; then
+   #/ if [ "$GETENVIRONMENT" = "bridge" ]; then
    #/ ip link add dummy0 type dummy >/dev/null 2>&1
    #/ brctl addif vswitch0 dummy0
    #/ fi
@@ -484,24 +501,24 @@ else
       UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
       if [ -e "$UDEVNET" ]; then
          GETBRIDGEPORT0=$(grep -s 'SUBSYSTEM=="net"' /etc/udev/rules.d/70-persistent-net.rules | grep "eth" | head -n 1 | tr ' ' '\n' | grep "NAME" | sed 's/NAME="//' | sed 's/"//')
-         if [ "$GETENVIRONMENT" = "desktop" ]; then
+         if [ "$GETENVIRONMENT" = "bridge" ]; then
             brctl addif vswitch0 "$GETBRIDGEPORT0"
          fi
             sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
             sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".forwarding=1 >/dev/null 2>&1
-         if [ "$GETENVIRONMENT" = "server" ]; then
+         if [ "$GETENVIRONMENT" = "proxy" ]; then
          ### Proxy_ARP/NDP // ###
             sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".proxy_arp=1 >/dev/null 2>&1
             sysctl -w net.ipv6.conf."$GETBRIDGEPORT0".proxy_ndp=1 >/dev/null 2>&1
          ### // Proxy_ARP/NDP ###
          fi
       else
-         if [ "$GETENVIRONMENT" = "desktop" ]; then
+         if [ "$GETENVIRONMENT" = "bridge" ]; then
             brctl addif vswitch0 eth0
          fi
             sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
             sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
-         if [ "$GETENVIRONMENT" = "server" ]; then
+         if [ "$GETENVIRONMENT" = "proxy" ]; then
          ### Proxy_ARP/NDP // ###
             sysctl -w net.ipv4.conf.eth0.proxy_arp=1 >/dev/null 2>&1
             sysctl -w net.ipv6.conf.eth0.proxy_ndp=1 >/dev/null 2>&1
@@ -509,12 +526,12 @@ else
          fi
       fi
    else
-      if [ "$GETENVIRONMENT" = "desktop" ]; then
+      if [ "$GETENVIRONMENT" = "bridge" ]; then
          brctl addif vswitch0 eth0
       fi
          sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
          sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### Proxy_ARP/NDP // ###
          sysctl -w net.ipv4.conf.eth0.proxy_arp=1 >/dev/null 2>&1
          sysctl -w net.ipv6.conf.eth0.proxy_ndp=1 >/dev/null 2>&1
@@ -523,7 +540,7 @@ else
    fi
       sysctl -w net.ipv4.conf.vswitch0.forwarding=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf.vswitch0.forwarding=1 >/dev/null 2>&1
-   if [ "$GETENVIRONMENT" = "server" ]; then
+   if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### Proxy_ARP/NDP // ###
       sysctl -w net.ipv4.conf.vswitch0.proxy_arp=1 >/dev/null 2>&1
       sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
@@ -545,8 +562,8 @@ else
    fi
 fi
 
-### NEW IP - Desktop Environment // ###
-if [ "$GETENVIRONMENT" = "desktop" ]; then
+### NEW IP - Bridge Environment // ###
+if [ "$GETENVIRONMENT" = "bridge" ]; then
    : # dummy
    #/ ipv4
    #/ killall dhclient
@@ -615,10 +632,10 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-### // NEW IP - Desktop Environment ###
+### // NEW IP - Bridge Environment ###
 
-### NEW IP - Server Environment // ###
-if [ "$GETENVIRONMENT" = "server" ]; then
+### NEW IP - Proxy Environment // ###
+if [ "$GETENVIRONMENT" = "proxy" ]; then
    #/ ipv4
    netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I % echo "IPV4DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV4GATEWAY.log
    chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
@@ -629,7 +646,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
       ifconfig vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
       ### fix //
@@ -645,7 +662,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
       ifconfig vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
       ### fix //
@@ -657,14 +674,14 @@ if [ "$GETENVIRONMENT" = "server" ]; then
    fi
    ### ### ###
    #/ ipv6
-   if [ "$GETENVIRONMENT" = "server" ]; then
+   if [ "$GETENVIRONMENT" = "proxy" ]; then
       netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I % echo "IPV6DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV6GATEWAY.log
       chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
       if [ -e "$UDEVNET" ]; then
          GETIPV6UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
-         if [ "$GETENVIRONMENT" = "server" ]; then
+         if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
@@ -675,7 +692,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
          GETIPV6=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
-         if [ "$GETENVIRONMENT" = "server" ]; then
+         if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
@@ -690,7 +707,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
       ### // rc.local reload ###
    fi
 fi
-### // NEW IP - Server Environment ###
+### // NEW IP - Proxy Environment ###
 
 ### ### ###
 sleep 1
@@ -755,7 +772,7 @@ LXCCONFIGFILEMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/config | awk '{prin
 if [ X"$LXCCONFIGFILEMANAGED" = X"lxc-to-go" ]; then
    : # dummy
 else
-   if [ "$GETENVIRONMENT" = "desktop" ]; then
+   if [ "$GETENVIRONMENT" = "bridge" ]; then
       : # dummy
 /bin/cat << LXCCONFIGMANAGED1 > /var/lib/lxc/managed/config
 ### ### ### lxc-to-go // ### ### ###
@@ -887,7 +904,7 @@ CHECKMANAGEDNETFILE1
 
 ### randomized MAC address // ###
    fi
-   if [ "$GETENVIRONMENT" = "server" ]; then
+   if [ "$GETENVIRONMENT" = "proxy" ]; then
       : # dummy
 /bin/cat << LXCCONFIGMANAGED2 > /var/lib/lxc/managed/config
 ### ### ### lxc-to-go // ### ### ###
@@ -1069,13 +1086,13 @@ if [ "$DEBVERSION" = "7" ]; then
       screen -d -m -S managed -- lxc-start -n managed
       sleep 1
       screen -list | grep "managed"
-      if [ "$GETENVIRONMENT" = "desktop" ]; then
+      if [ "$GETENVIRONMENT" = "bridge" ]; then
          : # dummy
          echo "" # dummy
          (sleep 30) & spinner $!
          : # dummy
       fi
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
          : # dummy
          echo "" # dummy
          (sleep 15) & spinner $!
@@ -1094,13 +1111,13 @@ else
       screen -d -m -S managed -- lxc-start -n managed
       sleep 1
       screen -list | grep "managed"
-      if [ "$GETENVIRONMENT" = "desktop" ]; then
+      if [ "$GETENVIRONMENT" = "bridge" ]; then
          : # dummy
          echo "" # dummy
          (sleep 30) & spinner $!
          : # dummy
       fi
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
          : # dummy
          echo "" # dummy
          (sleep 15) & spinner $!
@@ -1705,8 +1722,8 @@ else
 fi
 ### // network debug tools ###
 
-### NEW IP - Desktop Environment // ###
-if [ "$GETENVIRONMENT" = "desktop" ]; then
+### NEW IP - Bridge Environment // ###
+if [ "$GETENVIRONMENT" = "bridge" ]; then
    #/ ipv4
    #/ killall dhclient
    if [ -e "$UDEVNET" ]; then
@@ -1774,10 +1791,10 @@ if [ "$GETENVIRONMENT" = "desktop" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-### // NEW IP - Desktop Environment ###
+### // NEW IP - Bridge Environment ###
 
-### NEW IP - Server Environment // ###
-if [ "$GETENVIRONMENT" = "server" ]; then
+### NEW IP - Proxy Environment // ###
+if [ "$GETENVIRONMENT" = "proxy" ]; then
    #/ ipv4
    netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I % echo "IPV4DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV4GATEWAY.log
    chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
@@ -1788,7 +1805,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
       ifconfig vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
       ### fix //
@@ -1804,7 +1821,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
       ifconfig vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
-      if [ "$GETENVIRONMENT" = "server" ]; then
+      if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
       ### fix //
@@ -1816,14 +1833,14 @@ if [ "$GETENVIRONMENT" = "server" ]; then
    fi
    ### ### ###
    #/ ipv6
-   if [ "$GETENVIRONMENT" = "server" ]; then
+   if [ "$GETENVIRONMENT" = "proxy" ]; then
       netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I % echo "IPV6DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV6GATEWAY.log
       chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
       if [ -e "$UDEVNET" ]; then
          GETIPV6UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
-         if [ "$GETENVIRONMENT" = "server" ]; then
+         if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
@@ -1834,7 +1851,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
          GETIPV6=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
-         if [ "$GETENVIRONMENT" = "server" ]; then
+         if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
@@ -1849,7 +1866,7 @@ if [ "$GETENVIRONMENT" = "server" ]; then
       ### // rc.local reload ###
    fi
 fi
-### // NEW IP - Server Environment ###
+### // NEW IP - Proxy Environment ###
 
 ### RP_FILTER // ###
 sysctl -w net.ipv4.conf.all.rp_filter=1 >/dev/null 2>&1
@@ -2021,7 +2038,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
       #
       ### set iptable rules on HOST // ###
-      if [ "$CHECKENVIRONMENT" = "server" ]; then
+      if [ "$CHECKENVIRONMENT" = "proxy" ]; then
          iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
          iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
          #
@@ -2245,7 +2262,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
          CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
          #
          ### set iptable rules on HOST // ###
-         if [ "$CHECKENVIRONMENT" = "server" ]; then
+         if [ "$CHECKENVIRONMENT" = "proxy" ]; then
             ###/ delete MPORTS /###
             #/ MPORT 1
             iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
@@ -2577,7 +2594,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
       #
       ### set iptable rules on HOST // ###
-      if [ "$CHECKENVIRONMENT" = "server" ]; then
+      if [ "$CHECKENVIRONMENT" = "proxy" ]; then
          iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
          iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
@@ -2699,7 +2716,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
           CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
           #
           ### set iptable rules on HOST // ###
-          if [ "$CHECKENVIRONMENT" = "server" ]; then
+          if [ "$CHECKENVIRONMENT" = "proxy" ]; then
              ###/ delete MPORTS /###
              #/ MPORT 1
              iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
@@ -2916,7 +2933,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
       #
       ### set iptable rules on HOST // ###
-      if [ "$CHECKENVIRONMENT" = "server" ]; then
+      if [ "$CHECKENVIRONMENT" = "proxy" ]; then
          iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
          iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
@@ -3038,7 +3055,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
           CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
           #
           ### set iptable rules on HOST // ###
-          if [ "$CHECKENVIRONMENT" = "server" ]; then
+          if [ "$CHECKENVIRONMENT" = "proxy" ]; then
              ###/ delete MPORTS /###
              #/ MPORT 1
              iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
@@ -3519,7 +3536,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
       #
       ### set iptable rules on HOST // ###
-      if [ "$CHECKENVIRONMENT" = "server" ]; then
+      if [ "$CHECKENVIRONMENT" = "proxy" ]; then
          iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
          iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
@@ -3641,7 +3658,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
            CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
            #
            ### set iptable rules on HOST // ###
-           if [ "$CHECKENVIRONMENT" = "server" ]; then
+           if [ "$CHECKENVIRONMENT" = "proxy" ]; then
               ###/ delete MPORTS /###
               #/ MPORT 1
               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
@@ -4191,6 +4208,13 @@ MANAGEDLXCINLXC
    rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-ubuntu-cloud
 
    ### // LXC Template fixes ###
+   ### lxc-in-lxc host resolve // ###
+   CHECKETCHOSTS=$(grep -c "lxc-to-go" /etc/hosts)
+   if [ "$CHECKETCHOSTS" = "0" ]
+   then
+      echo "192.168.252.254   lxc-to-go" >> /etc/hosts
+   fi
+   ### // lxc-in-lxc host resolve ###
    "$DIR"/lxc-to-go.sh stop
    "$DIR"/lxc-to-go.sh shutdown
    echo "" # dummy
