@@ -4097,7 +4097,7 @@ then
       lxc-attach -n managed -- rm -rf /srv/lwp
       exit 1
    fi
-   (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc) & spinner $!
+   (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc/debian) & spinner $!
 cat << "MANAGEDLXCINLXC" > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
 #
@@ -4131,6 +4131,66 @@ iface lxc-in-lxc inet static
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 MANAGEDLXCINLXC
+   ### LXC Template fixes // ###
+
+   # from: /usr/share/lxc/templates
+   # lxc-alpine  lxc-altlinux  lxc-archlinux  lxc-busybox  lxc-centos  lxc-cirros  lxc-debian  lxc-debian-wheezy  lxc-download  lxc-fedora  lxc-gentoo  lxc-openmandriva  lxc-opensuse  lxc-oracle  lxc-plamo  lxc-sshd  lxc-ubuntu  lxc-ubuntu-cloud
+
+   # BROKEN: lxc-alpine
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-alpine
+
+   # BROKEN: lxc-altlinux
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-altlinux
+
+   # BROKEN: lxc-archlinux
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-archlinux
+
+   # NOT TESTED: lxc-busybox
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-busybox
+
+   # FIXED: lxc-centos
+   lxc-attach -n managed -- apt-get -y install yum
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-centos
+
+   # NOT TESTED: lxc-cirros
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-cirros
+
+   # DEFAULT: lxc-debian
+
+   # DEFAULT: lxc-debian-wheezy
+
+   # CLI only: lxc-download
+
+   # FIXED/BROKEN: lxc-fedora
+   lxc-attach -n managed -- apt-get -y install curl
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-fedora
+
+   # BROKEN: lxc-gentoo
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-gentoo
+
+   # BROKEN: lxc-openmandriva
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-openmandriva
+
+   # BROKEN: lxc-opensuse
+   lxc-attach -n managed -- apt-get -y install zypper
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-opensuse
+
+   # BROKEN: lxc-oracle
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-oracle
+
+   # NOT TESTED: lxc-plamo
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-plamo
+
+   # BROKEN: lxc-sshd
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-sshd
+
+   # BROKEN: lxc-ubuntu
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-ubuntu
+
+   # BROKEN: lxc-ubuntu-cloud
+   rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-ubuntu-cloud
+
+   ### // LXC Template fixes ###
    "$DIR"/lxc-to-go.sh stop
    "$DIR"/lxc-to-go.sh shutdown
    echo "" # dummy
