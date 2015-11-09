@@ -4103,7 +4103,7 @@ iface eth1 inet manual
 iface eth1 inet6 manual
 
 auto lxc-in-lxc
-iface lxc-in-lxc inet manual
+iface lxc-in-lxc inet static
    up ip link set dev lxc-in-lxc up
    bridge_ports none
    bridge_hello 2
