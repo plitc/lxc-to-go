@@ -44,6 +44,7 @@ Dependencies
 HOST (Package) Dependencies
 =================
 * Debian 7 Wheezy HOST
+
 ```
    [WHEEZY]: debootstrap libcap2-bin libpam-cap
    [WHEEZY-BACKPORTS]: initramfs-tools
@@ -55,16 +56,19 @@ HOST (Package) Dependencies
 ```
 
 * Debian 7 Wheezy HOST (virtualbox-ose-guest)
+
 ```
    [WHEEZY/WHEEZY-BACKPORTS] libasound2 libasyncns0 libcaca0 libcurl3 libdbus-1-3 libdirectfb-1.2-9 libflac8 libgsoap4 libjpeg8 libjson-c2 libogg0 libpng12-0 libpulse0 libpython2.7 libsdl1.2debian libsndfile1 libts-0.0-0 libvncserver0 libvorbis0a libvorbisenc2 libvpx1 libx11-xcb1 libxcursor1 libxi6 libxtst6 tsconf virtualbox virtualbox-dkms
 ```
 
 * Debian 8 Jessie HOST
+
 ```
    [JESSIE]: screen bridge-utils lxc
 ```
 
 * Debian 9 Testing (Stretch/Sid) HOST
+
 ```
    [STRETCH]: screen bridge-utils lxc
 ```
@@ -131,6 +135,7 @@ Usage
 Example
 =======
 * bootstrap
+
 ```
     # ./lxc-to-go.sh bootstrap
 
@@ -144,6 +149,7 @@ Example
 ```
 
 * start
+
 ```
     # ./lxc-to-go.sh start
     FOUND:
@@ -160,6 +166,7 @@ Example
 ```
 
 * stop
+
 ```
     # ./lxc-to-go.sh stop 
     FOUND (active):
@@ -169,6 +176,7 @@ Example
 ```
 
 * shutdown
+
 ```
     # ./lxc-to-go.sh shutdown
 
@@ -177,6 +185,7 @@ Example
 ```
 
 * create
+
 ```
     # ./lxc-to-go.sh create
     Please enter the new LXC Container name:
@@ -207,6 +216,7 @@ Example
 ```
 
 * delete
+
 ```
     # ./lxc-to-go.sh delete 
     test test1 test2 
@@ -220,6 +230,7 @@ Example
 ```
 
 * provisioning
+
 ```
     # ./lxc-to-go_provisioning.sh -n test3 -t deb8 -h yes -p 60003 -s yes
     Created container test3 as copy of deb8template
@@ -240,6 +251,7 @@ Example
 ```
 
 * show
+
 ```
     # ./lxc-to-go.sh show
     NAME          STATE    IPV4                              IPV6                                    AUTOSTART  PID    MEMORY    RAM       SWAP
@@ -251,11 +263,13 @@ Example
 ```
 
 * login
+
 ```
     [DIALOG]
 ```
 
 * lxc-in-lxc-webpanel
+
 ```
     LXC-Web-Panel:   http://192.168.253.254:5000
     Username:        admin
@@ -290,6 +304,7 @@ Provisioning Template Support
 * [org.samba.simple](https://www.samba.org)
    * (lxc-to-go-provisioning -n samba -t deb8 -h yes -p 135,136,137,138,139,445 -s yes)
       * (works currently only with deb8 lxc)
+
 ```
 #/ * [org.samba.active-directory](https://www.samba.org)
 #/ * (lxc-to-go-provisioning -n ads -t deb8 -h yes -p 53,88,135,136,137,138,139,389,445,464,636,1024,3268,3269 -s yes)
