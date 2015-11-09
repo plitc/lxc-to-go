@@ -1884,13 +1884,13 @@ fi
 ### // SYMBOLIC LINKS ###
 
 ### LXC-inside-LXC // ###
-echo "" # dummy
-echo "... prepare LXC-inside-LXC (if necessary) ..."
-#/lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; brctl addif lxc-in-lxc eth1 >/dev/null 2>&1; ifconfig lxc-in-lxc up; else :; fi'
-lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; ip link set dev lxc-in-lxc up; else :; fi'
-lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then ip addr add 192.168.252.254/24 dev lxc-in-lxc >/dev/null 2>&1; else :; fi'
-lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv4.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
-lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv6.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
+## echo "" # dummy
+## echo "... prepare LXC-inside-LXC (if necessary) ..."
+## #/lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; brctl addif lxc-in-lxc eth1 >/dev/null 2>&1; ifconfig lxc-in-lxc up; else :; fi'
+## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; ip link set dev lxc-in-lxc up; else :; fi'
+## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then ip addr add 192.168.252.254/24 dev lxc-in-lxc >/dev/null 2>&1; else :; fi'
+## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv4.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
+## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv6.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
 ### // LXC-inside-LXC ###
 
 cleanup
@@ -4088,6 +4088,39 @@ then
       exit 1
    fi
    (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc) & spinner $!
+cat << "MANAGEDLXCINLXC" > /var/lib/lxc/managed/rootfs/etc/network/interfaces
+### ### ### lxc-to-go // ### ### ###
+#
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet manual
+iface eth0 inet6 manual
+
+auto eth1
+iface eth1 inet manual
+iface eth1 inet6 manual
+
+auto lxc-in-lxc
+iface lxc-in-lxc inet manual
+   up ip link set dev lxc-in-lxc up
+   bridge_ports none
+   bridge_hello 2
+   bridge_fd 15
+   bridge_maxwait 15
+   #/bridge_hw
+   bridge_stp no
+   address 192.168.252.254
+   netmask 255.255.255.0
+   broadcast 192.168.252.255
+   #/gateway
+   post-up sysctl -w net.ipv4.conf.lxc-in-lxc.forwarding=1
+   post-up sysctl -w net.ipv6.conf.lxc-in-lxc.forwarding=1
+#
+### ### ### // lxc-to-go ### ### ###
+# EOF
+MANAGEDLXCINLXC
    "$DIR"/lxc-to-go.sh stop
    "$DIR"/lxc-to-go.sh shutdown
    echo "" # dummy
