@@ -2,7 +2,7 @@
 ### ### ### lxc-to-go // ### ### ###
 
 ### ### ### CUSTOM // ### ### ###
-CUSTOMINTERFACE=$(echo "wlan0")
+CUSTOMINTERFACE=$(echo "wlp3s0")
 ### ### ### // CUSTOM ### ### ###
 
 echo "<--- --- --- lxc-to-go (server variant) custom interface support // --- --- --->"
