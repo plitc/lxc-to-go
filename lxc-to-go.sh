@@ -4212,7 +4212,7 @@ MANAGEDLXCINLXC
    CHECKETCHOSTS=$(grep -c "lxc-to-go" /etc/hosts)
    if [ "$CHECKETCHOSTS" = "0" ]
    then
-      echo "192.168.252.254   lxc-to-go" >> /etc/hosts
+      echo "192.168.253.254   lxc-to-go" >> /etc/hosts
    fi
    ### // lxc-in-lxc host resolve ###
    "$DIR"/lxc-to-go.sh stop
