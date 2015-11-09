@@ -1998,6 +1998,8 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    exit 1
 fi
 
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+
 ### ### ###
 #/ echo "FOUND:"
 #/ lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
@@ -2564,6 +2566,8 @@ if [ "$CHECKCONTAINER2" = "0" ]; then
    exit 1
 fi
 
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+
 ### ### ###
 #/ echo "FOUND (active):"
 #/ lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
@@ -2902,6 +2906,8 @@ if [ "$CHECKCONTAINER2" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
 ### ### ###
 #/ echo "FOUND (active):"
@@ -3291,6 +3297,8 @@ else
    ### ### ### ### ### ### ### ### ###
 fi
 
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+
 echo "Please enter the new LXC Container name:"
 read LXCNAME;
 if [ -z "$LXCNAME" ]; then
@@ -3481,6 +3489,8 @@ if [ "$CHECKCONTAINER3" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
 lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
@@ -3844,6 +3854,8 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+
 echo "" # dummy
 printf "\033[1;33m LXC-to-Go HOST: \033[0m\n"
 lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,pid,memory,ram,swap | egrep -v "deb7template|deb8template"
@@ -3953,6 +3965,8 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
 ### ### ###
 
@@ -4078,6 +4092,8 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
 ### ### ###
 
