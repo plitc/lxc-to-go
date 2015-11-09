@@ -339,7 +339,9 @@ Screencast
 
 Errata
 ======
-* 09.11.2015: [lxc-to-go < 0.38.7.7]: Cgroup memory controller: missing (but works) --- OPEN
+* 09.11.2015: [lxc-to-go < 0.38.8.8]: lxc-to-go-provisioning can't set host iptables rules --- OPEN
+
+* 09.11.2015: [lxc-to-go < 0.38.7.7]: Cgroup memory controller: missing (but works on debian 9 (testing/stretch) with kernel 4.2) --- OPEN
 
 * 30.06.2015: [lxc-to-go < 0.26.5]: issue with [ulatencyd](https://packages.debian.org/stretch/ulatencyd) --- OPEN
 
