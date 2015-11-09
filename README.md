@@ -339,13 +339,15 @@ Screencast
 
 Errata
 ======
-* 30.06.2015: [lxc-to-go < 0.26.5]: issue with [ulatencyd](https://packages.debian.org/stretch/ulatencyd)
+* 09.11.2015: [lxc-to-go < 0.38.7.7]: Cgroup memory controller: missing (but works) --- OPEN
+
+* 30.06.2015: [lxc-to-go < 0.26.5]: issue with [ulatencyd](https://packages.debian.org/stretch/ulatencyd) --- OPEN
 
 * 04.05.2015: [lxc-to-go < 0.26.5]: missing lxc debian wheezy template on debian jessie release HOST environment --- FIXED in [0.26.8]
 
-* 27.04.2015: [lxc-to-go < 0.25]: multiple start of "start function" generating unnecessary firewall rules
+* 27.04.2015: [lxc-to-go < 0.25]: multiple start of "start function" generating unnecessary firewall rules --- OPEN
 
-* 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed
+* 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed --- OPEN
 ```
   locale: Cannot set LC_CTYPE to default locale: No such file or directory
   locale: Cannot set LC_MESSAGES to default locale: No such file or directory
@@ -360,7 +362,7 @@ Errata
 
 * 22.04.2015: [lxc-to-go < 0.17.1]: under circumstances can't load rc.local (firewall rules) after lxc 'managed' bootstrap --- FIXED in [0.19.1]
 
-* 21.04.2015: [lxc-to-go < 0.14.1]: Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed!
+* 21.04.2015: [lxc-to-go < 0.14.1]: Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed! --- OPEN
 ```
    STRACE: open("/dev/vboxguest", O_RDWR|O_CLOEXEC) = -1 ENOENT (No such file or directory)
 ```
