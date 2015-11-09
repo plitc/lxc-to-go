@@ -321,7 +321,7 @@ Diagram
   * (prototype > 0.11)
 ![lxc-to-go_schema](/content/lxc-to-go_schema_.jpg)
 
-* lxc-to-go for servers
+* lxc-to-go for servers or mobile devices with wireless lan bridge
   * proxy mode (prototype > 0.9)
 ![lxc-to-go_servers](/content/lxc-to-go_servers_.jpg)
 
