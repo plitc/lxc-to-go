@@ -514,27 +514,27 @@ else
          fi
       else
          if [ "$GETENVIRONMENT" = "bridge" ]; then
-            brctl addif vswitch0 eth0
+            brctl addif vswitch0 "$GETINTERFACE"
          fi
-            sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
-            sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
+            sysctl -w net.ipv4.conf."$GETINTERFACE".forwarding=1 >/dev/null 2>&1
+            sysctl -w net.ipv6.conf."$GETINTERFACE".forwarding=1 >/dev/null 2>&1
          if [ "$GETENVIRONMENT" = "proxy" ]; then
          ### Proxy_ARP/NDP // ###
-            sysctl -w net.ipv4.conf.eth0.proxy_arp=1 >/dev/null 2>&1
-            sysctl -w net.ipv6.conf.eth0.proxy_ndp=1 >/dev/null 2>&1
+            sysctl -w net.ipv4.conf."$GETINTERFACE".proxy_arp=1 >/dev/null 2>&1
+            sysctl -w net.ipv6.conf."$GETINTERFACE".proxy_ndp=1 >/dev/null 2>&1
          ### // Proxy_ARP/NDP ###
          fi
       fi
    else
       if [ "$GETENVIRONMENT" = "bridge" ]; then
-         brctl addif vswitch0 eth0
+         brctl addif vswitch0 "$GETINTERFACE"
       fi
-         sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
-         sysctl -w net.ipv6.conf.eth0.forwarding=1 >/dev/null 2>&1
+         sysctl -w net.ipv4.conf."$GETINTERFACE".forwarding=1 >/dev/null 2>&1
+         sysctl -w net.ipv6.conf."$GETINTERFACE".forwarding=1 >/dev/null 2>&1
       if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### Proxy_ARP/NDP // ###
-         sysctl -w net.ipv4.conf.eth0.proxy_arp=1 >/dev/null 2>&1
-         sysctl -w net.ipv6.conf.eth0.proxy_ndp=1 >/dev/null 2>&1
+         sysctl -w net.ipv4.conf."$GETINTERFACE".proxy_arp=1 >/dev/null 2>&1
+         sysctl -w net.ipv6.conf."$GETINTERFACE".proxy_ndp=1 >/dev/null 2>&1
       ### // Proxy_ARP/NDP ###
       fi
    fi
@@ -547,17 +547,17 @@ else
    ### // Proxy_ARP/NDP ###
    ### NAT // ###
       #/ ipv4 nat
-      iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      iptables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
       #/ ipv6 nat
-      ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
       #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
       #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
       ### NDP // ###
       sysctl -w net.ipv6.conf.all.forwarding=1 >/dev/null 2>&1
       ### // NDP ###
       ### # EXAMPLE #/ lxc1
-      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
-      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
+      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
+      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
    ### // NAT ###
    fi
 fi
@@ -586,23 +586,23 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       echo "" # dummy
       echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
    else
-      #/ dhclient eth0 >/dev/null 2>&1
-      #/ route del default dev eth0 >/dev/null 2>&1
+      #/ dhclient "$GETINTERFACE" >/dev/null 2>&1
+      #/ route del default dev "$GETINTERFACE" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
-         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         pgrep -f "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
-         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBTESTVERSION" = "1" ]; then
-         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
-      ip addr flush eth0
+      ip addr flush "$GETINTERFACE"
       echo "" # dummy
-      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
+      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT '"$GETINTERFACE"'"
    fi
    dhclient vswitch0 >/dev/null 2>&1
    ### fix //
@@ -617,7 +617,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    else
-      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
+      #/ ifconfig "$GETINTERFACE" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    fi
@@ -656,8 +656,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       fi
       ### // fix
    else
-      GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-      GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
+      GETIPV4=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+      GETIPV4SUBNET=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
       ifconfig vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
@@ -689,14 +689,14 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip -6 addr add "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
          ### // fix
       else
-         GETIPV6=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
-         GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
+         GETIPV6=$(ifconfig "$GETINTERFACE" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6SUBNET=$(ifconfig "$GETINTERFACE" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
          if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
-         GETIPV6LL1=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6LL1=$(ifconfig "$GETINTERFACE" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
          ### // fix
       fi
@@ -1342,9 +1342,9 @@ sysctl net.ipv6.conf.all.forwarding=1     # LXC
 
 ##/ echo "stage1"
 ##/ ipv4 nat
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE    # LXC
 ##/ ipv6 nat
-ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE   # LXC
 #/
 # lxc1
 ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
@@ -1745,23 +1745,23 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       echo "" # dummy
       echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
    else
-      #/ dhclient eth0 >/dev/null 2>&1
-      #/ route del default dev eth0 >/dev/null 2>&1
+      #/ dhclient "$GETINTERFACE" >/dev/null 2>&1
+      #/ route del default dev "$GETINTERFACE" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
-         pgrep -f "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         pgrep -f "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBVERSION" = "8" ]; then
-         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
       if [ "$DEBTESTVERSION" = "1" ]; then
-         ps -ax | grep "[dhclient] eth0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
+         ps -ax | grep "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          ps -ax | grep "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
       fi
-      ip addr flush eth0
+      ip addr flush "$GETINTERFACE"
       echo "" # dummy
-      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT 'eth0'"
+      echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT '"$GETINTERFACE"'"
    fi
    dhclient vswitch0 >/dev/null 2>&1
    ### fix //
@@ -1776,7 +1776,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    else
-      #/ ifconfig eth0 | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
+      #/ ifconfig "$GETINTERFACE" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    fi
@@ -1815,8 +1815,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       fi
       ### // fix
    else
-      GETIPV4=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-      GETIPV4SUBNET=$(ifconfig eth0 | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
+      GETIPV4=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+      GETIPV4SUBNET=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
       ifconfig vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
@@ -1848,14 +1848,14 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip -6 addr add "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
          ### // fix
       else
-         GETIPV6=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
-         GETIPV6SUBNET=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
+         GETIPV6=$(ifconfig "$GETINTERFACE" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6SUBNET=$(ifconfig "$GETINTERFACE" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
          if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
-         GETIPV6LL2=$(ifconfig eth0 | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
+         GETIPV6LL2=$(ifconfig "$GETINTERFACE" | grep "inet6" | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
          ### // fix
       fi
@@ -1871,7 +1871,7 @@ fi
 ### RP_FILTER // ###
 sysctl -w net.ipv4.conf.all.rp_filter=1 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.default.rp_filter=1 >/dev/null 2>&1
-sysctl -w net.ipv4.conf.eth0.rp_filter=1 >/dev/null 2>&1
+sysctl -w net.ipv4.conf."$GETINTERFACE".rp_filter=1 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.managed.rp_filter=1 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.managed1.rp_filter=1 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.vswitch0.rp_filter=1 >/dev/null 2>&1
@@ -2039,11 +2039,11 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       #
       ### set iptable rules on HOST // ###
       if [ "$CHECKENVIRONMENT" = "proxy" ]; then
-         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
          #
-         iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-         iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+         iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
       fi
       ### // set iptable rules on HOST ###
       #
@@ -2265,201 +2265,201 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
          if [ "$CHECKENVIRONMENT" = "proxy" ]; then
             ###/ delete MPORTS /###
             #/ MPORT 1
-            iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-            iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+            iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+            iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
             #/ MPORT 2
             if [ ! -z "$3" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
             fi
             #/ MPORT 3
             if [ ! -z "$4" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
             fi
             #/ MPORT 4
             if [ ! -z "$5" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
             fi
             #/ MPORT 5
             if [ ! -z "$6" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
             fi
             #/ MPORT 6
             if [ ! -z "$7" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
             fi
             #/ MPORT 7
             if [ ! -z "$8" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
             fi
             #/ MPORT 8
             if [ ! -z "$9" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
             fi
             #/ MPORT 9
             if [ ! -z "${10}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
             fi
             #/ MPORT 10
             if [ ! -z "${11}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
             fi
             #/ MPORT 11
             if [ ! -z "${12}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
             fi
             #/ MPORT 12
             if [ ! -z "${13}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
             fi
             #/ MPORT 13
             if [ ! -z "${14}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
             fi
             #/ MPORT 14
             if [ ! -z "${15}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
             fi
             #/ MPORT 15
             if [ ! -z "${16}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
             fi
             #/ MPORT 16
             if [ ! -z "${17}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
             fi
             #/ MPORT 17
             if [ ! -z "${18}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
             fi
             #/ MPORT 18
             if [ ! -z "${19}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
             fi
             #/ MPORT 19
             if [ ! -z "${20}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
             fi
             #/ MPORT 20
             if [ ! -z "${21}" ]; then
-               iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
-               iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+               iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
             fi
             ###/ add MPORTS /###
             #/ MPORT 1
-            iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
-            iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+            iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+            iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
             #/ MPORT 2
             if [ ! -z "$3" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
             fi
             #/ MPORT 3
             if [ ! -z "$4" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
             fi
             #/ MPORT 4
             if [ ! -z "$5" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
             fi
             #/ MPORT 5
             if [ ! -z "$6" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
             fi
             #/ MPORT 6
             if [ ! -z "$7" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
             fi
             #/ MPORT 7
             if [ ! -z "$8" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
             fi
             #/ MPORT 8
             if [ ! -z "$9" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
             fi
             #/ MPORT 9
             if [ ! -z "${10}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
             fi
             #/ MPORT 10
             if [ ! -z "${11}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
             fi
             #/ MPORT 11
             if [ ! -z "${12}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
             fi
             #/ MPORT 12
             if [ ! -z "${13}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
             fi
             #/ MPORT 13
             if [ ! -z "${14}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
             fi
             #/ MPORT 14
             if [ ! -z "${15}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
             fi
             #/ MPORT 15
             if [ ! -z "${16}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
             fi
             #/ MPORT 16
             if [ ! -z "${17}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
             fi
             #/ MPORT 17
             if [ ! -z "${18}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
             fi
             #/ MPORT 18
             if [ ! -z "${19}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
             fi
             #/ MPORT 19
             if [ ! -z "${20}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
             fi
             #/ MPORT 20
             if [ ! -z "${21}" ]; then
-               iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
-               iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
             fi
          fi
          ### // set iptable rules on HOST ###
@@ -2595,8 +2595,8 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       #
       ### set iptable rules on HOST // ###
       if [ "$CHECKENVIRONMENT" = "proxy" ]; then
-         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
       ### // set iptable rules on HOST ###
       #
@@ -2719,102 +2719,102 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
           if [ "$CHECKENVIRONMENT" = "proxy" ]; then
              ###/ delete MPORTS /###
              #/ MPORT 1
-             iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-             iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+             iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+             iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
              #/ MPORT 2
              if [ ! -z "$3" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
              fi
              #/ MPORT 3
              if [ ! -z "$4" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
              fi
              #/ MPORT 4
              if [ ! -z "$5" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
              fi
              #/ MPORT 5
              if [ ! -z "$6" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
              fi
              #/ MPORT 6
              if [ ! -z "$7" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
              fi
              #/ MPORT 7
              if [ ! -z "$8" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
              fi
              #/ MPORT 8
              if [ ! -z "$9" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
              fi
              #/ MPORT 9
              if [ ! -z "${10}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
              fi
              #/ MPORT 10
              if [ ! -z "${11}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
              fi
              #/ MPORT 11
              if [ ! -z "${12}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
              fi
              #/ MPORT 12
              if [ ! -z "${13}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
              fi
              #/ MPORT 13
              if [ ! -z "${14}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
              fi
              #/ MPORT 14
              if [ ! -z "${15}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
              fi
              #/ MPORT 15
              if [ ! -z "${16}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
              fi
              #/ MPORT 16
              if [ ! -z "${17}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
              fi
              #/ MPORT 17
              if [ ! -z "${18}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
              fi
              #/ MPORT 18
              if [ ! -z "${19}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
              fi
              #/ MPORT 19
              if [ ! -z "${20}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
              fi
              #/ MPORT 20
              if [ ! -z "${21}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
              fi
           fi
           ### // set iptable rules on HOST ###
@@ -2934,8 +2934,8 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       #
       ### set iptable rules on HOST // ###
       if [ "$CHECKENVIRONMENT" = "proxy" ]; then
-         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
       ### // set iptable rules on HOST ###
       #
@@ -3058,102 +3058,102 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
           if [ "$CHECKENVIRONMENT" = "proxy" ]; then
              ###/ delete MPORTS /###
              #/ MPORT 1
-             iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-             iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+             iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+             iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
              #/ MPORT 2
              if [ ! -z "$3" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
              fi
              #/ MPORT 3
              if [ ! -z "$4" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
              fi
              #/ MPORT 4
              if [ ! -z "$5" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
              fi
              #/ MPORT 5
              if [ ! -z "$6" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
              fi
              #/ MPORT 6
              if [ ! -z "$7" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
              fi
              #/ MPORT 7
              if [ ! -z "$8" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
              fi
              #/ MPORT 8
              if [ ! -z "$9" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
              fi
              #/ MPORT 9
              if [ ! -z "${10}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
              fi
              #/ MPORT 10
              if [ ! -z "${11}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
              fi
              #/ MPORT 11
              if [ ! -z "${12}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
              fi
              #/ MPORT 12
              if [ ! -z "${13}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
              fi
              #/ MPORT 13
              if [ ! -z "${14}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
              fi
              #/ MPORT 14
              if [ ! -z "${15}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
              fi
              #/ MPORT 15
              if [ ! -z "${16}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
              fi
              #/ MPORT 16
              if [ ! -z "${17}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
              fi
              #/ MPORT 17
              if [ ! -z "${18}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
              fi
              #/ MPORT 18
              if [ ! -z "${19}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
              fi
              #/ MPORT 19
              if [ ! -z "${20}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
              fi
              #/ MPORT 20
              if [ ! -z "${21}" ]; then
-                iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
-                iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+                iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
              fi
           fi
           ### // set iptable rules on HOST ###
@@ -3179,15 +3179,15 @@ sysctl -a | grep "proxy_ndp" | awk '{print $1}' | xargs -L1 -I % sysctl -w %=0 >
 
 ### NAT // ###
 #/ ipv4 nat
-iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE >/dev/null 2>&1
+iptables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
 #/ ipv6 nat
-ip6tables -t nat -D POSTROUTING -o eth0 -j MASQUERADE >/dev/null 2>&1
+ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
 ### // NAT ###
 
 ### RP_FILTER // ###
 sysctl -w net.ipv4.conf.all.rp_filter=0 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.default.rp_filter=0 >/dev/null 2>&1
-sysctl -w net.ipv4.conf.eth0.rp_filter=0 >/dev/null 2>&1
+sysctl -w net.ipv4.conf."$GETINTERFACE".rp_filter=0 >/dev/null 2>&1
 #/ sysctl -w net.ipv4.conf.managed.rp_filter=0 >/dev/null 2>&1
 #/ sysctl -w net.ipv4.conf.managed1.rp_filter=0 >/dev/null 2>&1
 #/ sysctl -w net.ipv4.conf.vswitch0.rp_filter=0 >/dev/null 2>&1
@@ -3537,8 +3537,8 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
       #
       ### set iptable rules on HOST // ###
       if [ "$CHECKENVIRONMENT" = "proxy" ]; then
-         iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-         iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+         iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
       fi
       ### // set iptable rules on HOST ###
       #
@@ -3661,102 +3661,102 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
            if [ "$CHECKENVIRONMENT" = "proxy" ]; then
               ###/ delete MPORTS /###
               #/ MPORT 1
-              iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
-              iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+              iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
+              iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2" > /dev/null 2>&1
               #/ MPORT 2
               if [ ! -z "$3" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3" > /dev/null 2>&1
               fi
               #/ MPORT 3
               if [ ! -z "$4" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4" > /dev/null 2>&1
               fi
               #/ MPORT 4
               if [ ! -z "$5" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5" > /dev/null 2>&1
               fi
               #/ MPORT 5
               if [ ! -z "$6" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6" > /dev/null 2>&1
               fi
               #/ MPORT 6
               if [ ! -z "$7" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7" > /dev/null 2>&1
               fi
               #/ MPORT 7
               if [ ! -z "$8" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8" > /dev/null 2>&1
               fi
               #/ MPORT 8
               if [ ! -z "$9" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9" > /dev/null 2>&1
               fi
               #/ MPORT 9
               if [ ! -z "${10}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}" > /dev/null 2>&1
               fi
               #/ MPORT 10
               if [ ! -z "${11}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}" > /dev/null 2>&1
               fi
               #/ MPORT 11
               if [ ! -z "${12}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}" > /dev/null 2>&1
               fi
               #/ MPORT 12
               if [ ! -z "${13}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}" > /dev/null 2>&1
               fi
               #/ MPORT 13
               if [ ! -z "${14}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}" > /dev/null 2>&1
               fi
               #/ MPORT 14
               if [ ! -z "${15}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}" > /dev/null 2>&1
               fi
               #/ MPORT 15
               if [ ! -z "${16}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}" > /dev/null 2>&1
               fi
               #/ MPORT 16
               if [ ! -z "${17}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}" > /dev/null 2>&1
               fi
               #/ MPORT 17
               if [ ! -z "${18}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}" > /dev/null 2>&1
               fi
               #/ MPORT 18
               if [ ! -z "${19}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}" > /dev/null 2>&1
               fi
               #/ MPORT 19
               if [ ! -z "${20}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}" > /dev/null 2>&1
               fi
               #/ MPORT 20
               if [ ! -z "${21}" ]; then
-                 iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
-                 iptables -t nat -D PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
+                 iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}" > /dev/null 2>&1
               fi
            fi
       ### // set iptable rules on HOST ###
@@ -4224,10 +4224,10 @@ MANAGEDLXCINLXC
    printf "\033[1;32m default gateway: 192.168.252.254 \033[0m\n"
 else
    : # dummy
-   #/iptables -t nat -D PREROUTING -i eth0 -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
-   #/iptables -t nat -D PREROUTING -i eth0 -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
-   #/iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
-   #/iptables -t nat -A PREROUTING -i eth0 -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
+   #/iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
+   #/iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
+   #/iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
+   #/iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
    echo "" # dummy
    printf "\033[1;32m LXC-Web-Panel:   http://192.168.253.254:5000 \033[0m\n"
    printf "\033[1;32m Username:        admin \033[0m\n"
