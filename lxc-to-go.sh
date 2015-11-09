@@ -3829,10 +3829,10 @@ fi
 
 echo "" # dummy
 printf "\033[1;33m LXC-to-Go HOST: \033[0m\n"
-lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,autostart,pid,memory,ram,swap | egrep -v "deb7template|deb8template"
+lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,pid,memory,ram,swap | egrep -v "deb7template|deb8template"
 echo "" # dummy
 printf "\033[1;33m LXC-in-LXC (managed): \033[0m\n"
-lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,autostart,pid,memory,ram,swap; fi'
+lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,pid,memory,ram,swap; fi'
 
 ### ### ###
 echo ""
