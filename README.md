@@ -82,27 +82,14 @@ Features
    * ipv6 router advertisement
 
 * "managed" lxc container:
-   * proxy_arp/ndp support (server mode)
-   * dhcp/ra support (desktop mode)
+   * proxy_arp/ndp support (proxy mode)
+   * dhcp/ra support (bridge mode)
 
 * transparent network flow
-   * if you run debian linux inside a virtualbox with an wireless lan bridge and the option "promiscuous mode: allow all" then the lxc-to-go "server" variant will also work!
-      * (thanks to proxy_arp/ndp)
 
-* wlan bridge support
-   * add support (in server variant) for native debian linux (use in future the modified version)
+* wlan bridge support thanks to proxy_arp/ndp
 
-usage:
-```
-   git clone https://github.com/plitc/lxc-to-go
-   cd lxc-to-go/modification
-   ./custom-interface-support.sh
-   cd ..
-
-   ./lxc-to-go-ci.sh
-```
-
-* rp_filter enabled by default
+* enable rp_filter by default
 
 * simple "template/flavor hooks" for general purposes
 
@@ -120,8 +107,6 @@ usage:
    lxc-to-go
    lxc-to-go-provisioning
    lxc-to-go-template
-   lxc-to-go_wlan
-   lxc-to-go_wlan-provisioning
 ```
 
 * LXC inside LXC
@@ -307,22 +292,26 @@ Provisioning Template Support
       * (works currently only with deb8 lxc)
 ```
 #/ * [org.samba.active-directory](https://www.samba.org)
-#/    * (lxc-to-go-provisioning -n ads -t deb8 -h yes -p 53,88,135,136,137,138,139,389,445,464,636,1024,3268,3269 -s yes)
-#/       * (works currently only with deb8 lxc)
+#/ * (lxc-to-go-provisioning -n ads -t deb8 -h yes -p 53,88,135,136,137,138,139,389,445,464,636,1024,3268,3269 -s yes)
+#/ * (works currently only with deb8 lxc)
 ```
 
 Diagram
 =======
-* lxc-to-go LXC inside LXC Support (prototype > 0.31.5)
+* lxc-to-go LXC inside LXC Support
+  * (prototype > 0.31.5)
 ![lxc-to-go_inside](/content/lxc-to-go_inside_.jpg)
 
-* lxc-to-go bootstrap (prototype > 0.11)
+* lxc-to-go bootstrap
+  * (prototype > 0.11)
 ![lxc-to-go_schema](/content/lxc-to-go_schema_.jpg)
 
-* lxc-to-go for servers (prototype > 0.9)
+* lxc-to-go for servers
+  * proxy mode (prototype > 0.9)
 ![lxc-to-go_servers](/content/lxc-to-go_servers_.jpg)
 
-* lxc-to-go for mobile devices (prototype 0.6)
+* lxc-to-go for mobile devices
+  * bridge mode (prototype 0.6)
 ![lxc-to-go_desktop](/content/lxc-to-go_desktop_.jpg)
 
 Screencast
@@ -350,6 +339,7 @@ Errata
 * 27.04.2015: [lxc-to-go < 0.25]: multiple start of "start function" generating unnecessary firewall rules --- OPEN
 
 * 23.04.2015: [lxc-to-go < 0.17.4]: "locales" package removed --- OPEN
+
 ```
   locale: Cannot set LC_CTYPE to default locale: No such file or directory
   locale: Cannot set LC_MESSAGES to default locale: No such file or directory
@@ -365,6 +355,7 @@ Errata
 * 22.04.2015: [lxc-to-go < 0.17.1]: under circumstances can't load rc.local (firewall rules) after lxc 'managed' bootstrap --- FIXED in [0.19.1]
 
 * 21.04.2015: [lxc-to-go < 0.14.1]: Starting VirtualBox AdditionsVBoxService: error: VbglR3Init failed with rc=VERR_FILE_NOT_FOUND failed! --- OPEN
+
 ```
    STRACE: open("/dev/vboxguest", O_RDWR|O_CLOEXEC) = -1 ENOENT (No such file or directory)
 ```
