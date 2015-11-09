@@ -49,13 +49,13 @@ lull
 DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSION" = "7" ]; then
    run curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
-   run chmod 0755 /root/script.deb.sh
-   run /root/script.deb.sh
+   run chmod 0755 /script.deb.sh
+   run /script.deb.sh
 fi
 if [ "$DEBVERSION" = "8" ]; then
    run curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
-   run chmod 0755 /root/script.deb.sh
-   run /root/script.deb.sh
+   run chmod 0755 /script.deb.sh
+   run /script.deb.sh
 fi
 
 run apt-get install gitlab-ce
