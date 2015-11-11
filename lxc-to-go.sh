@@ -707,7 +707,12 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### ### ###
       #/ container
       ### rc.local reload // ###
+      CHECKBOOTSTRAPINSTALL01="/etc/lxc-to-go/INSTALLED"
+      if [ -e "$CHECKBOOTSTRAPINSTALL01" ]; then
+         : # dummy
+      else
          lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+      fi
       ### // rc.local reload ###
    fi
 fi
@@ -1866,7 +1871,12 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### ### ###
       #/ container
       ### rc.local reload // ###
-         #/lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1 # break forwarding rules inside managed lxc
+      CHECKBOOTSTRAPINSTALL02="/etc/lxc-to-go/INSTALLED"
+      if [ -e "$CHECKBOOTSTRAPINSTALL02" ]; then
+         : # dummy
+      else
+         lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1 # break forwarding rules inside managed lxc
+      fi
       ### // rc.local reload ###
    fi
 fi
