@@ -1866,7 +1866,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### ### ###
       #/ container
       ### rc.local reload // ###
-         lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+         #/lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1 # break forwarding rules inside managed lxc
       ### // rc.local reload ###
    fi
 fi
