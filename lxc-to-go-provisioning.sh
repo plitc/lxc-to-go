@@ -315,12 +315,12 @@ CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/
 #
 CHECKDEB7IF=$(ifconfig | grep -c "deb7temp")
 if [ "$CHECKDEB7IF" = "1" ]; then
-   ifconfig deb7temp down
+   ip link set dev deb7temp down
    ip link del deb7temp
 fi
 CHECKDEB8IF=$(ifconfig | grep -c "deb8temp")
 if [ "$CHECKDEB8IF" = "1" ]; then
-   ifconfig deb8temp down
+   ip link set dev deb8temp down
    ip link del deb8temp
 fi
 #

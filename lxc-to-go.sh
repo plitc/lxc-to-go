@@ -647,7 +647,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
-      ifconfig vswitch0 up > /dev/null 2>&1
+      ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
       if [ "$GETENVIRONMENT" = "proxy" ]; then
@@ -663,7 +663,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       GETIPV4=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
-      ifconfig vswitch0 up > /dev/null 2>&1
+      ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
       if [ "$GETENVIRONMENT" = "proxy" ]; then
@@ -770,7 +770,7 @@ if [ "$CREATEBRIDGE1" = "1" ]; then
     : # dummy
 else
    brctl addbr vswitch1
-   ifconfig vswitch1 up
+   ip link set dev vswitch1 up
    sysctl -w net.ipv4.conf.vswitch1.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch1.forwarding=1 >/dev/null 2>&1
 fi
@@ -1811,7 +1811,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       GETIPV4UDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNETUDEV=$(ifconfig "$GETBRIDGEPORT0" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
-      ifconfig vswitch0 up > /dev/null 2>&1
+      ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
       if [ "$GETENVIRONMENT" = "proxy" ]; then
@@ -1827,7 +1827,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       GETIPV4=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
       GETIPV4SUBNET=$(ifconfig "$GETINTERFACE" | grep "inet " | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep "255.255.255" | sed 's/255.255.255.0/24/' | sed 's/255.255.255.224/27/')
       ip addr flush vswitch0
-      ifconfig vswitch0 up > /dev/null 2>&1
+      ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
       if [ "$GETENVIRONMENT" = "proxy" ]; then
@@ -3190,8 +3190,8 @@ lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % 
 
 lxc-ls --active | grep "managed" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
 
-ifconfig vswitch1 down > /dev/null 2>&1
-ifconfig vswitch0 down > /dev/null 2>&1
+ip link set dev vswitch1 down > /dev/null 2>&1
+ip link set dev vswitch0 down > /dev/null 2>&1
 ip link del vswitch0 > /dev/null 2>&1
 ip link del vswitch1 > /dev/null 2>&1
 sysctl -a | grep "proxy_arp" | awk '{print $1}' | xargs -L1 -I % sysctl -w %=0 > /dev/null 2>&1
