@@ -46,7 +46,7 @@ DIR=$(dirname "$PRG")
 #
 ADIR="$PWD"
 #
-#/ spinner
+##/ spinner
 spinner()
 {
    local pid=$1
@@ -62,7 +62,7 @@ spinner()
    printf "    \b\b\b\b"
 }
 #
-#/ function cleanup tmp
+##/ function cleanup tmp
 cleanup(){
    rm -rf /etc/lxc-to-go/tmp/*
 }
@@ -490,12 +490,12 @@ if [ "$CREATEBRIDGE0" = "1" ]; then
 else
    brctl addbr vswitch0
 
-   #/ if [ "$GETENVIRONMENT" = "bridge" ]; then
-   #/ ip link add dummy0 type dummy >/dev/null 2>&1
-   #/ brctl addif vswitch0 dummy0
-   #/ fi
+   #/if [ "$GETENVIRONMENT" = "bridge" ]; then
+   #/ip link add dummy0 type dummy >/dev/null 2>&1
+   #/brctl addif vswitch0 dummy0
+   #/fi
 
-   # check lxc-to-go-ci
+   ##/ check lxc-to-go-ci
    CHECKLXCTOGOCI=$(basename $0)
    if [ "$CHECKLXCTOGOCI" = "lxc-to-go-ci.sh" ];then
       UDEVNET="/etc/udev/rules.d/70-persistent-net.rules"
@@ -546,16 +546,16 @@ else
       sysctl -w net.ipv6.conf.vswitch0.proxy_ndp=1 >/dev/null 2>&1
    ### // Proxy_ARP/NDP ###
    ### NAT // ###
-      #/ ipv4 nat
+      ##/ ipv4 nat
       iptables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       iptables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       iptables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
-      #/ ipv6 nat
+      ##/ ipv6 nat
       ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
-      #/ iptables -A FORWARD -i vswitch0 -j ACCEPT
-      #/ sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
+      #/iptables -A FORWARD -i vswitch0 -j ACCEPT
+      #/sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
       ### NDP // ###
       sysctl -w net.ipv6.conf.all.forwarding=1 >/dev/null 2>&1
       ### // NDP ###
@@ -569,11 +569,11 @@ fi
 ### NEW IP - Bridge Environment // ###
 if [ "$GETENVIRONMENT" = "bridge" ]; then
    : # dummy
-   #/ ipv4
-   #/ killall dhclient
+   ##/ ipv4
+   #/killall dhclient
    if [ -e "$UDEVNET" ]; then
-      #/ dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
-      #/ route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
+      #/dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
+      #/route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
          pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
@@ -590,8 +590,8 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       echo "" # dummy
       echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
    else
-      #/ dhclient "$GETINTERFACE" >/dev/null 2>&1
-      #/ route del default dev "$GETINTERFACE" >/dev/null 2>&1
+      #/dhclient "$GETINTERFACE" >/dev/null 2>&1
+      #/route del default dev "$GETINTERFACE" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
          pgrep -f "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
@@ -615,18 +615,18 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       route del default
    fi
    ### // fix
-   #/ ipv6
+   ##/ ipv6
    if [ -e "$UDEVNET" ]; then
-      #/ ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
+      #/ifconfig "$GETBRIDGEPORT0" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    else
-      #/ ifconfig "$GETINTERFACE" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
+      #/ifconfig "$GETINTERFACE" | grep "inet6" | egrep -v "fe80" | awk '{print $2}' | xargs -L1 -I % ifconfig vswitch0 inet6 add % >/dev/null 2>&1
       ip -6 route del ::/0 >/dev/null 2>&1
       echo "2" > /proc/sys/net/ipv6/conf/vswitch0/accept_ra
    fi
-   #/ container
-   #/ lxc-attach -n managed -- pkill dhclient
+   ##/ container
+   #/lxc-attach -n managed -- pkill dhclient
    lxc-attach -n managed -- killall dhclient >/dev/null 2>&1
    lxc-attach -n managed -- ip addr flush eth0 >/dev/null 2>&1
    lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
@@ -640,7 +640,7 @@ fi
 
 ### NEW IP - Proxy Environment // ###
 if [ "$GETENVIRONMENT" = "proxy" ]; then
-   #/ ipv4
+   ##/ ipv4
    netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | xargs -L1 -I % echo "IPV4DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV4GATEWAY.log
    chmod 0700 /tmp/lxc-to-go_IPV4GATEWAY.log
    if [ -e "$UDEVNET" ]; then
@@ -677,7 +677,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // fix
    fi
    ### ### ###
-   #/ ipv6
+   ##/ ipv6
    if [ "$GETENVIRONMENT" = "proxy" ]; then
       netstat -rn6 | grep "^::/0" | egrep -v "lo" | awk '{print $2}' | xargs -L1 -I % echo "IPV6DEFAULTGATEWAY=%" > /tmp/lxc-to-go_IPV6GATEWAY.log
       chmod 0700 /tmp/lxc-to-go_IPV6GATEWAY.log
@@ -705,7 +705,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          ### // fix
       fi
       ### ### ###
-      #/ container
+      ##/ container
       ### rc.local reload // ###
       CHECKBOOTSTRAPINSTALL01="/etc/lxc-to-go/INSTALLED"
       if [ -e "$CHECKBOOTSTRAPINSTALL01" ]; then
@@ -879,10 +879,10 @@ lxc.cgroup.devices.allow = c 10:200 rwm
 # EOF
 LXCCONFIGMANAGED1
 
-      #/ if [ "$DEBVERSION" = "7" ]; then
-      #/    sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
-      #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
-      #/ fi
+      #/if [ "$DEBVERSION" = "7" ]; then
+      #/   sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
+      #/   sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
+      #/fi
 
       ### randomized MAC address // ###
       RANDOM1=$(shuf -i 10-99 -n 1)
