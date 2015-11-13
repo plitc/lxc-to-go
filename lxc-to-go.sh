@@ -4253,7 +4253,6 @@ MANAGEDLXCINLXC
    printf "\033[1;32m Password:        admin \033[0m\n"
    printf "\033[1;32m default gateway: 192.168.252.254 \033[0m\n"
 else
-   : # dummy
    #/iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
    #/iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
    #/iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST

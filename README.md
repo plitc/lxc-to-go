@@ -347,6 +347,8 @@ Screencast
 
 Errata
 ======
+* 13.11.2015: [lxc-to-go < 0.38.9.9]: lxc-to-go "proxy mode" issue with [easy_ipsec](https://github.com/plitc/easy_ipsec) --- OPEN
+
 * 09.11.2015: [lxc-to-go < 0.38.8.8]: lxc-to-go-provisioning can't set host iptables rules --- OPEN
 
 * 09.11.2015: [lxc-to-go < 0.38.7.7]: Cgroup memory controller: missing (but works on debian 9 (testing/stretch) with kernel 4.2) --- OPEN
