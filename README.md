@@ -157,7 +157,7 @@ Example
 ```
     # ./lxc-to-go.sh start
     FOUND:
-    test1 test2 test3 test4 test5 
+    test1 test2 test3 test4 test5
 
     ... LXC Container (screen sessions): ...
         14608.test1     (04/22/15 10:19:39)     (Detached)
@@ -172,9 +172,9 @@ Example
 * stop
 
 ```
-    # ./lxc-to-go.sh stop 
+    # ./lxc-to-go.sh stop
     FOUND (active):
-    test1 test2 test3 test4 test5 
+    test1 test2 test3 test4 test5
 
     lxc-to-go stop finished.
 ```
@@ -222,8 +222,8 @@ Example
 * delete
 
 ```
-    # ./lxc-to-go.sh delete 
-    test test1 test2 
+    # ./lxc-to-go.sh delete
+    test test1 test2
 
     Please enter the LXC Container name to DESTROY:
     test
