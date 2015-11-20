@@ -210,6 +210,16 @@ if [ -z "$LXC" ]; then
    echo "<--- --- --->"
 fi
 
+DEBOOTSTRAP=$(/usr/bin/which debootstrap)
+if [ -z "$DEBOOTSTRAP" ]; then
+   echo "<--- --- --->"
+   echo "need debootstrap"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install debootstrap
+   echo "<--- --- --->"
+fi
+
 ### LXC TEMPLATE - WHEEZY // ###
 CHECKLXCTEMPLATEWHEEZY="/usr/share/lxc/templates/lxc-debian-wheezy"
 if [ -e "$CHECKLXCTEMPLATEWHEEZY" ]; then
