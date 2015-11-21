@@ -142,6 +142,8 @@ Platform
       * 7 / Wheezy
    * LMDE (Linux Mint Debian Edition)
       * 2 (Betsy)
+   * Ubuntu Desktop
+      * 15.10 / Wily Werewolf
 
 Usage
 =====
