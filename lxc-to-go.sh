@@ -1956,6 +1956,7 @@ fi
 #/if [ -e "$CHECKSYMLINK2" ]; then
 CHECKSYMLINK2=$(basename $0)
 if [ "$CHECKSYMLINK2" = "lxc-to-go-ci.sh" ]
+then
    ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
    ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
 else
