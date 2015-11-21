@@ -92,9 +92,13 @@ else
          if [ "$DEBIAN" = "linuxmint" ]; then
             : # dummy
          else
-            #/echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
-            echo "[ERROR] We currently only support: Debian 7 (Wheezy), 8 (Jessie), 9 Testing (stretch/sid) and Linux Mint Debian Edition (LMDE 2 Betsy)"
-            exit 1
+            if [ "$DEBIAN" = "ubuntu" ]; then
+               : # dummy
+            else
+               #/echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+               echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) and Ubuntu Desktop 15.10+"
+               exit 1
+            fi
          fi
       fi
    fi
@@ -106,7 +110,7 @@ case "$1" in
 'bootstrap')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -2012,7 +2016,7 @@ esac
 'start')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -2576,7 +2580,7 @@ esac
 'stop')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -2897,7 +2901,7 @@ esac
 'shutdown')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3254,7 +3258,7 @@ esac
 'create')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3440,7 +3444,7 @@ esac
 'delete')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3791,7 +3795,7 @@ esac
 'show')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3851,7 +3855,7 @@ esac
 'login')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3958,7 +3962,7 @@ esac
 'lxc-in-lxc-webpanel')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint)
+debian|linuxmint|ubuntu)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
