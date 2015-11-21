@@ -35,7 +35,7 @@ DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
 DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 DEBTESTVERSION=$(grep -s "PRETTY_NAME" /etc/os-release | awk '{print $3}' | sed 's/"//g' | grep -c "stretch/sid")
 MYNAME=$(whoami)
-#
+
 PRG="$0"
 ##/ need this for relative symlinks
    while [ -h "$PRG" ] ;
@@ -43,8 +43,8 @@ PRG="$0"
          PRG=$(readlink "$PRG")
    done
 DIR=$(dirname "$PRG")
-#
-#/ spinner
+
+#// function: spinner
 spinner()
 {
    local pid=$1
@@ -59,31 +59,19 @@ spinner()
    done
    printf "    \b\b\b\b"
 }
-### // stage0 ###
 
-### stage1 // ###
-if [ "$DEBIAN" = "debian" ]; then
-   : # dummy
-else
-   # error 1
-   : # dummy
-   : # dummy
-   echo "[ERROR] Plattform = unknown"
+#// function: run script as root
+checkrootuser()
+{
+if [ "$(id -u)" != "0" ]; then
+   echo "[ERROR] This script must be run as root" 1>&2
    exit 1
 fi
-### stage2 // ###
+}
 
-### // stage2 ###
-#
-### stage3 // ###
-if [ "$MYNAME" = "root" ]; then
-   : # dummy
-else
-   : # dummy
-   : # dummy
-   echo "[ERROR] You must be root to run this script"
-   exit 1
-fi
+#// function: check debian based distributions
+checkdebiandistribution()
+{
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
@@ -93,11 +81,34 @@ else
       if [ "$DEBTESTVERSION" = "1" ]; then
          : # dummy
       else
-         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
-         exit 1
+         if [ "$DEBIAN" = "linuxmint" ]; then
+            : # dummy
+         else
+            #/echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+            echo "[ERROR] We currently only support: Debian 7 (Wheezy), 8 (Jessie), 9 Testing (stretch/sid) and Linux Mint Debian Edition (LMDE 2 Betsy)"
+            exit 1
+         fi
       fi
    fi
 fi
+}
+### // stage0 ###
+
+### stage1 // ###
+if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" ]
+then
+   : # dummy
+else
+   echo "[ERROR] Plattform = unknown"
+   exit 1
+fi
+### stage2 // ###
+checkrootuser
+checkdebiandistribution
+### // stage2 ###
+#
+### stage3 // ###
+#
 CHECKLXCINSTALL=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL" ]; then
    echo "" # dummy
