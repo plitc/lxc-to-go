@@ -109,10 +109,24 @@ case $DEBIAN in
 debian|linuxmint)
 ### stage2 // ###
 checkrootuser
+checkdebiandistribution
 ### // stage2 ###
 #
 ### stage3 // ###
-checkdebiandistribution
+#
+#/ fixes for lmde
+if [ "$DEBIAN" = "linuxmint" ]
+then
+   if [ -e "/etc/lxc-to-go/INSTALLED" ]
+   then
+      : # dummy
+   else
+      #/ dirty dbus & systemd
+      apt-get update
+      apt-get -y install --reinstall systemd-sysv
+   fi
+fi
+#
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###
