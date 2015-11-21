@@ -299,7 +299,8 @@ CHECKLXCINSIDELXC=$(echo $container | grep -c "lxc")
 ### // LXC inside LXC ###
 
 CHECKCGROUP=$(mount | grep -c "cgroup")
-if [ "$CHECKCGROUP" = "1" ]; then
+if [ "$CHECKCGROUP" -gt 0 ]
+then
    : # dummy
 else
    mount cgroup -t cgroup /sys/fs/cgroup >/dev/null 2>&1
