@@ -124,9 +124,12 @@ Features
 Platform
 ========
 * Linux
-   * Debian 9 / Testing Stretch/Sid (recommended)
-   * Debian 8 / Jessie (recommended)
-   * Debian 7 / Wheezy
+   * Debian
+      * 9 / Testing Stretch/Sid (recommended)
+      * 8 / Jessie (recommended)
+      * 7 / Wheezy
+   * LMDE (Linux Mint Debian Edition)
+      * 2 (Betsy)
 
 Usage
 =====
@@ -347,6 +350,17 @@ Screencast
 
 Errata
 ======
+* 21.11.2015: [lxc-to-go < 0.39.0.7]: lxc-to-go "bootstrap" failed when the choosed interface havn't got the default gateway route --- OPEN
+```
+  WORKAROUND:
+
+  route del default
+  ip route replace default via "MY_GATEWAY_IP" dev "MY_NEW_INTERFACE"
+
+  ./lxc-to-go.sh bootstrap
+     Choose your Interface: (eth0/wlan0) ? "MY_NEW_INTERFACE"
+```
+
 * 13.11.2015: [lxc-to-go < 0.38.9.9]: lxc-to-go "proxy mode" issue with [easy_ipsec](https://github.com/plitc/easy_ipsec) --- OPEN
 
 * 09.11.2015: [lxc-to-go < 0.38.8.8]: lxc-to-go-provisioning can't set host iptables rules --- OPEN
