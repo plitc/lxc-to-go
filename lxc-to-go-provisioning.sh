@@ -31,7 +31,7 @@
 ### ### ### PLITC // ### ### ###
 
 ### stage0 // ###
-DEBIAN=$(grep -s "ID" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
+DEBIAN=$(grep -s "ID=" /etc/os-release | egrep -v "VERSION" | sed 's/ID=//g')
 DEBVERSION=$(grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 DEBTESTVERSION=$(grep -s "PRETTY_NAME" /etc/os-release | awk '{print $3}' | sed 's/"//g' | grep -c "stretch/sid")
 MYNAME=$(whoami)
@@ -84,9 +84,12 @@ else
          if [ "$DEBIAN" = "linuxmint" ]; then
             : # dummy
          else
-            #/echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
-            echo "[ERROR] We currently only support: Debian 7 (Wheezy), 8 (Jessie), 9 Testing (stretch/sid) and Linux Mint Debian Edition (LMDE 2 Betsy)"
-            exit 1
+            if [ "$DEBIAN" = "ubuntu" ]; then
+               : # dummy
+            else
+               echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) and Ubuntu Desktop 15.10+"
+               exit 1
+            fi
          fi
       fi
    fi
@@ -95,7 +98,7 @@ fi
 ### // stage0 ###
 
 ### stage1 // ###
-if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" ]
+if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
 then
    : # dummy
 else

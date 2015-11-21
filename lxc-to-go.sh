@@ -95,7 +95,6 @@ else
             if [ "$DEBIAN" = "ubuntu" ]; then
                : # dummy
             else
-               #/echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
                echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) and Ubuntu Desktop 15.10+"
                exit 1
             fi
