@@ -1970,6 +1970,12 @@ else
 fi
 ### // SYMBOLIC LINKS ###
 
+CHECKETCHOSTS0=$(grep -c "lxc-to-go" /etc/hosts)
+if [ "$CHECKETCHOSTS0" = "0" ]
+then
+   echo "192.168.253.254   lxc-to-go" >> /etc/hosts
+fi
+
 ### LXC-inside-LXC // ###
 ## echo "" # dummy
 ## echo "... prepare LXC-inside-LXC (if necessary) ..."
@@ -4135,8 +4141,8 @@ MANAGEDLXCINLXC
 
    ### // LXC Template fixes ###
    ### lxc-in-lxc host resolve // ###
-   CHECKETCHOSTS=$(grep -c "lxc-to-go" /etc/hosts)
-   if [ "$CHECKETCHOSTS" = "0" ]
+   CHECKETCHOSTS1=$(grep -c "lxc-to-go" /etc/hosts)
+   if [ "$CHECKETCHOSTS1" = "0" ]
    then
       echo "192.168.253.254   lxc-to-go" >> /etc/hosts
    fi
