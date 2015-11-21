@@ -1748,6 +1748,10 @@ CHECKMANAGEDIPV6CONFIGFILE
    ### bootstrap finished file // ###
    touch /etc/lxc-to-go/INSTALLED
    ### // bootstrap finished file ###
+   #
+   # set iptables rules // ###
+   lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+   # set iptables rules // ###
 fi
 
 ### network debug tools // ###
