@@ -702,6 +702,12 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
+      ### fix //
+      if [ "$DEBIAN" = "ubuntu" ]; then
+      then
+         ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
+      fi
+      ### // fix
       if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
@@ -718,6 +724,12 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
+      ### fix //
+      if [ "$DEBIAN" = "ubuntu" ]; then
+      then
+         ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
+      fi
+      ### // fix
       if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
@@ -737,23 +749,47 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6UDEV=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNETUDEV=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
          GETIPV6UDEVLL1=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          ### // fix
       else
          GETIPV6=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNET=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
          GETIPV6LL1=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          ### // fix
       fi
       ### ### ###
@@ -1870,6 +1906,12 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
+      ### fix //
+      if [ "$DEBIAN" = "ubuntu" ]; then
+      then
+         ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
+      fi
+      ### // fix
       if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
@@ -1886,6 +1928,12 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ip link set dev vswitch0 up > /dev/null 2>&1
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
+      ### fix //
+      if [ "$DEBIAN" = "ubuntu" ]; then
+      then
+         ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
+      fi
+      ### // fix
       if [ "$GETENVIRONMENT" = "proxy" ]; then
          ip addr add 192.168.253.253/24 dev vswitch0
       fi
@@ -1905,23 +1953,47 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6UDEV=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNETUDEV=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
          GETIPV6UDEVLL2=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          ### // fix
       else
          GETIPV6=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/\/.*$//')
          GETIPV6SUBNET=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          if [ "$GETENVIRONMENT" = "proxy" ]; then
             ip -6 addr add fd00:aaaa:253::253/64 dev vswitch0 >/dev/null 2>&1
          fi
          ### fix //
          GETIPV6LL2=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
+         ### fix //
+         if [ "$DEBIAN" = "ubuntu" ]; then
+         then
+            ip -6 addr del "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
+         fi
+         ### // fix
          ### // fix
       fi
       ### ### ###
