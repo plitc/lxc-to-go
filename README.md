@@ -19,6 +19,18 @@ WARNING
 =======
 * lxc-to-go is experimental and its not ready for production. Do it at your own risk.
 
+Security Conditions
+===================
+```
+   apt-get install sudo
+   visudo
+### INPUT // ###
+   myusername ALL = (root) NOPASSWD: /usr/sbin/lxc-to-go
+   myusername ALL = (root) NOPASSWD: /usr/sbin/lxc-to-go-template
+   myusername ALL = (root) NOPASSWD: /usr/sbin/lxc-to-go-provisioning
+### // INPUT ###
+```
+
 Dependencies
 ============
 * Linux
