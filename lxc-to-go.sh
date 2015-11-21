@@ -61,29 +61,14 @@ spinner()
    done
    printf "    \b\b\b\b"
 }
-#
-##/ function cleanup tmp
+
+#// function: cleanup tmp
 cleanup(){
    rm -rf /etc/lxc-to-go/tmp/*
 }
-### // stage0 ###
 
-case "$1" in
-'bootstrap')
-### stage1 // ###
-case $DEBIAN in
-debian)
-### stage2 // ###
-#
-### // stage2 ###
-
-### stage3 // ###
-if [ "$MYNAME" = "root" ]; then
-   : # dummy
-else
-   echo "[ERROR] You must be root to run this script"
-   exit 1
-fi
+#// function: check debian based distributions
+checkdebiandistribution(){
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
@@ -93,11 +78,35 @@ else
       if [ "$DEBTESTVERSION" = "1" ]; then
          : # dummy
       else
-         echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
-         exit 1
+         if [ "$DEBIAN" = "linuxmint" ]; then
+            : # dummy
+         else
+            #/echo "[ERROR] You need Debian 7 (Wheezy), 8 (Jessie) or 9 Testing (stretch/sid) Version"
+            echo "[ERROR] We currently only support: Debian 7 (Wheezy), 8 (Jessie), 9 Testing (stretch/sid) and Linux Mint Debian Edition (LMDE 2 Betsy)"
+            exit 1
+         fi
       fi
    fi
 fi
+}
+### // stage0 ###
+
+case "$1" in
+'bootstrap')
+### stage1 // ###
+case $DEBIAN in
+debian|linuxmint)
+### stage2 // ###
+if [ "$MYNAME" = "root" ]; then
+   : # dummy
+else
+   echo "[ERROR] You must be root to run this script"
+   exit 1
+fi
+### // stage2 ###
+#
+### stage3 // ###
+checkdebiandistribution
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###
