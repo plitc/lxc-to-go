@@ -122,8 +122,14 @@ then
       : # dummy
    else
       #/ dirty dbus & systemd
-      apt-get update
-      apt-get -y install --reinstall systemd-sysv
+      systemctl status >/dev/null 2>&1
+      if [ $? -eq 0 ]
+      then
+         : dummy
+      else
+         apt-get update
+         apt-get -y install --reinstall systemd-sysv
+      fi
    fi
 fi
 #
