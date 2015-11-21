@@ -2991,12 +2991,12 @@ fi
 #
 ### ### ### ### ### ### ### ### ###
 
-CHECKCONTAINER2=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
-if [ "$CHECKCONTAINER2" = "0" ]; then
-   echo "" # dummy
-   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
-   exit 1
-fi
+#/CHECKCONTAINER2=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+#/if [ "$CHECKCONTAINER2" = "0" ]; then
+#/   echo "" # dummy
+#/   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
+#/   exit 1
+#/fi
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
