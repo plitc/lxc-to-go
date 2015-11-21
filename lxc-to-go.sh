@@ -130,7 +130,7 @@ then
          apt-get update
          apt-get -y install --reinstall systemd-sysv
          echo "" # dummy
-         printf "\033[1;31mWARNING: We fixed the SystemD Package Environment in LMDE! Please Reboot your System immediately! and continue the bootstrap.\033[0m\n"
+         printf "\033[1;31mWARNING: We fixed the SystemD Package Environment in your LMDE! Please Reboot your System immediately! and continue the bootstrap.\033[0m\n"
          echo "" # dummy
          exit 1
       fi
