@@ -121,7 +121,7 @@ then
    then
       : # dummy
    else
-      #/ dirty dbus & systemd
+      #/ FIX: dirty dbus & systemd
       systemctl status >/dev/null 2>&1
       if [ $? -eq 0 ]
       then
@@ -129,6 +129,8 @@ then
       else
          apt-get update
          apt-get -y install --reinstall systemd-sysv
+         printf "\033[1;31mWARNING: We fixed the SystemD Package in LMDE! Please Reboot your System immediately! and continue the bootstrap.\033[0m\n"
+         exit 1
       fi
    fi
 fi
