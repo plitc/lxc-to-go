@@ -366,6 +366,8 @@ Screencast
 
 Errata
 ======
+* 22.11.2015: [lxc-to-go < 0.39.3.5]: lxc-to-go on Ubuntu: lxc-clone failed (empty deb7/deb8 templates) --- OPEN
+
 * 22.11.2015: [lxc-to-go < 0.39.2.7]: lxc-to-go doesn't work with apparmor on Ubuntu --- WORKAROUND: disable apparmor in [0.39.2.8]
 
 * 21.11.2015: [lxc-to-go < 0.39.2.3]: lxc-to-go "bootstrap" (proxy mode) on Ubuntu with double ip mapping (phy./bridge) disturbs the routing --- FIXED in [0.39.2.4]
