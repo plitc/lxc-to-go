@@ -145,6 +145,8 @@ if [ "$DEBIAN" = "ubuntu" ]
 then
    systemctl stop apparmor
    systemctl disabpe apparmor >/dev/null 2>&1
+   printf "\033[1;33mWARNING: disable AppArmor on Ubuntu!\033[0m\n"
+   sleep 6
 fi
 #
 ### stage4 // ###
