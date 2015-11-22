@@ -1150,7 +1150,7 @@ CHECKMANAGEDNETFILE2
 ### fix //
    if [ "$DEBIAN" = "ubuntu" ]
    then
-      : # dummy
+      sed -i '/lxc.cgroup.devices/d' /var/lib/lxc/managed/config
    fi
 ### // fix
 fi
