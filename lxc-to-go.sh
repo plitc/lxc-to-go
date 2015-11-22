@@ -140,6 +140,13 @@ then
    fi
 fi
 #
+#/ fixes for ubuntu
+if [ "$DEBIAN" = "ubuntu" ]
+then
+   systemctl stop apparmor
+   systemctl disabpe apparmor >/dev/null 2>&1
+fi
+#
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###

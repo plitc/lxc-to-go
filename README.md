@@ -364,6 +364,8 @@ Screencast
 
 Errata
 ======
+* 22.11.2015: [lxc-to-go < 0.39.2.7]: lxc-to-go doesn't work with apparmor on Ubuntu --- WORKAROUND: disable apparmor in [0.39.2.8]
+
 * 21.11.2015: [lxc-to-go < 0.39.2.3]: lxc-to-go "bootstrap" (proxy mode) on Ubuntu with double ip mapping (phy./bridge) disturbs the routing --- FIXED in [0.39.2.4]
 
 * 21.11.2015: [lxc-to-go < 0.39.0.7]: lxc-to-go "bootstrap" failed when the choosed interface havn't got the default gateway route --- OPEN
