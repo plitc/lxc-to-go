@@ -1202,7 +1202,15 @@ if [ "$DEBVERSION" = "7" ]; then
       echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
    else
       echo "... LXC Container (screen session): managed starting ..."
-      screen -d -m -S managed -- lxc-start -n managed
+      #/screen -d -m -S managed -- lxc-start -n managed
+### fix //
+      if [ "$DEBIAN" = "ubuntu" ]
+      then
+         screen -d -m -S managed -- lxc-start -n managed -F
+      else
+         screen -d -m -S managed -- lxc-start -n managed
+      fi
+### // fix
       sleep 1
       screen -list | grep "managed"
       if [ "$GETENVIRONMENT" = "bridge" ]; then
@@ -1227,7 +1235,15 @@ else
       echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
    else
       echo "... LXC Container (screen session): managed starting ..."
-      screen -d -m -S managed -- lxc-start -n managed
+      #/screen -d -m -S managed -- lxc-start -n managed
+### fix //
+      if [ "$DEBIAN" = "ubuntu" ]
+      then
+         screen -d -m -S managed -- lxc-start -n managed -F
+      else
+         screen -d -m -S managed -- lxc-start -n managed
+      fi
+### // fix
       sleep 1
       screen -list | grep "managed"
       if [ "$GETENVIRONMENT" = "bridge" ]; then
@@ -1374,7 +1390,15 @@ else
       echo "" # dummy
    fi
    echo "... LXC Container (screen session): managed restarting ..."
-   screen -d -m -S managed -- lxc-start -n managed
+   #/screen -d -m -S managed -- lxc-start -n managed
+### fix //
+   if [ "$DEBIAN" = "ubuntu" ]
+   then
+      screen -d -m -S managed -- lxc-start -n managed -F
+   else
+      screen -d -m -S managed -- lxc-start -n managed
+   fi
+### // fix
    sleep 1
    screen -list | grep "managed"
    echo "" # dummy
@@ -1545,7 +1569,15 @@ CHECKMANAGEDNETFILE
 
    echo "" # dummy
    echo "... LXC Container (screen session): managed restarting ..."
-   screen -d -m -S managed -- lxc-start -n managed
+   #/screen -d -m -S managed -- lxc-start -n managed
+### fix //
+   if [ "$DEBIAN" = "ubuntu" ]
+   then
+      screen -d -m -S managed -- lxc-start -n managed -F
+   else
+      screen -d -m -S managed -- lxc-start -n managed
+   fi
+### // fix
    sleep 1
    screen -list | grep "managed"
    echo "" # dummy
@@ -2158,7 +2190,15 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 #/ lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
 echo "" # dummy
 
-lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
+#/lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
+### fix //
+if [ "$DEBIAN" = "ubuntu" ]
+then
+   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%" -F; sleep 5; }' & spinner $!
+else
+   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
+fi
+### // fix
 
 echo "" # dummy
 echo "... LXC Container (screen sessions): ..."
@@ -3476,7 +3516,15 @@ echo "$LXCNAME" > /var/lib/lxc/"$LXCNAME"/rootfs/etc/hostname
 echo ""
 read -p "Do you wish to start this LXC Container: "$LXCNAME" ? (y/n) " LXCSTART
 if [ "$LXCSTART" = "y" ]; then
-  screen -d -m -S "$LXCNAME" -- lxc-start -n "$LXCNAME"
+   #/screen -d -m -S "$LXCNAME" -- lxc-start -n "$LXCNAME"
+### fix //
+   if [ "$DEBIAN" = "ubuntu" ]
+   then
+      screen -d -m -S "$LXCNAME" -- lxc-start -n "$LXCNAME" -F
+   else
+      screen -d -m -S "$LXCNAME" -- lxc-start -n "$LXCNAME"
+   fi
+### // fix
   echo ""
   echo "... starting screen session ..."
   sleep 1

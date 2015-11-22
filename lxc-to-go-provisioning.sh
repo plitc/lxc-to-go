@@ -342,7 +342,15 @@ fi
 
 ### start // ###
 if [ "$start" = "yes" ]; then
-   screen -d -m -S "$name" -- lxc-start -n "$name"
+   #/screen -d -m -S "$name" -- lxc-start -n "$name"
+### fix //
+   if [ "$DEBIAN" = "ubuntu" ]
+   then
+      screen -d -m -S "$name" -- lxc-start -n "$name" -F
+   else
+      screen -d -m -S "$name" -- lxc-start -n "$name"
+   fi
+### // fix
    echo "" # dummy
    echo "... starting screen session ..."
    sleep 2
@@ -365,7 +373,15 @@ if [ "$start" = "yes" ]; then
 fi
 if [ "$start" = "no" ]; then
    if [ "$hooks" = "yes" ]; then
-   screen -d -m -S "$name" -- lxc-start -n "$name"
+   #/screen -d -m -S "$name" -- lxc-start -n "$name"
+### fix //
+   if [ "$DEBIAN" = "ubuntu" ]
+   then
+      screen -d -m -S "$name" -- lxc-start -n "$name" -F
+   else
+      screen -d -m -S "$name" -- lxc-start -n "$name"
+   fi
+### // fix
    echo "" # dummy
    echo "... starting screen session ..."
    sleep 2
