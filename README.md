@@ -144,6 +144,8 @@ Platform
       * 2 / Betsy
    * Ubuntu Desktop
       * 15.10 / Wily Werewolf
+   * Ubuntu Server (lxc-to-go experimental support)
+      * 15.10
 
 Usage
 =====
