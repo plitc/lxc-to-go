@@ -1151,6 +1151,12 @@ CHECKMANAGEDNETFILE2
    if [ "$DEBIAN" = "ubuntu" ]
    then
       sed -i '/lxc.cgroup.devices/d' /var/lib/lxc/managed/config
+      sed -i '/lxc.mount.entry/d' /var/lib/lxc/managed/config
+      echo "### fixes for ubuntu // ###" >> /var/lib/lxc/managed/config
+      echo "#" >> /var/lib/lxc/managed/config
+      echo "lxc.include = /usr/share/lxc/config/ubuntu.common.conf" >> /var/lib/lxc/managed/config
+      echo "#" >> /var/lib/lxc/managed/config
+      echo "### // fixes for ubuntu ###" >> /var/lib/lxc/managed/config
    fi
 ### // fix
 fi
