@@ -693,7 +693,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- ip addr flush eth0 >/dev/null 2>&1
    lxc-attach -n managed -- dhclient eth0 >/dev/null 2>&1
    lxc-attach -n managed -- ip -6 route del ::/0 >/dev/null 2>&1
-   lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra
+   lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra >/dev/null 2>&1
    ### rc.local reload // ###
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
