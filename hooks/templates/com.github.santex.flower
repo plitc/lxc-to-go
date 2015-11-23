@@ -74,6 +74,7 @@ lull
 #/ --- flower --- #/
 run cpanm Data::UUID;
 run cpanm Time::Duration;
+run cpanm Test::MonkeyMock;
 run git clone https://github.com/santex/flower.git
 run /bin/sh -c "cd /root/flower && perl Makefile.PL && make && make test && make install"
 run mkdir -p /root/data
