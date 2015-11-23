@@ -327,6 +327,9 @@ Provisioning Template Support
 * [org.samba.simple](https://www.samba.org)
    * (lxc-to-go-provisioning -n samba -t deb8 -h yes -p 135,136,137,138,139,445 -s yes)
       * (works currently only with deb8 lxc)
+* [com.github.letsencrypt](https://letsencrypt.org/)
+   * (lxc-to-go-provisioning -n letsencrypt -t deb8 -h yes -p 80 -s yes)
+      * (works currently only with deb8 lxc)
 
 ```
 #/ * [org.samba.active-directory](https://www.samba.org)
