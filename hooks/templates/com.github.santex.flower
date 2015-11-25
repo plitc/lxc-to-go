@@ -79,6 +79,8 @@ lull
 
 run cpanm IO::Socket::SSL; check
 
+# cpanm --reinstall Flower; check
+run cpanm Flower>0.01; check
 run cpanm Flower::Chronos; check
 run cpanm Flower::Chronos::Application::Base; check
 run cpanm Flower::Chronos::Application::Chromium; check
