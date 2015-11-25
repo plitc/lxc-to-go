@@ -53,6 +53,10 @@ run apt-get -y install elasticsearch
 
 lull
 
+run systemctl restart elasticsearch
+
+lull
+
 run update-rc.d elasticsearch defaults 95 10
 run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf
 run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data
@@ -122,6 +126,8 @@ run echo 'network.bind_host: "0.0.0.0"' >> /etc/elasticsearch/elasticsearch.yml
 run echo 'transport.tcp.port: 9300' >> /etc/elasticsearch/elasticsearch.yml
 run echo 'http.port: 9200' >> /etc/elasticsearch/elasticsearch.yml
 run echo '### ### ### // lxc-to-go ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
+
+lull
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
