@@ -19,6 +19,15 @@ echo "<--- --- --- provisioning hooks // --- --- --->"
 
 #/ version: 1 for 0.10
 
+### LXC Config // ###
+echo "### video & sound support // ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "lxc.mount.entry = /dev/dri dev/dri none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "lxc.mount.entry = /dev/snd dev/snd none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "lxc.mount.entry = /tmp/.X11-unix tmp/.X11-unix none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "lxc.mount.entry = /dev/video0 dev/video0 none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "### // video & sound support ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
+### // LXC Config ###
+
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 
