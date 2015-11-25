@@ -79,31 +79,33 @@ lull
 
 run cpanm IO::Socket::SSL; check
 
-# cpanm --reinstall Flower; check
-run cpanm Flower>0.09; check
-run cpanm Flower::Chronos; check
-run cpanm Flower::Chronos::Application::Base; check
-run cpanm Flower::Chronos::Application::Chromium; check
-run cpanm Flower::Chronos::Application::Firefox; check
-run cpanm Flower::Chronos::Application::GnomeTerminal; check
-run cpanm Flower::Chronos::Application::GoogleChrome; check
-run cpanm Flower::Chronos::Application::Pidgin; check
-run cpanm Flower::Chronos::Application::Skype; check
-run cpanm Flower::Chronos::Application::Thunderbird; check
-run cpanm Flower::Chronos::Logger; check
-run cpanm Flower::Chronos::Logger::Base; check
-run cpanm Flower::Chronos::Logger::Stdout; check
-run cpanm Flower::Chronos::Report; check
-run cpanm Flower::Chronos::Tracker; check
-run cpanm Flower::Chronos::Utils; check
-run cpanm Flower::Chronos::X11; check
-run cpanm Flower::File; check
-run cpanm Flower::Files; check
-run cpanm Flower::Interface; check
-run cpanm Flower::Node; check
-run cpanm Flower::Nodes; check
-run cpanm Flower::Rest; check
-run cpanm Flower::Upload; check
+#/run cpanm Flower
+run cpanm --reinstall Flower
+#/run cpanm Flower>0.09
+
+#/run cpanm Flower::Chronos; check
+#/run cpanm Flower::Chronos::Application::Base; check
+#/run cpanm Flower::Chronos::Application::Chromium; check
+#/run cpanm Flower::Chronos::Application::Firefox; check
+#/run cpanm Flower::Chronos::Application::GnomeTerminal; check
+#/run cpanm Flower::Chronos::Application::GoogleChrome; check
+#/run cpanm Flower::Chronos::Application::Pidgin; check
+#/run cpanm Flower::Chronos::Application::Skype; check
+#/run cpanm Flower::Chronos::Application::Thunderbird; check
+#/run cpanm Flower::Chronos::Logger; check
+#/run cpanm Flower::Chronos::Logger::Base; check
+#/run cpanm Flower::Chronos::Logger::Stdout; check
+#/run cpanm Flower::Chronos::Report; check
+#/run cpanm Flower::Chronos::Tracker; check
+#/run cpanm Flower::Chronos::Utils; check
+#/run cpanm Flower::Chronos::X11; check
+#/run cpanm Flower::File; check
+#/run cpanm Flower::Files; check
+#/run cpanm Flower::Interface; check
+#/run cpanm Flower::Node; check
+#/run cpanm Flower::Nodes; check
+#/run cpanm Flower::Rest; check
+#/run cpanm Flower::Upload; check
 
 lull
 
