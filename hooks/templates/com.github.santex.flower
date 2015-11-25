@@ -30,7 +30,7 @@ echo "### // video & sound support ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
-run echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts
+run /bin/sh -c ' echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts '
 
 lull
 
@@ -121,11 +121,11 @@ lull
 
 run /etc/rc.local
 
-run echo '### ### ### lxc-to-go // ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
-run echo 'network.bind_host: "0.0.0.0"' >> /etc/elasticsearch/elasticsearch.yml
-run echo 'transport.tcp.port: 9300' >> /etc/elasticsearch/elasticsearch.yml
-run echo 'http.port: 9200' >> /etc/elasticsearch/elasticsearch.yml
-run echo '### ### ### // lxc-to-go ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
+run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/elasticsearch/elasticsearch.yml '
+run /bin/sh -c ' echo "network.bind_host: 0.0.0.0" >> /etc/elasticsearch/elasticsearch.yml '
+run /bin/sh -c ' echo "transport.tcp.port: 9300" >> /etc/elasticsearch/elasticsearch.yml '
+run /bin/sh -c ' echo "http.port: 9200" >> /etc/elasticsearch/elasticsearch.yml '
+run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsearch/elasticsearch.yml '
 
 lull
 
