@@ -30,6 +30,7 @@ echo "### // video & sound support ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
 
 run apt-get -y update
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+run echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts
 
 lull
 
@@ -57,12 +58,6 @@ run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf
 run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data
 run touch /var/run/elasticsearch.pid
 run chown elasticsearch:elasticsearch /var/run/elasticsearch.pid
-run echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts
-run echo '### ### ### lxc-to-go // ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
-run echo 'network.bind_host: "0.0.0.0"' >> /etc/elasticsearch/elasticsearch.yml
-run echo 'transport.tcp.port: 9300' >> /etc/elasticsearch/elasticsearch.yml
-run echo 'http.port: 9200' >> /etc/elasticsearch/elasticsearch.yml
-run echo '### ### ### // lxc-to-go ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
 
 lull
 
@@ -121,6 +116,12 @@ RCLOCAL
 lull
 
 run /etc/rc.local
+
+run echo '### ### ### lxc-to-go // ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
+run echo 'network.bind_host: "0.0.0.0"' >> /etc/elasticsearch/elasticsearch.yml
+run echo 'transport.tcp.port: 9300' >> /etc/elasticsearch/elasticsearch.yml
+run echo 'http.port: 9200' >> /etc/elasticsearch/elasticsearch.yml
+run echo '### ### ### // lxc-to-go ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
