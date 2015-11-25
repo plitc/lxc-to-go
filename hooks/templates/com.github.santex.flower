@@ -6,6 +6,17 @@ run(){
    lxc-attach -n "$LXCCREATENAME" -- "$@"
 }
 
+check(){
+   if [ $? -eq 0 ]
+   then
+      printf "\033[1;32m OK \033[0m\n"
+      sleep 2
+   else
+      printf "\033[1;31m FAILED \033[0m\n"
+      sleep 2
+   fi
+}
+
 lull(){
    # break
    sleep 4
@@ -29,67 +40,90 @@ echo "### // video & sound support ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
 ### // LXC Config ###
 
 run apt-get -y update
+check
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+check
 run /bin/sh -c ' echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts '
+check
 
 lull
 
 run apt-get -y install sudo
+check
 run apt-get -y install telnet
+check
 run apt-get -y install curl
+check
 run apt-get -y install vim
+check
 run apt-get -y install git
+check
 run apt-get -y install make
+check
 run apt-get -y install gcc
+check
 run apt-get -y install build-essential
+check
 #run apt-get -y install wordnet
 #run apt-get -y install memcached
 run apt-get -y install cpanminus
+check
 run apt-get -y install libssl-dev
+check
 run apt-get -y install libio-pty-perl
+check
 run curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious
+check
 run apt-get -y install xprintidle
+check
 run apt-get -y install elasticsearch
+check
 
 lull
 
 run systemctl restart elasticsearch
+check
 
 lull
 
 run update-rc.d elasticsearch defaults 95 10
+check
 run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf
+check
 run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data
+check
 run touch /var/run/elasticsearch.pid
+check
 run chown elasticsearch:elasticsearch /var/run/elasticsearch.pid
+check
 
 lull
 
-run cpanm IO::Socket::SSL;
+run cpanm IO::Socket::SSL; check
 
-run cpanm Flower::Chronos;
-run cpanm Flower::Chronos::Application::Base;
-run cpanm Flower::Chronos::Application::Chromium;
-run cpanm Flower::Chronos::Application::Firefox;
-run cpanm Flower::Chronos::Application::GnomeTerminal;
-run cpanm Flower::Chronos::Application::GoogleChrome;
-run cpanm Flower::Chronos::Application::Pidgin;
-run cpanm Flower::Chronos::Application::Skype;
-run cpanm Flower::Chronos::Application::Thunderbird;
-run cpanm Flower::Chronos::Logger;
-run cpanm Flower::Chronos::Logger::Base;
-run cpanm Flower::Chronos::Logger::Stdout;
-run cpanm Flower::Chronos::Report;
-run cpanm Flower::Chronos::Tracker;
-run cpanm Flower::Chronos::Utils;
-run cpanm Flower::Chronos::X11;
-run cpanm Flower::File;
-run cpanm Flower::Files;
-run cpanm Flower::Interface;
-run cpanm Flower::Node;
-run cpanm Flower::Nodes;
-run cpanm Flower::Rest;
-run cpanm Flower::Upload;
+run cpanm Flower::Chronos; check
+run cpanm Flower::Chronos::Application::Base; check
+run cpanm Flower::Chronos::Application::Chromium; check
+run cpanm Flower::Chronos::Application::Firefox; check
+run cpanm Flower::Chronos::Application::GnomeTerminal; check
+run cpanm Flower::Chronos::Application::GoogleChrome; check
+run cpanm Flower::Chronos::Application::Pidgin; check
+run cpanm Flower::Chronos::Application::Skype; check
+run cpanm Flower::Chronos::Application::Thunderbird; check
+run cpanm Flower::Chronos::Logger; check
+run cpanm Flower::Chronos::Logger::Base; check
+run cpanm Flower::Chronos::Logger::Stdout; check
+run cpanm Flower::Chronos::Report; check
+run cpanm Flower::Chronos::Tracker; check
+run cpanm Flower::Chronos::Utils; check
+run cpanm Flower::Chronos::X11; check
+run cpanm Flower::File; check
+run cpanm Flower::Files; check
+run cpanm Flower::Interface; check
+run cpanm Flower::Node; check
+run cpanm Flower::Nodes; check
+run cpanm Flower::Rest; check
+run cpanm Flower::Upload; check
 
 lull
 
