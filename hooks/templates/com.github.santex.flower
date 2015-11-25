@@ -42,11 +42,11 @@ run apt-get -y install elasticsearch
 
 lull
 
-update-rc.d elasticsearch defaults 95 10
-/usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf
-chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data
-touch /var/run/elasticsearch.pid
-chown elasticsearch:elasticsearch /var/run/elasticsearch.pid
+run update-rc.d elasticsearch defaults 95 10
+run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf
+run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data
+run touch /var/run/elasticsearch.pid
+run chown elasticsearch:elasticsearch /var/run/elasticsearch.pid
 run echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts
 run echo '### ### ### lxc-to-go // ### ### ###' >> /etc/elasticsearch/elasticsearch.yml
 run echo 'network.bind_host: "0.0.0.0"' >> /etc/elasticsearch/elasticsearch.yml
@@ -120,6 +120,8 @@ RCLOCAL
 # sudo -u elasticsearch  /usr/bin/java -Xms256m -Xmx1g -Xss256k -Djava.awt.headless=true -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+HeapDumpOnOutOfMemoryError -Delasticsearch -Des.foreground=yes -Des.path.home=/usr/share/elasticsearch -cp :/usr/share/elasticsearch/lib/elasticsearch-1.1.1.jar:/usr/share/elasticsearch/lib/*:/usr/share/elasticsearch/lib/sigar/* org.elasticsearch.bootstrap.Elasticsearch
 
 # sudo -u elasticsearch /usr/share/elasticsearch/bin/elasticsearch -d -p /var/run/elasticsearch.pid --default.config=/etc/elasticsearch/elasticsearch.yml --default.path.home=/usr/share/elasticsearch --default.path.logs=/var/log/elasticsearch --default.path.data=/var/lib/elasticsearch --default.path.work=/tmp/elasticsearch --default.path.conf=/etc/elasticsearch
+
+run /etc/rc.local
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
