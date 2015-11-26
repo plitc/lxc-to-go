@@ -304,9 +304,13 @@ Provisioning Template Support
 =============================
 
 * plain_provisioning (default)
-* [com.github.santex.flower](https://github.com/santex/flower)
+* [com.github.plitc.flower](https://github.com/plitc/flower)
    * (lxc-to-go-provisioning -n flower -t deb8 -h yes -p 2222 -s yes)
       * (works with deb7/deb8 lxc)
+* [com.github.santex.flower](https://github.com/santex/flower)
+   * (lxc-to-go-provisioning -n newflower -t deb8 -h yes -p 2222 -s yes)
+      * (works currently only with deb8 lxc)
+      * (X11 inside LXC: lxc-attach -n newflower -- chromium --no-sandbox)
 * [com.github.santex.ai-microstructure](https://github.com/santex/AI-MicroStructure)
    * (lxc-to-go-provisioning -n micro -t deb7 -h yes -p 10001 -s yes)
       * (works currently only with deb7 lxc)
