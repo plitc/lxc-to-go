@@ -55,16 +55,16 @@ run apt-get -y install git; check
 run apt-get -y install make; check
 run apt-get -y install gcc; check
 run apt-get -y install build-essential; check
-#run apt-get -y install wordnet; check
-#run apt-get -y install memcached; check
+#/run apt-get -y install wordnet; check
+#/run apt-get -y install memcached; check
 run apt-get -y install cpanminus; check
 run apt-get -y install libssl-dev; check
 run apt-get -y install libio-pty-perl; check
 run curl -L https://cpanmin.us | perl - -M https://cpan.metacpan.org -n Mojolicious; check
 run apt-get -y install xprintidle; check
 
-# useless elasticsearch from deb repo
-#run apt-get -y install elasticsearch; check
+### old repo
+#/run apt-get -y install elasticsearch; check
 run /bin/sh -c ' cd /root; wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add - '; check
 run /bin/sh -c ' echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list '; check
 run apt-get -y update; check
@@ -78,7 +78,7 @@ run systemctl restart elasticsearch; check
 lull 3
 
 run update-rc.d elasticsearch defaults 95 10; check
-run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf; check
+#/run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf; check
 run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data; check
 run touch /var/run/elasticsearch.pid; check
 run chown elasticsearch:elasticsearch /var/run/elasticsearch.pid; check
