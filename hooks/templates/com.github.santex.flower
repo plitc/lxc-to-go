@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 ### ### ### lxc-to-go // ### ### ###
 
 run(){
@@ -23,7 +23,7 @@ lull(){
    # break
    sleep 4
    echo ""
-   echo "---> next step <---"
+   echo "---> next step: "$@" <---"
    echo ""
 }
 
@@ -44,7 +44,7 @@ run apt-get -y update; check
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; check
 run /bin/sh -c ' echo "$LXCCREATENAME   127.0.0.1" >> /etc/hosts '; check
 
-lull
+lull 1
 
 run apt-get -y install sudo; check
 run apt-get -y install telnet; check
@@ -71,11 +71,11 @@ run apt-get -y update; check
 run apt-get -y install openjdk-7-jre; check
 run apt-get -y install elasticsearch; check
 
-lull
+lull 2
 
 run systemctl restart elasticsearch; check
 
-lull
+lull 3
 
 run update-rc.d elasticsearch defaults 95 10; check
 run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf; check
@@ -83,7 +83,7 @@ run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data; check
 run touch /var/run/elasticsearch.pid; check
 run chown elasticsearch:elasticsearch /var/run/elasticsearch.pid; check
 
-lull
+lull 4
 
 run cpanm IO::Socket::SSL; check
 
@@ -115,7 +115,7 @@ run cpanm --reinstall Flower
 #/run cpanm Flower::Rest; check
 #/run cpanm Flower::Upload; check
 
-lull
+lull 5
 
 #/ --- flower --- #/
 
@@ -142,7 +142,7 @@ exit 0
 RCLOCAL
 check
 
-lull
+lull 6
 
 run /etc/rc.local; check
 
@@ -152,7 +152,7 @@ run /bin/sh -c ' echo "transport.tcp.port: 9300" >> /etc/elasticsearch/elasticse
 run /bin/sh -c ' echo "http.port: 9200" >> /etc/elasticsearch/elasticsearch.yml '; check
 run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsearch/elasticsearch.yml '; check
 
-lull
+lull 7
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
