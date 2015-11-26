@@ -167,6 +167,9 @@ run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsear
 
 lull 8
 
+#/ force reboot for lxc.mount changes
+run poweroff
+
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
 # EOF
