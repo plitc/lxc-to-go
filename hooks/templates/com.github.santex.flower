@@ -157,7 +157,7 @@ check
 
 lull 7
 
-run /etc/rc.local; check
+#run /etc/rc.local; check
 
 run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/elasticsearch/elasticsearch.yml '; check
 run /bin/sh -c ' echo "network.bind_host: 0.0.0.0" >> /etc/elasticsearch/elasticsearch.yml '; check
@@ -168,7 +168,7 @@ run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsear
 lull 8
 
 #/ force reboot for lxc.mount changes
-run poweroff
+#run poweroff
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
