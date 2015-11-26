@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
 
 run(){
@@ -35,8 +35,10 @@ echo "<--- --- --- provisioning hooks // --- --- --->"
 echo "### video & sound support // ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
 echo "lxc.mount.entry = /dev/dri dev/dri none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
 echo "lxc.mount.entry = /dev/snd dev/snd none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
-echo "lxc.mount.entry = /tmp/.X11-unix tmp/.X11-unix none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
 echo "lxc.mount.entry = /dev/video0 dev/video0 none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "#/lxc.mount.entry = /tmp/.X11-unix tmp/.X11-unix none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "# WORKAROUND: against systemd-tmpfiles-clean and X clean" >> /var/lib/lxc/"$LXCCREATENAME"/config
+echo "lxc.mount.entry = /tmp/.X11-unix tmp_HOST/.X11-unix none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config
 echo "### // video & sound support ###" >> /var/lib/lxc/"$LXCCREATENAME"/config
 ### // LXC Config ###
 
@@ -73,11 +75,12 @@ run apt-get -y install elasticsearch; check
 
 lull 2
 
+run systemctl enable elasticsearch; check
 run systemctl restart elasticsearch; check
 
 lull 3
 
-run update-rc.d elasticsearch defaults 95 10; check
+#/run update-rc.d elasticsearch defaults 95 10; check
 #/run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf; check
 run mkdir -p /usr/share/elasticsearch/data; check
 run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data; check
@@ -129,8 +132,11 @@ run mkdir -p /data; check
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
 
-#/ elasticsearch
-sudo -u elasticsearch /usr/share/elasticsearch/bin/elasticsearch -d -p /var/run/elasticsearch.pid --default.config=/etc/elasticsearch/elasticsearch.yml --default.path.home=/usr/share/elasticsearch --default.path.logs=/var/log/elasticsearch --default.path.data=/var/lib/elasticsearch --default.path.work=/tmp/elasticsearch --default.path.conf=/etc/elasticsearch
+# WORKAROUND: against systemd-tmpfiles-clean and X clean
+mount --bind /tmp_HOST/.X11-unix /tmp/.X11-unix
+
+# elasticsearch
+#/sudo -u elasticsearch /usr/share/elasticsearch/bin/elasticsearch -d -p /var/run/elasticsearch.pid --default.config=/etc/elasticsearch/elasticsearch.yml --default.path.home=/usr/share/elasticsearch --default.path.logs=/var/log/elasticsearch --default.path.data=/var/lib/elasticsearch --default.path.work=/tmp/elasticsearch --default.path.conf=/etc/elasticsearch
 
 # /usr/local/bin/flower --filepath /data --ip $GETIPV4NEWINSIDE &
 GETFLOWERPATH=$(find /root -name "flower" | grep "bin/flower" | egrep -v "script" | head -n 1 | sed 's/\/bin\/flower//g')
@@ -154,6 +160,11 @@ run /bin/sh -c ' echo "http.port: 9200" >> /etc/elasticsearch/elasticsearch.yml 
 run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsearch/elasticsearch.yml '; check
 
 lull 7
+
+# Applications
+run apt-get -y install chromium; check
+
+lull 8
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
