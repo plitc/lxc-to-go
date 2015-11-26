@@ -143,6 +143,7 @@ run mkdir -p /data; check
 
 # WORKAROUND: against systemd-tmpfiles-clean and X clean
 mount --bind /tmp_HOST/.X11-unix /tmp/.X11-unix
+export DISPLAY=:0
 
 ### # elasticsearch
 ### #/sudo -u elasticsearch /usr/share/elasticsearch/bin/elasticsearch -d -p /var/run/elasticsearch.pid --default.config=/etc/elasticsearch/elasticsearch.yml --default.path.home=/usr/share/elasticsearch --default.path.logs=/var/log/elasticsearch --default.path.data=/var/lib/elasticsearch --default.path.work=/tmp/elasticsearch --default.path.conf=/etc/elasticsearch
