@@ -121,6 +121,12 @@ run cpanm --reinstall Flower
 
 lull 5
 
+# Applications
+run apt-get -y install chromium; check
+run apt-get -y install iceweasel; check
+
+lull 6
+
 #/ --- flower --- #/
 
 run mkdir -p /data; check
@@ -149,7 +155,7 @@ exit 0
 RCLOCAL
 check
 
-lull 6
+lull 7
 
 run /etc/rc.local; check
 
@@ -158,11 +164,6 @@ run /bin/sh -c ' echo "network.bind_host: 0.0.0.0" >> /etc/elasticsearch/elastic
 run /bin/sh -c ' echo "transport.tcp.port: 9300" >> /etc/elasticsearch/elasticsearch.yml '; check
 run /bin/sh -c ' echo "http.port: 9200" >> /etc/elasticsearch/elasticsearch.yml '; check
 run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsearch/elasticsearch.yml '; check
-
-lull 7
-
-# Applications
-run apt-get -y install chromium; check
 
 lull 8
 
