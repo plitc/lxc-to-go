@@ -1,6 +1,7 @@
 OK
 
 plain_provisioning
+plain_x11gui_provisioning
 com.gitlab.communityedition
 org.samba.simple
 com.github.letsencrypt
