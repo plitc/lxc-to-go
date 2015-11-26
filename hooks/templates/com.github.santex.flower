@@ -79,6 +79,7 @@ lull 3
 
 run update-rc.d elasticsearch defaults 95 10; check
 #/run /usr/share/elasticsearch/bin/plugin -install lmenezes/elasticsearch-kopf; check
+run mkdir -p /usr/share/elasticsearch/data; check
 run chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data; check
 run touch /var/run/elasticsearch.pid; check
 run chown elasticsearch:elasticsearch /var/run/elasticsearch.pid; check
