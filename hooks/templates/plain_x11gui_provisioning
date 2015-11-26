@@ -57,6 +57,7 @@ lull 2
 
 # WORKAROUND: against systemd-tmpfiles-clean and X clean
 mount --bind /tmp_HOST/.X11-unix /tmp/.X11-unix
+export DISPLAY=:0
 
 exit 0
 ### ### ### // lxc-to-go ### ### ###
