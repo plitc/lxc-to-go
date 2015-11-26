@@ -23,7 +23,7 @@ lull(){
    # break
    sleep 2
    echo ""
-   echo "---> next step <---"
+   echo "---> next step: "$@" <---"
    echo ""
 }
 
@@ -46,6 +46,11 @@ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; check
 
 lull 1
 
+# X11
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install xorg"; check
+
+lull 2
+
 /bin/cat << "RCLOCAL" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
@@ -59,7 +64,7 @@ exit 0
 RCLOCAL
 check
 
-lull 2
+lull 3
 
 #/ force reboot for lxc.mount changes
 #/run poweroff

@@ -121,6 +121,9 @@ run cpanm --reinstall Flower
 
 lull 5
 
+# X11
+run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install xorg"; check
+
 # Applications
 run apt-get -y install chromium; check
 run apt-get -y install iceweasel; check
