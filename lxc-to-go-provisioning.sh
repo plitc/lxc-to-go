@@ -398,6 +398,15 @@ if [ "$start" = "no" ]; then
             echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
             #/ $DIR/hooks/hook_provisioning.sh
             /etc/lxc-to-go/hook_provisioning.sh
+            if [ $? -eq 0 ]
+            then
+               printf "\033[1;32m OK \033[0m\n"
+               sleep 2
+            else
+               printf "\033[1;31m FAILED \033[0m\n"
+               sleep 1
+               exit 1
+            fi
          echo "" # dummy
       ###
       unset LXCCREATENAME
