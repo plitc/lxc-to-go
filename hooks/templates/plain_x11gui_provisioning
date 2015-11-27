@@ -70,7 +70,7 @@ lull 3
 # Users
 run apt-get -y install zsh; check
 run useradd -m -c "lxc-to-go" lxctogo; check
-run echo lxctogo:lxctogo | chpasswd; check
+run /bin/sh -c ' echo lxctogo:lxctogo | chpasswd '; check
 run chsh -s /usr/bin/zsh lxctogo; check
 
 lull 4
