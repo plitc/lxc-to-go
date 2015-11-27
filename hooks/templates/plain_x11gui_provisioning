@@ -70,6 +70,7 @@ lull 3
 # Users
 run apt-get -y install zsh; check
 run useradd -m -c "lxc-to-go" lxctogo; check
+run echo lxctogo:lxctogo | chpasswd; check
 run chsh -s /usr/bin/zsh lxctogo; check
 
 lull 4
@@ -97,6 +98,8 @@ check
 
 sed -i 's/CHANGEME/'"$LXCCREATENAME"'/g' /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; check
 chmod 0755 /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; check
+touch /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; check
+chmod 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; check
 
 lull 5
 
