@@ -99,7 +99,7 @@ check
 sed -i 's/CHANGEME/'"$LXCCREATENAME"'/g' /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; check
 chmod 0755 /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; check
 touch /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; check
-chmod 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; check
+chown 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; check
 
 lull 5
 
