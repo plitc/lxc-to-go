@@ -78,11 +78,11 @@ lull 4
 run apt-get -y install pulseaudio; check
 echo "lxc.hook.pre-start = /var/lib/lxc/$LXCCREATENAME/pulseaudio-helper.sh" >> /var/lib/lxc/"$LXCCREATENAME"/config
 
-/bin/cat << RCPULSEAUDIO > /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh
+/bin/cat << "RCPULSEAUDIO" > /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
 
-PULSE_PATH="$LXCCREATENAME"/home/lxctogo/.pulse_socket
+PULSE_PATH=/var/lib/lxc/CHANGEME/home/lxctogo/.pulse_socket
 
 if [ ! -e "$PULSE_PATH" ] || [ -z "$(lsof -n $PULSE_PATH 2>&1)" ]; then
    pactl load-module module-native-protocol-unix auth-anonymous=1 \
@@ -95,7 +95,8 @@ exit 0
 RCPULSEAUDIO
 check
 
-chmod 0755 /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh
+sed -i 's/CHANGEME/'"$LXCCREATENAME"'/g' /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; check
+chmod 0755 /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; check
 
 lull 5
 
