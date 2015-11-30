@@ -4210,7 +4210,16 @@ then
       lxc-attach -n managed -- rm -rf /srv/lwp
       exit 1
    fi
-   (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc/debian) & spinner $!
+   #// for AMD64 or PowerPC Environment
+   CHECKYABOOT3=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   if [ -z "$CHECKYABOOT3" ]
+   then
+      #// for amd64
+      (cp -prf /var/cache/lxc/debian/rootfs-wheezy-amd64 /var/lib/lxc/managed/rootfs/var/cache/lxc/debian) & spinner $!
+   else
+      #// for powerpc
+      (cp -prf /var/cache/lxc/debian/rootfs-wheezy-ppc /var/lib/lxc/managed/rootfs/var/cache/lxc/debian) & spinner $!
+   fi
 cat << "MANAGEDLXCINLXC" > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
 #
@@ -4269,6 +4278,14 @@ MANAGEDLXCINLXC
    rm -rf /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-cirros
 
    # DEFAULT: lxc-debian
+   #// for PowerPC Environment
+   CHECKYABOOT4=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   if [ -z "$CHECKYABOOT4" ]
+   then
+      : # dummy
+   else
+      cp -prf /usr/share/lxc/templates/lxc-debian-wheezy /var/lib/lxc/managed/rootfs/usr/share/lxc/templates/lxc-debian
+   fi
 
    # DEFAULT: lxc-debian-wheezy
 
