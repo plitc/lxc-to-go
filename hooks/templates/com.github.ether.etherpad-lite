@@ -43,7 +43,7 @@ spinner(){
 }
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
-#/ version: 2.0
+#// Version: 2.0
 
 run apt-get -y update; check
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; check
@@ -62,7 +62,8 @@ then
    run apt-get -y install nodejs npm; check
 else
    #// powerpc
-   : # dummy
+   run /bin/sh -c ' cd /root; git clone git://github.com/nodejs/node; cd /root/node; ./configure; make install '; check
+   run apt-get -y install npm; check
 fi
 check
 
@@ -74,7 +75,7 @@ lull 2
 
 #/ --- etherpad-lite --- #/
 
-run git clone git://github.com/ether/etherpad-lite.git; check
+run /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git '; check
 
 lull 3
 
@@ -94,7 +95,7 @@ if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 fi
 if [ "$DEBVERSION" = "8" ]; then
-   #/ systemd service file
+   #// systemd service file
    run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "[Unit]" >> /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "Description=Run Etherpad-lite, the collaborative editor." >> /lib/systemd/system/etherpad-lite.service '; check
@@ -102,7 +103,7 @@ if [ "$DEBVERSION" = "8" ]; then
    run /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; check
-   #/ run /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; check
+   #/run /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; check
    run /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; check
@@ -122,7 +123,7 @@ fi
 
 #/ --- info --- #/
 
-GETHOSTIP4=$(ifconfig vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETHOSTIP4=$(ip addr show vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
 GETIPV4PORTINSIDE=$(run cat /root/PORT)
 echo ""
 echo "IP:               $GETHOSTIP4"
