@@ -478,52 +478,62 @@ fi
 if [ "$CHECKLXCINSIDELXC" = "1" ]; then
    : ### LXC inside LXC ###
 else
-   CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
-   if [ "$CHECKGRUB1" = "1" ]; then
-      : # dummy
-   else
-      cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
-      sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
-      sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
-
-      ### grub update
-
-      : # dummy
-      sleep 2
-      grub-mkconfig
-      : # dummy
-      sleep 2
-      update-grub
-      if [ "$?" != "0" ]; then
+   #// ignore PowerPC Environment
+   CHECKYABOOT1=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   if [ -z "$CHECKYABOOT1" ]
+   then
+      CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+      if [ "$CHECKGRUB1" = "1" ]; then
          : # dummy
-         sleep 5
-         echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
-         cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
+      else
+         cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
+         sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
+         sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+
+         ### grub update
+
          : # dummy
          sleep 2
          grub-mkconfig
          : # dummy
          sleep 2
          update-grub
-         exit 1
+         if [ "$?" != "0" ]; then
+            : # dummy
+            sleep 5
+            echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
+            cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
+            : # dummy
+            sleep 2
+            grub-mkconfig
+            : # dummy
+            sleep 2
+            update-grub
+            exit 1
+         fi
+         : # dummy
+         touch /etc/lxc-to-go/STAGE1
+         echo "" # dummy
+         printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
+         exit 0
       fi
+   fi
+fi
+
+#// ignore PowerPC Environment
+CHECKYABOOT2=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+if [ -z "$CHECKYABOOT2" ]
+then
+   CHECKGRUB2=$(grep "cgroup_enable=memory" /proc/cmdline | grep -c "swapaccount=1")
+   if [ "$CHECKGRUB2" = "1" ]; then
+      : # dummy
+   else
       : # dummy
       touch /etc/lxc-to-go/STAGE1
       echo "" # dummy
       printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
       exit 0
    fi
-fi
-
-CHECKGRUB2=$(grep "cgroup_enable=memory" /proc/cmdline | grep -c "swapaccount=1")
-if [ "$CHECKGRUB2" = "1" ]; then
-   : # dummy
-else
-   : # dummy
-   touch /etc/lxc-to-go/STAGE1
-   echo "" # dummy
-   printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
-   exit 0
 fi
 
 ##/ check ip_tables/ip6_tables kernel module
