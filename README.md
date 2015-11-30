@@ -135,7 +135,7 @@ Features
 
 Platform
 ========
-* Linux
+* Linux (amd64 / i386 / powerpc)
    * Debian
       * 9 / Testing Stretch/Sid (recommended)
       * 8 / Jessie (recommended)
