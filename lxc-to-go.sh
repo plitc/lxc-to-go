@@ -278,6 +278,15 @@ if [ -e "$CHECKLXCTEMPLATEWHEEZY" ]; then
 else
    cp -prf /usr/share/lxc/templates/lxc-debian /usr/share/lxc/templates/lxc-debian-wheezy
    sed -i 's/release=${release:-${current_release}}/release=$(echo "wheezy")/g' /usr/share/lxc/templates/lxc-debian-wheezy
+   #// BUG: E: Invalid Release file, no entry for main/binary-ppc/Packages
+   #// FIX: for PowerPC Environment
+   CHECKYABOOT0=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   if [ -z "$CHECKYABOOT0" ]
+   then
+      : # dummy
+   else
+      sed -i 's/debootstrap --verbose --variant=minbase --arch=$arch/debootstrap --verbose --variant=minbase --arch=powerpc/g' /usr/share/lxc/templates/lxc-debian-wheezy
+   fi
 fi
 ### // LXC TEMPLATE - WHEEZY ###
 
