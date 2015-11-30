@@ -62,7 +62,9 @@ then
    run apt-get -y install nodejs npm; check
 else
    #// powerpc
-   run /bin/sh -c ' cd /root; git clone git://github.com/nodejs/node; cd /root/node; ./configure; make install '; check
+   #run /bin/sh -c ' cd /root; git clone git://github.com/nodejs/node; cd /root/node; ./configure; make install '; check
+   run /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/v8ppc.git; cd /root/v8ppc; ./configure; make install '; check
+   run /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; check
    run apt-get -y install npm; check
 fi
 check
