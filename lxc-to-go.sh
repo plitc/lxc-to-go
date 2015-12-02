@@ -753,7 +753,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
 ### fix //
       CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
       if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
-          route del default
+          #/route del default
+          : # dummy
       fi
 ### // fix
    else
@@ -775,7 +776,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
 ### fix //
       CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
       if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
-         route del default
+         #/route del default
+         : # dummy
       fi
 ### // fix
    fi
@@ -2001,7 +2003,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
 ### fix //
       CHECKGETIPV4DEFAULTGATEWAY1=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
       if [ "$CHECKGETIPV4DEFAULTGATEWAY1" = "2" ]; then
-         route del default
+         #/route del default
+         : # dummy
       fi
 ### // fix
    else
@@ -2023,7 +2026,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
 ### fix //
       CHECKGETIPV4DEFAULTGATEWAY2=$(netstat -rn4 | grep "^0.0.0.0" | awk '{print $2}' | grep -c "")
       if [ "$CHECKGETIPV4DEFAULTGATEWAY2" = "2" ]; then
-         route del default
+         #/route del default
+         : # dummy
       fi
 ### // fix
    fi

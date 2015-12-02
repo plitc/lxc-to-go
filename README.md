@@ -43,6 +43,7 @@ Dependencies
    * bridge-utils
    * screen
    * lxc
+   * cgmanager
 
 * LXC Container: managed
    * debian jessie
@@ -86,7 +87,7 @@ HOST (Package) Dependencies
 * Debian 9 Testing (Stretch/Sid) HOST
 
 ```
-   [STRETCH]: screen bridge-utils lxc
+   [STRETCH]: screen bridge-utils lxc cgmanager
 ```
 
 Features
