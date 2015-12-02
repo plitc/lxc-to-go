@@ -1,7 +1,8 @@
 OK
 
-plain_provisioning
-plain_x11gui_provisioning
+plain.provisioning
+plain.provisioning.x11gui
+plain.provisioning.x11gui.browser
 com.gitlab.communityedition
 org.samba.simple
 com.github.letsencrypt

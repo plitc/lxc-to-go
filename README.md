@@ -137,6 +137,12 @@ Features
 
 * enable PulseAudio Service for X11 LXC Container
 
+```
+    # lxc-attach -n x11_lxc
+    # su lxctogo
+    # PULSE_SERVER=192.168.253.253 chromium &
+```
+
 Platform
 ========
 * Linux (amd64 / i386 / powerpc)
@@ -307,7 +313,10 @@ Example
 Provisioning Template Support
 =============================
 
-* plain_provisioning (default)
+* plain.provisioning (default)
+* plain.provisioning.x11gui
+* plain.provisioning.x11gui.browser
+   * (with chromium, iceweasel & flashplugin-nonfree)
 * [com.github.plitc.flower](https://github.com/plitc/flower)
    * (lxc-to-go-provisioning -n flower -t deb8 -h yes -p 2222 -s yes)
       * (works with deb7/deb8 lxc)

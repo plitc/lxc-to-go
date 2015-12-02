@@ -27,7 +27,7 @@ lull(){
    echo ""
 }
 
-#/ version: 1
+#// version: 2.0
 echo "<--- --- --- provisioning hooks // --- --- --->"
 
 ### LXC Config // ###
@@ -46,7 +46,7 @@ run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; check
 
 lull 1
 
-# X11
+#// X11
 run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install xorg"; check
 
 lull 2
@@ -67,7 +67,7 @@ check
 
 lull 3
 
-# Users
+#// Users
 run apt-get -y install zsh; check
 run useradd -m -c "lxc-to-go" lxctogo; check
 run /bin/sh -c ' echo lxctogo:lxctogo | chpasswd '; check
@@ -75,7 +75,7 @@ run chsh -s /usr/bin/zsh lxctogo; check
 
 lull 4
 
-# Pulseaudio
+#// Pulseaudio
 run apt-get -y install pulseaudio; check
 echo "lxc.hook.pre-start = /var/lib/lxc/$LXCCREATENAME/pulseaudio-helper.sh" >> /var/lib/lxc/"$LXCCREATENAME"/config
 
@@ -103,6 +103,11 @@ chown 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket;
 run /bin/sh -c ' usermod -a -G audio lxctogo '; check
 
 lull 5
+
+#// Browser
+run apt-get -y install chromium iceweasel flashplugin-nonfree; check
+
+lull 6
 
 #/ force reboot for lxc.mount changes
 #/run poweroff
