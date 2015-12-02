@@ -2134,6 +2134,10 @@ fi
 ## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv6.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
 ### // LXC-inside-LXC ###
 
+### restricting container view of dmesg // ###
+echo 1 > /proc/sys/kernel/dmesg_restrict
+### // restricting container view of dmesg ###
+
 cleanup
 ### ### ### ### ### ### ### ### ###
 echo "" # printf

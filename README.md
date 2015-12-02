@@ -133,6 +133,8 @@ Features
    * allow lxc-to-go to run within a container with web-panel
 ![lxc-inside-lxc](/content/lxcwebpanel.png)
 
+* restricting container view of dmesg
+
 Platform
 ========
 * Linux (amd64 / i386 / powerpc)
