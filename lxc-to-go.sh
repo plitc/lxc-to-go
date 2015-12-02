@@ -221,6 +221,16 @@ fi
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
+CGMANAGER=$(/usr/bin/which cgmanager)
+if [ -z "$CGMANAGER" ]; then
+   echo "<--- --- --->"
+   echo "need cgmanager"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install cgmanager
+   echo "<--- --- --->"
+fi
+
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
    echo "<--- --- --->"
