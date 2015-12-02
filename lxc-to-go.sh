@@ -2167,7 +2167,17 @@ then
                apt-get -y install sudo
                echo "<--- --- --->"
             fi
-            /usr/bin/sudo /bin/su -s /bin/sh -c ' pactl load-module module-native-protocol-tcp auth-ip-acl=192.168.253.0/24 ' "$GETLASTUSER"
+            PAPREFS=$(/usr/bin/which paprefs)
+            if [ -z "$PAPREFS" ]
+            then
+               echo "<--- --- --->"
+               echo "need paprefs & pulseaudio-module-zeroconf"
+               echo "<--- --- --->"
+               apt-get update
+               apt-get -y install paprefs pulseaudio-module-zeroconf
+               echo "<--- --- --->"
+            fi
+            /usr/bin/sudo /bin/su -s /bin/sh -c ' pactl load-module module-native-protocol-tcp auth-ip-acl=192.168.253.0/24 auth-anonymous=1 ' "$GETLASTUSER"
             printf "\033[1;33m WARNING: PulseAudio listen on (vswitch0) Port 4713 now! \033[0m\n"
          else
             : # dummy
