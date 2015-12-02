@@ -135,6 +135,8 @@ Features
 
 * restricting container view of dmesg
 
+* enable PulseAudio Service for X11 LXC Container
+
 Platform
 ========
 * Linux (amd64 / i386 / powerpc)

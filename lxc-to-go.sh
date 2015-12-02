@@ -2111,8 +2111,9 @@ fi
 CHECKSYMLINK2=$(basename $0)
 if [ "$CHECKSYMLINK2" = "lxc-to-go-ci.sh" ]
 then
-   ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
-   ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
+   #/ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
+   #/ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
+   : # dummy
 else
    : # dummy
 fi
@@ -2137,6 +2138,44 @@ fi
 ### restricting container view of dmesg // ###
 echo 1 > /proc/sys/kernel/dmesg_restrict
 ### // restricting container view of dmesg ###
+
+### LXC X11 Video & Audio // ###
+CHECKPULSEAUDIO=$(/usr/bin/dpkg -l | grep -swc "ii  pulseaudio ")
+if [ "$CHECKPULSEAUDIO" = "1" ]
+then
+   # quick & dirty
+   GETLASTUSER=$(/usr/bin/last | egrep -v "root" | head -n 1 | awk '{print $1}')
+   if [ -z "$GETLASTUSER" ]
+   then
+      : # dummy
+   else
+      GETX11STATE=$(/bin/ps -ax | pgrep -c "Xorg")
+      if [ "$GETX11STATE" = "0" ]
+      then
+         : # dummy
+      else
+         GETPULSEAUDIOSTATE=$(/bin/ss -l | grep -sc "4713")
+         if [ "$GETPULSEAUDIOSTATE" = "0" ]
+         then
+            SUDO=$(/usr/bin/which sudo)
+            if [ -z "$SUDO" ]
+            then
+               echo "<--- --- --->"
+               echo "need sudo"
+               echo "<--- --- --->"
+               apt-get update
+               apt-get -y install sudo
+               echo "<--- --- --->"
+            fi
+            /usr/bin/sudo /bin/su -s /bin/sh -c ' pactl load-module module-native-protocol-tcp auth-ip-acl=192.168.253.0/24 ' "$GETLASTUSER"
+            printf "\033[1;33m WARNING: PulseAudio listen on (vswitch0) Port 4713 now! \033[0m\n"
+         else
+            : # dummy
+         fi
+      fi
+   fi
+fi
+### // LXC X11 Video & Audio ###
 
 cleanup
 ### ### ### ### ### ### ### ### ###
