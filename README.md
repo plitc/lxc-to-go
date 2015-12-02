@@ -315,8 +315,12 @@ Provisioning Template Support
 
 * plain.provisioning (default)
 * plain.provisioning.x11gui
+   * (lxc-to-go-provisioning -n x11 -t deb8 -h yes -p 60001 -s yes)
+      * (works currently only with deb8 lxc)
 * plain.provisioning_x11gui.browser
    * (with chromium, iceweasel & flashplugin-nonfree)
+   * (lxc-to-go-provisioning -n x11browser -t deb8 -h yes -p 60002 -s yes)
+      * (works currently only with deb8 lxc)
 * [com.github.plitc.flower](https://github.com/plitc/flower)
    * (lxc-to-go-provisioning -n flower -t deb8 -h yes -p 2222 -s yes)
       * (works with deb7/deb8 lxc)
