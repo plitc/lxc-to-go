@@ -382,6 +382,7 @@ Errata
 * 21.11.2015: [lxc-to-go < 0.39.2.3]: lxc-to-go "bootstrap" (proxy mode) on Ubuntu with double ip mapping (phy./bridge) disturbs the routing --- FIXED in [0.39.2.4]
 
 * 21.11.2015: [lxc-to-go < 0.39.0.7]: lxc-to-go "bootstrap" failed when the choosed interface havn't got the default gateway route --- OPEN
+
 ```
   WORKAROUND:
 
@@ -430,6 +431,8 @@ Errata
 
 TODO
 ====
+* 02.12.2015: unprivileged containers support --- OPEN
+
 * 27.11.2015: source based routing support --- OPEN
 
 * 08.11.2015: deb9 testing template --- OPEN
