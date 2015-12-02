@@ -158,6 +158,11 @@ case $list1 in
       echo "" # dummy
       awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' "$LISTTEMPLATEFILE3" "$LISTTEMPLATEFILE4" | awk '{print $2}' | sed 's/"//g' > "$LISTTEMPLATEFILE5"
       GETTEMPLATE=$(cat "$LISTTEMPLATEFILE5")
+      if [ -z "$GETTEMPLATE" ]
+      then
+         echo "[ERROR] nothing selected"
+         exit 1
+      fi
       #/ cp -prf "$DIR"/hooks/templates/"$GETTEMPLATE" "$DIR"/hooks/hook_provisioning.sh
       cp -prf "$DIR"/hooks/templates/"$GETTEMPLATE" /etc/lxc-to-go/hook_provisioning.sh
       : # dummy
@@ -179,9 +184,9 @@ esac
 
 ### TEMPLATE BUILD STATUS // ###
 
-TEMPLATESTATUS1=$(cat "$DIR"/hooks/template-status | sed -n '/OK/,/WARNING/p' | grep "$GETTEMPLATE")
-TEMPLATESTATUS2=$(cat "$DIR"/hooks/template-status | sed -n '/WARNING/,/FAIL/p' | grep "$GETTEMPLATE")
-TEMPLATESTATUS3=$(cat "$DIR"/hooks/template-status | sed -n '/FAIL/,//p' | grep "$GETTEMPLATE")
+TEMPLATESTATUS1=$(cat "$DIR"/hooks/template-status | sed -n '/OK/,/WARNING/p' | grep -sw "$GETTEMPLATE")
+TEMPLATESTATUS2=$(cat "$DIR"/hooks/template-status | sed -n '/WARNING/,/FAIL/p' | grep -sw "$GETTEMPLATE")
+TEMPLATESTATUS3=$(cat "$DIR"/hooks/template-status | sed -n '/FAIL/,//p' | grep -sw "$GETTEMPLATE")
 
 if [ "$GETTEMPLATE" = "$TEMPLATESTATUS1" ]; then
    echo "" # dummy

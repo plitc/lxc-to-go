@@ -315,7 +315,7 @@ Provisioning Template Support
 
 * plain.provisioning (default)
 * plain.provisioning.x11gui
-* plain.provisioning.x11gui.browser
+* plain.provisioning_x11gui.browser
    * (with chromium, iceweasel & flashplugin-nonfree)
 * [com.github.plitc.flower](https://github.com/plitc/flower)
    * (lxc-to-go-provisioning -n flower -t deb8 -h yes -p 2222 -s yes)
