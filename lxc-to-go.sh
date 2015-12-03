@@ -805,7 +805,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### fix //
          if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
          then
-            ip -6 addr del "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
+            #// need link local!
+            #/ip -6 addr del "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
          fi
    ### // fix
 ### // fix
@@ -828,7 +829,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### fix //
          if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
          then
-            ip -6 addr del "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
+            #/ need link local!
+            #/ip -6 addr del "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
          fi
    ### // fix
 ### // fix
@@ -2055,7 +2057,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### fix //
          if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
          then
-            ip -6 addr del "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
+            #// need link local!
+            #/ip -6 addr del "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
          fi
    ### // fix
 ### // fix
@@ -2078,7 +2081,8 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### fix //
          if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
          then
-            ip -6 addr del "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
+            #// need link local!
+            #/ip -6 addr del "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
          fi
    ### // fix
 ### // fix
