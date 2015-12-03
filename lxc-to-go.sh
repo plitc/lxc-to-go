@@ -807,6 +807,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          then
             #// need link local!
             #/ip -6 addr del "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
+            : # dummy
          fi
    ### // fix
 ### // fix
@@ -831,6 +832,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          then
             #/ need link local!
             #/ip -6 addr del "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
+            : # dummy
          fi
    ### // fix
 ### // fix
@@ -2059,6 +2061,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          then
             #// need link local!
             #/ip -6 addr del "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
+            : # dummy
          fi
    ### // fix
 ### // fix
@@ -2083,6 +2086,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          then
             #// need link local!
             #/ip -6 addr del "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
+            : # dummy
          fi
    ### // fix
 ### // fix
