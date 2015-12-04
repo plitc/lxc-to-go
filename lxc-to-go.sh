@@ -1453,11 +1453,11 @@ else
 /bin/cat << SYSCTLFILEMANAGED > /var/lib/lxc/managed/rootfs/etc/sysctl.conf
 ### ### ### lxc-to-go // ### ### ###
 #
-net.ipv4.conf.eth0.forwarding=1 # LXC
-net.ipv4.conf.eth1.forwarding=1 # LXC
-net.ipv6.conf.eth0.forwarding=1 # LXC
-net.ipv6.conf.eth1.forwarding=1 # LXC
-net.ipv6.conf.all.forwarding=1  # LXC
+net.ipv4.conf.eth0.forwarding=1
+net.ipv4.conf.eth1.forwarding=1
+net.ipv6.conf.eth0.forwarding=1
+net.ipv6.conf.eth1.forwarding=1
+net.ipv6.conf.all.forwarding=1
 #
 ### ### ### // lxc-to-go ### ### ###
 # EOF
