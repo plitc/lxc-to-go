@@ -2209,6 +2209,14 @@ then
 fi
 ### // LXC X11 Video & Audio ###
 
+### LXC: managed Service State // ###
+echo "" # dummy
+lxc-attach -n managed -- systemctl status isc-dhcp-server
+lxc-attach -n managed -- systemctl status unbound
+lxc-attach -n managed -- systemctl status radvd
+echo "" # dummy
+### // LXC: managed Service State ###
+
 cleanup
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
