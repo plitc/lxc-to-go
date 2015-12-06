@@ -136,6 +136,7 @@ if [ -z "$CHECKLXCINSTALL" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -149,6 +150,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
+check lxc-to-go environment - stage 2
 
 CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCCONTAINER" = "3" ]; then
@@ -160,6 +162,7 @@ else
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
+check lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -184,6 +187,7 @@ if [ -z "$name" ]; then
    echo "" # dummy
    exit 0
 fi
+check lxc-to-go environment - stage 4
 
 #/ check name - alphanumeric
 cname="$(echo "$name" | sed -e 's/[^[:alnum:]]//g')"
@@ -192,6 +196,7 @@ if [ "$cname" != "$name" ] ; then
    echo "[ERROR] string -name '"$name"' has characters which are not alphanumeric"
    exit 1
 fi
+check lxc-to-go environment - stage 5
 
 #/ check template - empty argument
 if [ -z "$template" ]; then
@@ -199,6 +204,7 @@ if [ -z "$template" ]; then
    echo "[ERROR] choose for template argument (deb7/deb8)"
    exit 1
 fi
+check lxc-to-go environment - stage 6
 
 #/ check template - argument
 ctemplate="$(echo "$template" | sed 's/deb7//g' | sed 's/deb8//g')"
@@ -209,6 +215,7 @@ else
    echo "[ERROR] choose for template argument (deb7/deb8)"
    exit 1
 fi
+check lxc-to-go environment - stage 7
 
 #/ check hooks - empty argument
 if [ -z "$hooks" ]; then
@@ -216,6 +223,7 @@ if [ -z "$hooks" ]; then
    echo "[ERROR] choose for hooks argument (yes/no)"
    exit 1
 fi
+check lxc-to-go environment - stage 8
 
 #/ check hooks - argument
 chooks="$(echo "$hooks" | sed 's/yes//g' | sed 's/no//g')"
@@ -226,6 +234,7 @@ else
    echo "[ERROR] choose for hooks argument (yes/no)"
    exit 1
 fi
+check lxc-to-go environment - stage 9
 
 #/ check port - empty argument
 if [ -z "$port" ]; then
@@ -233,6 +242,7 @@ if [ -z "$port" ]; then
    echo "[ERROR] choose a port number or alternative use 'lxc-to-go create'"
    exit 1
 fi
+check lxc-to-go environment - stage 10
 
 #/ check port - numeric
 cport="$(echo "$port" | sed 's/[^0-9,]*//g')"
@@ -241,6 +251,7 @@ if [ "$cport" != "$port" ] ; then
    echo "[ERROR] string -port '"$port"' has characters which are not numeric"
    exit 1
 fi
+check lxc-to-go environment - stage 11
 
 #/ check port - length
 cportlength=$(echo -n "$port" | wc -c)
@@ -254,6 +265,7 @@ if [ "$cportlength" -gt 5 ]; then
       exit 1
    fi
 fi
+check lxc-to-go environment - stage 12
 
 cportmulti2=$(echo "$port" | grep -c ",")
 if [ "$cportmulti2" = "1" ]; then
@@ -266,6 +278,7 @@ else
       exit 1
    fi
 fi
+check lxc-to-go environment - stage 13
 
 CHECKPORTRESERVATION=$(grep -scw "$port" /etc/lxc-to-go/portforwarding.conf)
 if [ "$CHECKPORTRESERVATION" = "1" ]; then
@@ -273,6 +286,7 @@ if [ "$CHECKPORTRESERVATION" = "1" ]; then
    echo "[ERROR] port already reserved"
    exit 1
 fi
+check lxc-to-go environment - stage 14
 
 #/ check start - empty argument
 if [ -z "$start" ]; then
@@ -280,6 +294,7 @@ if [ -z "$start" ]; then
    echo "[ERROR] choose for start argument (yes/no)"
    exit 1
 fi
+check lxc-to-go environment - stage 15
 
 #/ check start - argument
 cstart="$(echo "$start" | sed 's/yes//g' | sed 's/no//g')"
@@ -290,6 +305,7 @@ else
    echo "[ERROR] choose for start argument (yes/no)"
    exit 1
 fi
+check lxc-to-go environment - stage 16
 
 ### create // ###
 
@@ -299,6 +315,7 @@ if [ "$CHECKLXCEXIST" = "1" ]; then
    echo "[ERROR] lxc already exists!"
    exit 1
 fi
+check lxc-to-go environment - stage 17
 
 ###
 
@@ -320,6 +337,7 @@ if [ "$template" = "deb7" ]; then
    sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
    echo "$name" > /var/lib/lxc/"$name"/rootfs/etc/hostname
 fi
+check lxc-to-go provisioning - stage 1
 
 if [ "$template" = "deb8" ]; then
    (lxc-clone -o deb8template -n "$name")& spinner $!
@@ -338,6 +356,7 @@ if [ "$template" = "deb8" ]; then
    sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
    echo "$name" > /var/lib/lxc/"$name"/rootfs/etc/hostname
 fi
+check lxc-to-go provisioning - stage 2
 
 ### create // ###
 
@@ -350,11 +369,14 @@ if [ "$CHECKDEB7IF" = "1" ]; then
    ip link set dev deb7temp down
    ip link del deb7temp
 fi
+check lxc-to-go provisioning - stage 3
+
 CHECKDEB8IF=$(ifconfig | grep -c "deb8temp")
 if [ "$CHECKDEB8IF" = "1" ]; then
    ip link set dev deb8temp down
    ip link del deb8temp
 fi
+check lxc-to-go provisioning - stage 4
 #
 ### // cleanup ###
 
@@ -389,6 +411,8 @@ if [ "$start" = "yes" ]; then
       unset LXCCREATENAME
    fi
 fi
+check lxc-to-go provisioning - stage 5
+
 if [ "$start" = "no" ]; then
    if [ "$hooks" = "yes" ]; then
    #/screen -d -m -S "$name" -- lxc-start -n "$name"
@@ -430,6 +454,7 @@ if [ "$start" = "no" ]; then
       unset LXCCREATENAME
    fi
 fi
+check lxc-to-go provisioning - stage 6
 ### start // ###
 
 ### FORWARDING // ###
@@ -475,6 +500,7 @@ else
       fi
    fi
 fi
+check lxc-to-go portforwarding
 #
 ### // FORWARDING ###
 

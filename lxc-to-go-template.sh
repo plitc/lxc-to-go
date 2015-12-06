@@ -122,6 +122,8 @@ if [ -z "$CHECKLXCINSTALL" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
+
 DIALOG=$(/usr/bin/which dialog)
 if [ -z "$DIALOG" ]; then
    echo "<--- --- --->"
@@ -131,6 +133,7 @@ if [ -z "$DIALOG" ]; then
    apt-get -y install dialog
    echo "<--- --- --->"
 fi
+check lxc-to-go environment - stage 2
 #
 ### stage4 // ###
 #
@@ -144,6 +147,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
+check lxc-to-go environment - stage 3
 
 CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCCONTAINER" = "3" ]; then
@@ -155,6 +159,7 @@ else
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
+check lxc-to-go environment - stage 4
 
 ### TEMPLATE // ###
 
@@ -167,6 +172,7 @@ LISTTEMPLATEFILE5="/etc/lxc-to-go/tmp/choose_templ5.tmp"
 ls -tr "$DIR"/hooks/templates/ > "$LISTTEMPLATEFILE1"
 nl "$LISTTEMPLATEFILE1" | sed 's/ //g' > "$LISTTEMPLATEFILE2"
 /bin/sed 's/$/ off/' "$LISTTEMPLATEFILE2" > "$LISTTEMPLATEFILE3"
+check lxc-to-go template - stage 1
 
 dialog --radiolist "Choose one template:" 45 80 60 --file "$LISTTEMPLATEFILE3" 2>"$LISTTEMPLATEFILE4"
 list1=$?
@@ -197,6 +203,7 @@ case $list1 in
       exit 0
    ;;
 esac
+check lxc-to-go template - stage 2
 
 ### // TEMPLATE ###
 
