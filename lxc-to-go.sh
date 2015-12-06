@@ -2953,10 +2953,10 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 ### ### ###
 #/ echo "FOUND (active):"
 #/ lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
-echo "" # dummy
+#/echo "" # dummy
 
 ### FORWARDING // ###
-echo "" # dummy
+#/echo "" # dummy
 sleep 5
 CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
 if [ -e "$CHECKFORWARDINGFILE" ]; then
@@ -3278,10 +3278,10 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 ### ### ###
 #/ echo "FOUND (active):"
 #/ lxc-ls --active | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
-echo "" # dummy
+#/echo "" # dummy
 
 ### FORWARDING // ###
-echo "" # dummy
+#/echo "" # dummy
 sleep 5
 CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
 if [ -e "$CHECKFORWARDINGFILE" ]; then
