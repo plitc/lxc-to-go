@@ -697,7 +697,7 @@ else
    ### // NAT ###
    fi
 fi
-check prepare bridge zones - stage1
+check prepare bridge zones - stage 1
 
 ### NEW IP - Bridge Environment // ###
 if [ "$GETENVIRONMENT" = "bridge" ]; then
@@ -767,9 +767,10 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra >/dev/null 2>&1
    ### rc.local reload // ###
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+   echo "" # dummy (workaround for rc.local check failed)
    ### // rc.local reload ###
 fi
-check prepare bridge zones - stage2
+check prepare bridge zones - stage 2
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -892,7 +893,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check prepare bridge zones - stage3
+check prepare bridge zones - stage 3
 ### // NEW IP - Proxy Environment ###
 
 ### ### ###
@@ -1372,7 +1373,7 @@ CHECKUPDATELIST1IN
       exit 1
    fi
 fi
-check lxc: managed upgrade
+check lxc: managed upgrade - stage 1
 
 DEBVERSIONMANAGED=$(grep "VERSION_ID" /var/lib/lxc/managed/rootfs/etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSIONMANAGED" = "8" ]; then
@@ -1489,7 +1490,7 @@ else
    screen -list | grep "managed"
    echo "" # dummy
 fi
-check lxc: managed upgrade
+check lxc: managed upgrade - stage 2
 
 CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c "iptables")
 if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
@@ -2048,7 +2049,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-check prepare bridge zones - stage4
+check prepare bridge zones - stage 4
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -2171,7 +2172,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check prepare bridge zones - stage5
+check prepare bridge zones - stage 5
 ### // NEW IP - Proxy Environment ###
 
 ### RP_FILTER // ###
@@ -2197,7 +2198,7 @@ else
    ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
    ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 fi
-check configure lxc-to-go symlinks
+check configure lxc-to-go symlinks - stage 1
 #
 #/CHECKSYMLINK2="/usr/sbin/lxc-to-go-ci"
 #/if [ -e "$CHECKSYMLINK2" ]; then
@@ -2210,7 +2211,7 @@ then
 else
    : # dummy
 fi
-check configure lxc-to-go symlinks
+check configure lxc-to-go symlinks - stage 2
 ### // SYMBOLIC LINKS ###
 
 CHECKETCHOSTS0=$(grep -c "lxc-to-go" /etc/hosts)
