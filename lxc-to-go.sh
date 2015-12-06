@@ -169,6 +169,14 @@ then
 fi
 check optional: fixes for ubuntu
 #
+#/ fixes for devuan
+if [ "$DEBIAN" = "devuan" ]
+then
+   : # dummy
+   sleep 6
+fi
+check optional: fixes for devuan
+#
 ### stage4 // ###
 #
 ### ### ### ### ### ### ### ### ###
