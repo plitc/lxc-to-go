@@ -944,7 +944,7 @@ else
       echo "" # dummy
    fi
 fi
-check lxc: managed bootstrap
+check lxc: managed bootstrap - stage 1
 ### // NEW 'managed' lxc bootstrap ###
 
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
@@ -963,7 +963,7 @@ else
       exit 1
    fi
 fi
-check lxc: managed bootstrap
+check lxc: managed bootstrap - stage 2
 
 CREATEBRIDGE1=$(ip a | grep -c "vswitch1:")
 if [ "$CREATEBRIDGE1" = "1" ]; then
@@ -974,7 +974,7 @@ else
    sysctl -w net.ipv4.conf.vswitch1.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch1.forwarding=1 >/dev/null 2>&1
 fi
-check sysctl configcheck
+check configure host sysctl
 
 touch /etc/lxc/fstab.empty
 
@@ -1366,7 +1366,7 @@ else
       fi
    fi
 fi
-check lxc: managed bootstrap
+check lxc: managed bootstrap - stage 3
 
 CHECKUPDATELIST1=$(grep "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list | head -n 1 | grep -c "jessie")
 if [ "$CHECKUPDATELIST1" = "1" ]; then
