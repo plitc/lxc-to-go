@@ -775,7 +775,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- echo "2" > /proc/sys/net/ipv6/conf/eth0/accept_ra >/dev/null 2>&1
    ### rc.local reload // ###
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
-   echo "" # dummy (workaround for rc.local check failed)
+   echo "" > /dev/null 2>&1 # dummy (workaround for rc.local check failed)
    ### // rc.local reload ###
 fi
 check prepare bridge zones - stage 2
@@ -897,7 +897,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          : # dummy
       else
          lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
-         echo "" # dummy (workaround for rc.local check failed)
+         echo "" > /dev/null 2>&1 # dummy (workaround for rc.local check failed)
       fi
       ### // rc.local reload ###
    fi
