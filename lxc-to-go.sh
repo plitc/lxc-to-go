@@ -2292,6 +2292,7 @@ echo "" # dummy
 ### // LXC: managed Service State ###
 
 cleanup
+check clean up tmp files
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
