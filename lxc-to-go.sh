@@ -195,13 +195,13 @@ if [ "$DEBVERSION" = "7" ]; then
       fi
    fi
 fi
-check
+check optional: debian wheezy upgrade information
 ### // WARNING ###
 
 mkdir -p /etc/lxc-to-go
-check
+check create lxc-to-go directory
 mkdir -p /etc/lxc-to-go/tmp
-check
+check create lxc-to-go/tmp directory
 
 CHECKHOOKPROVISIONINGFILE="/etc/lxc-to-go/hook_provisioning.sh"
 if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
@@ -209,7 +209,7 @@ if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
 else
    cp -prf "$DIR"/hooks/hook_provisioning.sh /etc/lxc-to-go/hook_provisioning.sh
 fi
-check
+check copy hook_provisioning.sh
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
@@ -225,7 +225,7 @@ if [ -z "$CHECKENVIRONMENT" ]; then
       exit 1
    fi
 fi
-check
+check lxc-to-go environment configcheck
 
 GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 
@@ -243,7 +243,7 @@ if [ -z "$CHECKINTERFACE" ]; then
    fi
    echo "INTERFACE=$INTERFACEVALUE" >> /etc/lxc-to-go/lxc-to-go.conf
 fi
-check
+check lxc-to-go interface configcheck
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -256,7 +256,7 @@ if [ -z "$CGMANAGER" ]; then
    apt-get -y install cgmanager
    echo "<--- --- --->"
 fi
-check
+check look over cgmanager
 
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
@@ -267,7 +267,7 @@ if [ -z "$SCREEN" ]; then
    apt-get -y install screen
    echo "<--- --- --->"
 fi
-check
+check look over screen
 
 IPTABLES=$(/usr/bin/which iptables)
 if [ -z "$IPTABLES" ]; then
@@ -278,7 +278,7 @@ if [ -z "$IPTABLES" ]; then
    apt-get -y install iptables
    echo "<--- --- --->"
 fi
-check
+check look over iptables
 
 IP6TABLES=$(/usr/bin/which ip6tables)
 if [ -z "$IP6TABLES" ]; then
@@ -289,7 +289,7 @@ if [ -z "$IP6TABLES" ]; then
    apt-get -y install ip6tables
    echo "<--- --- --->"
 fi
-check
+check look over ip6tables
 
 LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
 if [ -z "$LXC" ]; then
@@ -300,7 +300,7 @@ if [ -z "$LXC" ]; then
    DEBIAN_FRONTEND=noninteractive apt-get -y install lxc
    echo "<--- --- --->"
 fi
-check
+check look over lxc
 
 DEBOOTSTRAP=$(/usr/bin/which debootstrap)
 if [ -z "$DEBOOTSTRAP" ]; then
@@ -311,7 +311,7 @@ if [ -z "$DEBOOTSTRAP" ]; then
    apt-get -y install debootstrap
    echo "<--- --- --->"
 fi
-check
+check look over debootstrap
 
 ### LXC TEMPLATE - WHEEZY // ###
 CHECKLXCTEMPLATEWHEEZY="/usr/share/lxc/templates/lxc-debian-wheezy"
@@ -330,7 +330,7 @@ else
       sed -i 's/debootstrap --verbose --variant=minbase --arch=$arch/debootstrap --verbose --variant=minbase --arch=powerpc/g' /usr/share/lxc/templates/lxc-debian-wheezy
    fi
 fi
-check
+check lxc template - wheezy configcheck
 ### // LXC TEMPLATE - WHEEZY ###
 
 BRIDGEUTILS=$(/usr/bin/dpkg -l | grep bridge-utils | awk '{print $2}')
@@ -342,7 +342,7 @@ if [ -z "$BRIDGEUTILS" ]; then
    apt-get -y install bridge-utils
    echo "<--- --- --->"
 fi
-check
+check look over bridge-utils
 
 NETTOOLS=$(/usr/bin/dpkg -l | grep net-tools | awk '{print $2}')
 if [ -z "$NETTOOLS" ]; then
@@ -353,7 +353,7 @@ if [ -z "$NETTOOLS" ]; then
    apt-get -y install net-tools
    echo "<--- --- --->"
 fi
-check
+check look over net-tools
 
 sleep 1
 
@@ -368,6 +368,7 @@ then
 else
    mount cgroup -t cgroup /sys/fs/cgroup >/dev/null 2>&1
 fi
+
 lxc-checkconfig
 if [ $? -eq 0 ]
 then
@@ -380,7 +381,6 @@ else
     fi
     exit 1
 fi
-check
 
 sleep 1
 
@@ -441,7 +441,7 @@ CHECKDEB7WHEEZYBACKPORTSFILE
       fi
    fi
 fi
-check
+check optional: wheezy kernel upgrade
 ### // Wheezy KERNEL UPGRADE ###
 
 ### Wheezy - Jessie LXC // ###
@@ -527,7 +527,7 @@ CHECKDEB7PREFERENCESFILE
       apt-get -y install --no-install-recommends --reinstall -t jessie lxc
    fi
 fi
-check
+check optional: wheezy lxc upgrade
 ### // Wheezy - Jessie LXC ###
 
 ##/ modify grub
@@ -576,7 +576,7 @@ else
       fi
    fi
 fi
-check
+check grub configcheck
 
 #// ignore PowerPC Environment
 CHECKYABOOT2=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
@@ -593,7 +593,7 @@ then
       exit 0
    fi
 fi
-check
+check optional: powerpc environment configcheck
 
 ##/ check ip_tables/ip6_tables kernel module
 
@@ -614,7 +614,7 @@ else
       modprobe ip6_tables
    fi
 fi
-check
+check modprobe: iptables
 
 CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
 if [ "$CREATEBRIDGE0" = "1" ]; then
@@ -697,7 +697,7 @@ else
    ### // NAT ###
    fi
 fi
-check
+check prepare bridge zones
 
 ### NEW IP - Bridge Environment // ###
 if [ "$GETENVIRONMENT" = "bridge" ]; then
@@ -769,7 +769,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-check
+check prepare bridge zones
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -892,7 +892,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check
+check prepare bridge zones
 ### // NEW IP - Proxy Environment ###
 
 ### ### ###
@@ -923,7 +923,7 @@ else
       echo "" # dummy
    fi
 fi
-check
+check lxc: managed bootstrap
 ### // NEW 'managed' lxc bootstrap ###
 
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
@@ -942,7 +942,7 @@ else
       exit 1
    fi
 fi
-check
+check lxc: managed bootstrap
 
 CREATEBRIDGE1=$(ip a | grep -c "vswitch1:")
 if [ "$CREATEBRIDGE1" = "1" ]; then
@@ -953,7 +953,7 @@ else
    sysctl -w net.ipv4.conf.vswitch1.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch1.forwarding=1 >/dev/null 2>&1
 fi
-check
+check sysctl configcheck
 
 touch /etc/lxc/fstab.empty
 
@@ -1242,7 +1242,7 @@ CHECKMANAGEDNETFILE2
    fi
 ### // fix
 fi
-check
+check optional: fixes for ubuntu
 
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
@@ -1275,7 +1275,7 @@ else
       "$DIR"/hooks/hook_deb7.sh
    echo "" # dummy
 fi
-check
+check lxc: deb7template
 
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 
@@ -1345,7 +1345,7 @@ else
       fi
    fi
 fi
-check
+check lxc: managed bootstrap
 
 CHECKUPDATELIST1=$(grep "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list | head -n 1 | grep -c "jessie")
 if [ "$CHECKUPDATELIST1" = "1" ]; then
@@ -1372,7 +1372,7 @@ CHECKUPDATELIST1IN
       exit 1
    fi
 fi
-check
+check lxc: managed upgrade
 
 DEBVERSIONMANAGED=$(grep "VERSION_ID" /var/lib/lxc/managed/rootfs/etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSIONMANAGED" = "8" ]; then
@@ -1489,7 +1489,7 @@ else
    screen -list | grep "managed"
    echo "" # dummy
 fi
-check
+check lxc: managed upgrade
 
 CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c "iptables")
 if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
@@ -1497,7 +1497,7 @@ if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install iptables
 fi
-check
+check lxc: managed look over iptables
 
 SYSCTLMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/sysctl.conf | awk '{print $4}' | head -n 1)
 if [ X"$SYSCTLMANAGED" = X"lxc-to-go" ]; then
@@ -1516,7 +1516,7 @@ net.ipv6.conf.all.forwarding=1
 # EOF
 SYSCTLFILEMANAGED
 fi
-check
+check lxc: managed sysctl
 
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth1.forwarding=1 >/dev/null 2>&1
@@ -1631,7 +1631,7 @@ exit 0
 # EOF
 RCLOCALFILEMANAGED
 fi
-check
+check lxc: managed rc.local
 
 CHECKMANAGEDNET=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/network/interfaces | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDNET" = X"lxc-to-go" ]; then
@@ -1672,7 +1672,7 @@ CHECKMANAGEDNETFILE
    screen -list | grep "managed"
    echo "" # dummy
 fi
-check
+check lxc: managed network settings
 
 ##/ less for systemd
 CHECKMANAGEDLESS=$(lxc-attach -n managed -- dpkg -l | grep -c "less")
@@ -1681,7 +1681,7 @@ if [ "$CHECKMANAGEDLESS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install less
 fi
-check
+check lxc: managed look over less
 
 ##/ DHCP-Service
 
@@ -1691,7 +1691,7 @@ if [ "$CHECKMANAGEDDHCP" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install isc-dhcp-server
 fi
-check
+check lxc: managed look over isc-dhcp-server
 
 CHECKMANAGEDDHCPCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDHCPCONFIG" = X"lxc-to-go" ]; then
@@ -1789,7 +1789,7 @@ log-facility local7;
 CHECKMANAGEDDHCPCONFIGFILE
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
 fi
-check
+check lxc: managed isc-dhcp-server configcheck
 
 ##/ DNS-Service (unbound)
 
@@ -1799,7 +1799,7 @@ if [ "$CHECKMANAGEDDNS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install unbound
 fi
-check
+check lxc: managed look over unbound
 
 CHECKMANAGEDDNSCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/unbound/unbound.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDNSCONFIG" = X"lxc-to-go" ]; then
@@ -1896,7 +1896,7 @@ remote-control:
 CHECKMANAGEDDNSCONFIGFILE
    lxc-attach -n managed -- systemctl restart unbound
 fi
-check
+check lxc: managed unbound configcheck
 
 ##/ RA-Service
 
@@ -1906,7 +1906,7 @@ if [ "$CHECKMANAGEDIPV6D" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install radvd
 fi
-check
+check lxc: managed look over radvd
 
 touch /var/lib/lxc/managed/rootfs/etc/radvd.conf
 CHECKMANAGEDIPV6CONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/radvd.conf | awk '{print $4}' | head -n 1)
@@ -1943,7 +1943,7 @@ CHECKMANAGEDIPV6CONFIGFILE
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    # set iptables rules // ###
 fi
-check
+check lxc: managed radvd configcheck
 
 ### network debug tools // ###
 CHECKMANAGEDIPUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "iputils-ping")
@@ -1952,7 +1952,7 @@ if [ "$CHECKMANAGEDIPUTILS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install iputils-ping
 fi
-check
+check lxc: managed look over iputils-ping
 
 CHECKMANAGEDTRACEROUTE=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "traceroute")
 if [ "$CHECKMANAGEDTRACEROUTE" = "1" ]; then
@@ -1960,7 +1960,7 @@ if [ "$CHECKMANAGEDTRACEROUTE" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install traceroute
 fi
-check
+check lxc: managed look over traceroute
 
 CHECKMANAGEDDNSUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "dnsutils")
 if [ "$CHECKMANAGEDDNSUTILS" = "1" ]; then
@@ -1968,7 +1968,7 @@ if [ "$CHECKMANAGEDDNSUTILS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install dnsutils
 fi
-check
+check lxc: managed look over dnsutils
 
 CHECKMANAGEDMTRTINY=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "mtr-tiny")
 if [ "$CHECKMANAGEDMTRTINY" = "1" ]; then
@@ -1976,7 +1976,7 @@ if [ "$CHECKMANAGEDMTRTINY" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install mtr-tiny
 fi
-check
+check lxc: managed look over mtr-tiny
 ### // network debug tools ###
 
 ### NEW IP - Bridge Environment // ###
@@ -2048,7 +2048,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-check
+check prepare bridge zones
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -2171,7 +2171,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check
+check prepare bridge zones
 ### // NEW IP - Proxy Environment ###
 
 ### RP_FILTER // ###
@@ -2185,7 +2185,7 @@ sysctl -w net.ipv4.conf.vswitch1.rp_filter=1 >/dev/null 2>&1
 if [ -e "$UDEVNET" ]; then
    sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".rp_filter=1 >/dev/null 2>&1
 fi
-check
+check configure rp_filter sysctl
 ### // RP_FILTER ###
 
 ### SYMBOLIC LINKS // ###
@@ -2197,7 +2197,7 @@ else
    ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
    ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 fi
-check
+check configure lxc-to-go symlinks
 #
 #/CHECKSYMLINK2="/usr/sbin/lxc-to-go-ci"
 #/if [ -e "$CHECKSYMLINK2" ]; then
@@ -2210,7 +2210,7 @@ then
 else
    : # dummy
 fi
-check
+check configure lxc-to-go symlinks
 ### // SYMBOLIC LINKS ###
 
 CHECKETCHOSTS0=$(grep -c "lxc-to-go" /etc/hosts)
@@ -2218,7 +2218,7 @@ if [ "$CHECKETCHOSTS0" = "0" ]
 then
    echo "192.168.253.254   lxc-to-go" >> /etc/hosts
 fi
-check
+check configure lxc-to-go etc/hosts entry
 
 ### LXC-inside-LXC // ###
 ## echo "" # dummy
@@ -2280,7 +2280,7 @@ then
       fi
    fi
 fi
-check
+check optional: prepare lxc x11 video / audio environment
 ### // LXC X11 Video & Audio ###
 
 ### LXC: managed Service State // ###
