@@ -113,10 +113,10 @@ check()
 {
 if [ $? -eq 0 ]
 then
-   printf "\033[1;32m OK \033[0m\n"
+   echo '[$(printf "\033[1;32m OK \033[0m\n")] "$@"'
    sleep 2
 else
-   printf "\033[1;31m FAILED \033[0m\n"
+   echo '[$(printf "\033[1;31m FAILED \033[0m\n")] "$@"'
    sleep 1
    exit 1
 fi
@@ -157,7 +157,7 @@ then
       fi
    fi
 fi
-check
+check optional: fixes for lmde
 #
 #/ fixes for ubuntu
 if [ "$DEBIAN" = "ubuntu" ]
@@ -167,7 +167,7 @@ then
    printf "\033[1;33mWARNING: disable AppArmor on Ubuntu!\033[0m\n"
    sleep 6
 fi
-check
+check optional: fixes for ubuntu
 #
 ### stage4 // ###
 #
