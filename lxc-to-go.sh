@@ -4374,14 +4374,6 @@ check lxc-to-go environment - stage 2
 #
 ### ### ### ### ### ### ### ### ###
 
-CHECKCONTAINER1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
-if [ "$CHECKCONTAINER1" = "0" ]; then
-   echo "" # dummy
-   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
-   exit 1
-fi
-check lxc-to-go environment - stage 3
-
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
    : # dummy
@@ -4390,15 +4382,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 4
-
-CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
-if [ "$CHECKLXCSTART1" = "0" ]; then
-   echo "" # dummy
-   printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
-   exit 1
-fi
-check lxc-to-go environment - stage 5
+check lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
