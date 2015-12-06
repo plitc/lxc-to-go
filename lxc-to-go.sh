@@ -697,7 +697,7 @@ else
    ### // NAT ###
    fi
 fi
-check prepare bridge zones
+check prepare bridge zones (1)
 
 ### NEW IP - Bridge Environment // ###
 if [ "$GETENVIRONMENT" = "bridge" ]; then
@@ -769,7 +769,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-check prepare bridge zones
+check prepare bridge zones (2)
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -892,7 +892,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check prepare bridge zones
+check prepare bridge zones (3)
 ### // NEW IP - Proxy Environment ###
 
 ### ### ###
@@ -2048,7 +2048,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-check prepare bridge zones
+check prepare bridge zones (4)
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -2171,7 +2171,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check prepare bridge zones
+check prepare bridge zones (5)
 ### // NEW IP - Proxy Environment ###
 
 ### RP_FILTER // ###
