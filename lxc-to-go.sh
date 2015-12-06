@@ -95,8 +95,12 @@ else
             if [ "$DEBIAN" = "ubuntu" ]; then
                : # dummy
             else
-               echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) and Ubuntu Desktop 15.10+"
-               exit 1
+               if [ "$DEBIAN" = "devuan" ]; then
+                  : # dummy
+               else
+                  echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) / Ubuntu Desktop 15.10+ and Devuan"
+                  exit 1
+               fi
             fi
          fi
       fi
@@ -109,7 +113,7 @@ case "$1" in
 'bootstrap')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -742,7 +746,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
 ### fix //
-      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
       then
          ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
       fi
@@ -765,7 +769,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
 ### fix //
-      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
       then
          ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
       fi
@@ -791,7 +795,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6SUBNETUDEV=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
 ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             ip -6 addr del "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
          fi
@@ -803,7 +807,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6UDEVLL1=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
    ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             #// need link local!
             #/ip -6 addr del "$GETIPV6UDEVLL1"/64 dev vswitch0 >/dev/null 2>&1
@@ -816,7 +820,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6SUBNET=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
 ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             ip -6 addr del "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
          fi
@@ -828,7 +832,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6LL1=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
    ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             #/ need link local!
             #/ip -6 addr del "$GETIPV6LL1"/64 dev vswitch0 >/dev/null 2>&1
@@ -1996,7 +2000,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       #/ifconfig vswitch0 inet "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV"
       ip addr add "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
 ### fix //
-      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
       then
          ip addr del "$GETIPV4UDEV"/"$GETIPV4SUBNETUDEV" dev vswitch0
       fi
@@ -2019,7 +2023,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       #/ifconfig vswitch0 inet "$GETIPV4"/"$GETIPV4SUBNET"
       ip addr add "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
 ### fix //
-      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+      if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
       then
          ip addr del "$GETIPV4"/"$GETIPV4SUBNET" dev vswitch0
       fi
@@ -2045,7 +2049,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6SUBNETUDEV=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
 ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             ip -6 addr del "$GETIPV6UDEV"/"$GETIPV6SUBNETUDEV" dev vswitch0 >/dev/null 2>&1
          fi
@@ -2057,7 +2061,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6UDEVLL2=$(ip -6 addr show "$GETBRIDGEPORT0" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
    ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             #// need link local!
             #/ip -6 addr del "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
@@ -2070,7 +2074,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6SUBNET=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | egrep -v "fe80" | head -n 1 | sed 's/.*\///')
          ip -6 addr add "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
 ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             ip -6 addr del "$GETIPV6"/"$GETIPV6SUBNET" dev vswitch0 >/dev/null 2>&1
          fi
@@ -2082,7 +2086,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          GETIPV6LL2=$(ip -6 addr show "$GETINTERFACE" | grep "inet6 " | awk '{print $2}' | grep -Eo '[a-z0-9\.:/]*' | grep "/" | grep "fe80" | head -n 1 | sed 's/\/.*$//')
          ip -6 addr add "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
    ### fix //
-         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+         if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
          then
             #// need link local!
             #/ip -6 addr del "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
@@ -2243,7 +2247,7 @@ esac
 'start')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -2815,7 +2819,7 @@ esac
 'stop')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3136,7 +3140,7 @@ esac
 'shutdown')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3493,7 +3497,7 @@ esac
 'create')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -3687,7 +3691,7 @@ esac
 'delete')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -4038,7 +4042,7 @@ esac
 'show')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -4098,7 +4102,7 @@ esac
 'login')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -4205,7 +4209,7 @@ esac
 'lxc-in-lxc-webpanel')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu)
+debian|linuxmint|ubuntu|devuan)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution

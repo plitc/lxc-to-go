@@ -157,6 +157,8 @@ Platform
       * 15.10 / Wily Werewolf
    * Ubuntu Server (lxc-to-go experimental support)
       * 15.10
+   * Devuan Debian Jessie (System without Systemd)
+      * Alpha 2
 
 Usage
 =====

@@ -87,8 +87,12 @@ else
             if [ "$DEBIAN" = "ubuntu" ]; then
                : # dummy
             else
-               echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) and Ubuntu Desktop 15.10+"
-               exit 1
+               if [ "$DEBIAN" = "devuan" ]; then
+                  : # dummy
+               else
+                  echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) / Ubuntu Desktop 15.10+ and Devuan"
+                  exit 1
+               fi
             fi
          fi
       fi
@@ -98,7 +102,7 @@ fi
 ### // stage0 ###
 
 ### stage1 // ###
-if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" ]
+if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" ]
 then
    : # dummy
 else
