@@ -255,16 +255,22 @@ check lxc-to-go interface configcheck
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
-CGMANAGER=$(/usr/bin/which cgmanager)
-if [ -z "$CGMANAGER" ]; then
-   echo "<--- --- --->"
-   echo "need cgmanager"
-   echo "<--- --- --->"
-   apt-get update
-   apt-get -y install cgmanager
-   echo "<--- --- --->"
+#// fix: cgmanager dependency with systemd breaks devuan cgroups
+if [ "$DEBIAN" = "devuan" ]
+then
+   printf "\033[1;33mWARNING: cgmanager dependency with systemd breaks devuan cgroups, so we ignore it!\033[0m\n"
+else
+   CGMANAGER=$(/usr/bin/which cgmanager)
+   if [ -z "$CGMANAGER" ]; then
+      echo "<--- --- --->"
+      echo "need cgmanager"
+      echo "<--- --- --->"
+      apt-get update
+      apt-get -y install cgmanager
+      echo "<--- --- --->"
+   fi
+   check look over cgmanager
 fi
-check look over cgmanager
 
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
@@ -373,6 +379,11 @@ CHECKCGROUP=$(mount | grep -c "cgroup")
 if [ "$CHECKCGROUP" -gt 0 ]
 then
    : # dummy
+   #// fixes for devuan
+   if [ "$DEBIAN" = "devuan" ]
+   then
+      mount cgroup -t cgroup /sys/fs/cgroup >/dev/null 2>&1
+   fi
 else
    mount cgroup -t cgroup /sys/fs/cgroup >/dev/null 2>&1
 fi
