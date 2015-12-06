@@ -108,7 +108,7 @@ else
 fi
 }
 
-#// function: check state
+#// function: check state (version: 1.0)
 check()
 {
 if [ $? -eq 0 ]
@@ -2353,6 +2353,7 @@ if [ -z "$CHECKLXCINSTALL1" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -2364,6 +2365,7 @@ if [ "$CHECKCONTAINER1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 2
 
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
@@ -2373,6 +2375,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 3
 
 CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCSTART1" = "0" ]; then
@@ -2380,6 +2383,7 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 4
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -2396,11 +2400,13 @@ then
 else
    lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
 fi
+check lxc-to-go start
 ### // fix
 
 echo "" # dummy
 echo "... LXC Container (screen sessions): ..."
 lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -list | grep "%"; }'
+check lxc-to-go screen sessions
 ### ### ###
 
 ### FORWARDING // ###
@@ -2863,6 +2869,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    ### // set iptable rules ###
    # // ipv4
 fi
+check lxc-to-go portforwarding
 ### // FORWARDING ###
 
 ### CHECK FORWARDING RULES // ###
@@ -2881,9 +2888,11 @@ else
    echo "--5--> lxc-to-go bootstrap"
    echo "--6--> lxc-to-go start"
 fi
+check lxc-to-go duplicated portforwarding rules
 ### // CHECK FORWARDING RULES ###
 
 cleanup
+check clean up tmp files
 ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go start finished.\033[0m\n"
@@ -2925,6 +2934,7 @@ if [ -z "$CHECKLXCINSTALL2" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -2936,6 +2946,7 @@ if [ "$CHECKCONTAINER2" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 2
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3200,11 +3211,14 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    ### // set iptable rules ###
    # // ipv4
 fi
+check lxc-to-go portforwarding
 ### // FORWARDING ###
 
 lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
+check lxc-to-go shutdown
 
 cleanup
+check clean up tmp files
 ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go stop finished.\033[0m\n"
@@ -3246,6 +3260,7 @@ if [ -z "$CHECKLXCINSTALL2" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3521,11 +3536,14 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    ### // set iptable rules ###
    # // ipv4
 fi
+check lxc-to-go portforwarding
 ### // FORWARDING ###
 
 lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
+check lxc-to-go stop
 
 lxc-ls --active | grep "managed" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
+check lxc-to-go shutdown
 
 ip link set dev vswitch1 down > /dev/null 2>&1
 ip link set dev vswitch0 down > /dev/null 2>&1
@@ -3562,6 +3580,7 @@ fi
 ### // RP_FILTER ###
 
 cleanup
+check clean up tmp files
 ### ### ###
 echo "" # printf
 printf "\033[1;31mlxc-to-go shutdown finished.\033[0m\n"
@@ -3603,6 +3622,7 @@ if [ -z "$CHECKLXCINSTALL3" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3616,6 +3636,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
+check lxc-to-go environment - stage 2
 
 CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCCONTAINER" = "3" ]; then
@@ -3627,6 +3648,7 @@ else
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
+check lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3636,6 +3658,7 @@ if [ -z "$LXCNAME" ]; then
    echo "[ERROR] empty name"
    exit 1
 fi
+check lxc-to-go environment - stage 4
 
 CHECKLXCEXIST=$(lxc-ls | grep -c "$LXCNAME")
 if [ "$CHECKLXCEXIST" = "1" ]; then
@@ -3643,6 +3666,7 @@ if [ "$CHECKLXCEXIST" = "1" ]; then
    echo "[ERROR] lxc already exists!"
    exit 1
 fi
+check lxc-to-go environment - stage 5
 
 echo ""
 echo "Choose the LXC template:"
@@ -3693,6 +3717,7 @@ case $LXCCREATETEMPLATE in
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
 esac
+check lxc-to-go create - stage 1
 
 ### randomized MAC address // ###
 #/ RANDOMMAC1=$(shuf -i 10-99 -n 1)
@@ -3728,6 +3753,7 @@ if [ "$LXCSTART" = "y" ]; then
   sleep 1
   screen -list | grep "$LXCNAME"
   echo ""
+check lxc-to-go create - stage 2
 
 ### flavor hooks // ###
 #
@@ -3751,6 +3777,7 @@ else
    : # dummy
    #
 fi
+check lxc-to-go create - stage 3
 #
 ### // flavor hooks ###
 
@@ -3761,6 +3788,7 @@ else
 fi
 
 cleanup
+check clean up tmp files
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
@@ -3797,6 +3825,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3808,6 +3837,7 @@ if [ "$CHECKCONTAINER3" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 2
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3821,24 +3851,28 @@ if [ -z "$LXCDESTROY" ]; then
    echo "[ERROR] empty name"
    exit 1
 fi
+check lxc-to-go delete - stage 1
 
 if [ "$LXCDESTROY" = "managed" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n managed' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
+check lxc-to-go delete - stage 2
 
 if [ "$LXCDESTROY" = "deb7template" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb7template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
+check lxc-to-go delete - stage 3
 
 if [ "$LXCDESTROY" = "deb8template" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
+check lxc-to-go delete - stage 4
 
 ### FORWARDING // ###
 echo "" # dummy
@@ -4099,14 +4133,17 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    sed -i '/'"$LXCDESTROY"'/d' "$CHECKFORWARDINGFILE"
    ###
 fi
+check lxc-to-go portforwarding
 ### // FORWARDING ###
 
    echo "" # dummy
    echo "... shutdown & delete the lxc container ..."
    lxc-stop -n "$LXCDESTROY" -k > /dev/null 2>&1
    lxc-destroy -n "$LXCDESTROY"
+check lxc-to-go destroy
 
 cleanup
+check clean up tmp files
 ### ### ###
 echo ""
 printf "\033[1;31mlxc-to-go delete finished.\033[0m\n"
@@ -4148,6 +4185,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -4217,6 +4255,7 @@ if [ -z "$DIALOG" ]; then
    apt-get -y install dialog
    echo "<--- --- --->"
 fi
+check lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -4228,6 +4267,7 @@ if [ "$CHECKCONTAINER1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 2
 
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
@@ -4237,6 +4277,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 3
 
 CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCSTART1" = "0" ]; then
@@ -4244,6 +4285,7 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 4
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -4315,6 +4357,8 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 1
+
 DIALOG=$(/usr/bin/which dialog)
 if [ -z "$DIALOG" ]; then
    echo "<--- --- --->"
@@ -4324,6 +4368,7 @@ if [ -z "$DIALOG" ]; then
    apt-get -y install dialog
    echo "<--- --- --->"
 fi
+check lxc-to-go environment - stage 2
 #
 ### stage4 // ###
 #
@@ -4335,6 +4380,7 @@ if [ "$CHECKCONTAINER1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 3
 
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
@@ -4344,6 +4390,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 4
 
 CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCSTART1" = "0" ]; then
@@ -4351,6 +4398,7 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
+check lxc-to-go environment - stage 5
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -4525,6 +4573,7 @@ else
    printf "\033[1;32m Password:        admin \033[0m\n"
    printf "\033[1;32m default gateway: 192.168.252.254 \033[0m\n"
 fi
+check lxc-to-go lxc-inside-lxc webpanel
 
 ### ### ###
 echo ""

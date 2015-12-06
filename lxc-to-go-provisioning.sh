@@ -99,6 +99,20 @@ else
    fi
 fi
 }
+
+#// function: check state (version: 1.0)
+check()
+{
+if [ $? -eq 0 ]
+then
+   echo "[$(printf "\033[1;32m OK \033[0m\n")] '"$@"'"
+   sleep 2
+else
+   echo "[$(printf "\033[1;31m FAILED \033[0m\n")] '"$@"'"
+   sleep 1
+   exit 1
+fi
+}
 ### // stage0 ###
 
 ### stage1 // ###
