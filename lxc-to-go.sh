@@ -897,6 +897,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
          : # dummy
       else
          lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
+         echo "" # dummy (workaround for rc.local check failed)
       fi
       ### // rc.local reload ###
    fi
