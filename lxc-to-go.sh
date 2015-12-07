@@ -4351,6 +4351,13 @@ checkdebiandistribution
 #
 ### stage3 // ###
 #
+#// can't support devuan without systemd cgroups management yet :(
+if [ "$DEBIAN" = "devuan" ]
+then
+   printf "\033[1;31m Sorry we can't support Devuan without SystemD Cgroups Management :( \033[0m\n"
+   exit 1
+fi
+
 CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
 if [ -z "$CHECKLXCINSTALL4" ]; then
    echo "" # dummy
