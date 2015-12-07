@@ -2307,7 +2307,9 @@ check optional: prepare lxc x11 video / audio environment
 ### LXC: managed Service State // ###
 echo "" # dummy
 lxc-attach -n managed -- systemctl status isc-dhcp-server
+echo "" # dummy
 lxc-attach -n managed -- systemctl status unbound
+echo "" # dummy
 lxc-attach -n managed -- systemctl status radvd
 echo "" # dummy
 ### // LXC: managed Service State ###
@@ -2316,7 +2318,7 @@ cleanup
 check clean up tmp files
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
-printf "\033[1;31mlxc-to-go bootstrap finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go bootstrap finished.\033[0m\n"
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
@@ -2410,7 +2412,7 @@ check lxc-to-go screen sessions
 ### ### ###
 
 ### FORWARDING // ###
-echo "" # dummy
+#/echo "" # dummy
 sleep 5
 CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
 if [ -e "$CHECKFORWARDINGFILE" ]; then
@@ -2895,7 +2897,7 @@ cleanup
 check clean up tmp files
 ### ### ###
 echo "" # printf
-printf "\033[1;31mlxc-to-go start finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go start finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -3221,7 +3223,7 @@ cleanup
 check clean up tmp files
 ### ### ###
 echo "" # printf
-printf "\033[1;31mlxc-to-go stop finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go stop finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -3583,7 +3585,7 @@ cleanup
 check clean up tmp files
 ### ### ###
 echo "" # printf
-printf "\033[1;31mlxc-to-go shutdown finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go shutdown finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -3781,10 +3783,10 @@ check lxc-to-go create - stage 3
 #
 ### // flavor hooks ###
 
-  printf "\033[1;31mlxc-to-go create finished.\033[0m\n"
+  printf "\033[1;32mlxc-to-go create finished.\033[0m\n"
 else
   echo ""
-  printf "\033[1;31mlxc-to-go create finished.\033[0m\n"
+  printf "\033[1;32mlxc-to-go create finished.\033[0m\n"
 fi
 
 cleanup
@@ -4146,7 +4148,7 @@ cleanup
 check clean up tmp files
 ### ### ###
 echo ""
-printf "\033[1;31mlxc-to-go delete finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go delete finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -4207,7 +4209,7 @@ fi
 
 ### ### ###
 echo ""
-printf "\033[1;31mlxc-to-go show finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go show finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -4318,7 +4320,7 @@ esac
 
 ### ### ###
 echo ""
-printf "\033[1;31mlxc-to-go login finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go login finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
@@ -4568,7 +4570,7 @@ check lxc-to-go lxc-inside-lxc webpanel
 
 ### ### ###
 echo ""
-printf "\033[1;31mlxc-to-go (lxc-inside-lxc) webpanel finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go (lxc-inside-lxc) webpanel finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###

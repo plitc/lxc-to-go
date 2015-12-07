@@ -236,7 +236,7 @@ fi
 ### ### ###
 echo "" # dummy
 echo "" # dummy
-printf "\033[1;31mlxc-to-go template selection finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go template selection finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###

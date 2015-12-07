@@ -508,7 +508,7 @@ check lxc-to-go portforwarding
 
 ### ### ###
 echo ""
-printf "\033[1;31mlxc-to-go provisioning finished.\033[0m\n"
+printf "\033[1;32mlxc-to-go provisioning finished.\033[0m\n"
 ### ### ###
 
 ### ### ### ### ### ### ### ### ###
