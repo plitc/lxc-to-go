@@ -46,9 +46,8 @@ DIR=$(dirname "$PRG")
 #
 ADIR="$PWD"
 
-#// function: spinner
-spinner()
-{
+#// FUNCTION: spinner
+spinner() {
    local pid=$1
    local delay=0.01
    local spinstr='|/-\'
@@ -62,24 +61,21 @@ spinner()
    printf "    \b\b\b\b"
 }
 
-#// function: cleanup tmp
-cleanup()
-{
+#// FUNCTION: clean up tmp files
+cleanup() {
    rm -rf /etc/lxc-to-go/tmp/*
 }
 
-#// function: run script as root
-checkrootuser()
-{
+#// FUNCTION: run script as root
+checkrootuser() {
 if [ "$(id -u)" != "0" ]; then
    echo "[ERROR] This script must be run as root" 1>&2
    exit 1
 fi
 }
 
-#// function: check debian based distributions
-checkdebiandistribution()
-{
+#// FUNCTION: check debian based distributions
+checkdebiandistribution() {
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
@@ -108,18 +104,65 @@ else
 fi
 }
 
-#// function: check state (version: 1.0)
-check()
-{
+#// FUNCTION: check state
+check() {
 if [ $? -eq 0 ]
 then
-   echo "[$(printf "\033[1;32m OK \033[0m\n")] '"$@"'"
-   sleep 2
+   echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
 else
-   echo "[$(printf "\033[1;31m FAILED \033[0m\n")] '"$@"'"
+   echo "[$(printf "\033[1;31mFAILED\033[0m\n")] '"$@"'"
    sleep 1
    exit 1
 fi
+}
+
+#// FUNCTION: check state without exit
+checkhidden() {
+if [ $? -eq 0 ]
+then
+   echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
+else
+   echo "[$(printf "\033[1;31mFAILED\033[0m\n")] '"$@"'"
+   sleep 1
+fi
+}
+
+#// FUNCTION: starting all lxc vms
+lxcstartall() {
+   for i in $(lxc-ls --stopped | egrep -v "managed|deb7template|deb8template")
+   do
+      if [ "$DEBIAN" = "ubuntu" ]
+      then
+         screen -d -m -S "$i" -- lxc-start -n "$i" -F
+         (sleep 5) & spinner $!
+      else
+         screen -d -m -S "$i" -- lxc-start -n "$i"
+         (sleep 5) & spinner $!
+      fi
+      lxc-ls --active | grep -sc "$i" > /dev/null 2>&1
+      checkhidden LXC-Start: "$i"
+   done
+}
+
+#// FUNCTION: stopping lxc managed vm
+lxcstopmanaged() {
+   for i in $(lxc-ls --active | grep "managed")
+   do
+      (lxc-stop -n "$i") & spinner $!
+      checkhidden LXC-Stop: "$i"
+      (sleep 1) & spinner $!
+   done
+}
+
+#// FUNCTION: stopping all lxc vms
+lxcstopall() {
+   for i in $(lxc-ls --active | egrep -v "managed|deb7template|deb8template")
+   do
+      (lxc-stop -n "$i") & spinner $!
+      lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
+      checkhidden LXC-Stop: "$i"
+      (sleep 5) & spinner $!
+   done
 }
 ### // stage0 ###
 
@@ -2308,8 +2351,30 @@ check optional: prepare lxc x11 video / audio environment
 echo "" # dummy
 lxc-attach -n managed -- systemctl status isc-dhcp-server
 echo "" # dummy
+### fix //
+CHECKLXCMANAGEDDHCP=$(lxc-attach -n managed -- /bin/sh -c ' systemctl status isc-dhcp-server | egrep -c "inactive (dead)" ')
+if [ "$CHECKLXCMANAGEDDHCP" = "1" ]
+then
+   lxc-attach -n managed -- systemctl restart isc-dhcp-server
+   sleep 2
+   lxc-attach -n managed -- systemctl status isc-dhcp-server
+   checkhidden LXC Managed: isc-dhcp-server restart
+   echo "" # dummy
+fi
+### // fix
 lxc-attach -n managed -- systemctl status unbound
 echo "" # dummy
+### fix //
+CHECKLXCMANAGEDUNBOUND=$(lxc-attach -n managed -- /bin/sh -c ' systemctl status unbound | egrep -c "Starting (null)|fatal error" ')
+if [ "$CHECKLXCMANAGEDUNBOUND" = "1" ]
+then
+   lxc-attach -n managed -- systemctl restart unbound
+   sleep 2
+   lxc-attach -n managed -- systemctl status unbound
+   checkhidden LXC Managed: unbound restart
+   echo "" # dummy
+fi
+### // fix
 lxc-attach -n managed -- systemctl status radvd
 echo "" # dummy
 ### // LXC: managed Service State ###
@@ -2392,23 +2457,26 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 ### ### ###
 #/ echo "FOUND:"
 #/ lxc-ls | egrep -v "managed|deb7template|deb8template" | tr '\n' ' '
-echo "" # dummy
+#/echo "" # dummy
 
 #/lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
+
 ### fix //
-if [ "$DEBIAN" = "ubuntu" ]
-then
-   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%" -F; sleep 5; }' & spinner $!
-else
-   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
-fi
-check lxc-to-go start
+###if [ "$DEBIAN" = "ubuntu" ]
+###then
+###   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%" -F; sleep 5; }' & spinner $!
+###else
+###   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
+###fi
+###check lxc-to-go start
 ### // fix
 
-echo "" # dummy
+lxcstartall
+
+#/echo "" # dummy
 echo "... LXC Container (screen sessions): ..."
 lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -list | grep "%"; }'
-check lxc-to-go screen sessions
+checkhidden lxc-to-go screen sessions
 ### ### ###
 
 ### FORWARDING // ###
@@ -3216,8 +3284,10 @@ fi
 check lxc-to-go portforwarding
 ### // FORWARDING ###
 
-lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
-check lxc-to-go shutdown
+#/lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
+#/check lxc-to-go shutdown
+
+lxcstopall
 
 cleanup
 check clean up tmp files
@@ -3541,11 +3611,13 @@ fi
 check lxc-to-go portforwarding
 ### // FORWARDING ###
 
-lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
-check lxc-to-go stop
+#/lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
+#/check lxc-to-go stop
+#/lxc-ls --active | grep "managed" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
+#/check lxc-to-go shutdown
 
-lxc-ls --active | grep "managed" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
-check lxc-to-go shutdown
+lxcstopall
+lxcstopmanaged
 
 ip link set dev vswitch1 down > /dev/null 2>&1
 ip link set dev vswitch0 down > /dev/null 2>&1

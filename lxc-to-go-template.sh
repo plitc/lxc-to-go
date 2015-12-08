@@ -86,15 +86,15 @@ else
 fi
 }
 
-#// function: check state (version: 1.0)
+#// function: check state (version: 1.1)
 check()
 {
 if [ $? -eq 0 ]
 then
-   echo "[$(printf "\033[1;32m OK \033[0m\n")] '"$@"'"
-   sleep 2
+   echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
+   #/sleep 2
 else
-   echo "[$(printf "\033[1;31m FAILED \033[0m\n")] '"$@"'"
+   echo "[$(printf "\033[1;31mFAILED\033[0m\n")] '"$@"'"
    sleep 1
    exit 1
 fi
