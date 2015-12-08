@@ -105,7 +105,7 @@ fi
 }
 
 #// FUNCTION: check state
-check() {
+checkhard() {
 if [ $? -eq 0 ]
 then
    echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
@@ -117,7 +117,7 @@ fi
 }
 
 #// FUNCTION: check state without exit
-checkhidden() {
+checksoft() {
 if [ $? -eq 0 ]
 then
    echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
@@ -140,7 +140,7 @@ lxcstartall() {
          (sleep 5) & spinner $!
       fi
       lxc-ls --active | grep -sc "$i" > /dev/null 2>&1
-      checkhidden LXC-Start: "$i"
+      checksoft LXC-Start: "$i"
    done
 }
 
@@ -149,7 +149,7 @@ lxcstopmanaged() {
    for i in $(lxc-ls --active | grep "managed")
    do
       (lxc-stop -n "$i") & spinner $!
-      checkhidden LXC-Stop: "$i"
+      checksoft LXC-Stop: "$i"
       (sleep 1) & spinner $!
    done
 }
@@ -160,7 +160,7 @@ lxcstopall() {
    do
       (lxc-stop -n "$i") & spinner $!
       lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
-      checkhidden LXC-Stop: "$i"
+      checksoft LXC-Stop: "$i"
       (sleep 5) & spinner $!
    done
 }
@@ -200,7 +200,7 @@ then
       fi
    fi
 fi
-check optional: fixes for lmde
+checkhard optional: fixes for lmde
 #
 #/ fixes for ubuntu
 if [ "$DEBIAN" = "ubuntu" ]
@@ -210,7 +210,7 @@ then
    printf "\033[1;33mWARNING: disable AppArmor on Ubuntu!\033[0m\n"
    sleep 6
 fi
-check optional: fixes for ubuntu
+checkhard optional: fixes for ubuntu
 #
 #/ fixes for devuan
 if [ "$DEBIAN" = "devuan" ]
@@ -218,7 +218,7 @@ then
    : # dummy
    sleep 6
 fi
-check optional: fixes for devuan
+checkhard optional: fixes for devuan
 #
 ### stage4 // ###
 #
@@ -246,13 +246,13 @@ if [ "$DEBVERSION" = "7" ]; then
       fi
    fi
 fi
-check optional: debian wheezy upgrade information
+checkhard optional: debian wheezy upgrade information
 ### // WARNING ###
 
 mkdir -p /etc/lxc-to-go
-check create lxc-to-go directory
+checkhard create lxc-to-go directory
 mkdir -p /etc/lxc-to-go/tmp
-check create lxc-to-go/tmp directory
+checkhard create lxc-to-go/tmp directory
 
 CHECKHOOKPROVISIONINGFILE="/etc/lxc-to-go/hook_provisioning.sh"
 if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
@@ -260,7 +260,7 @@ if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
 else
    cp -prf "$DIR"/hooks/hook_provisioning.sh /etc/lxc-to-go/hook_provisioning.sh
 fi
-check copy hook_provisioning.sh
+checkhard copy hook_provisioning.sh
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
@@ -276,7 +276,7 @@ if [ -z "$CHECKENVIRONMENT" ]; then
       exit 1
    fi
 fi
-check lxc-to-go environment configcheck
+checkhard lxc-to-go environment configcheck
 
 GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 
@@ -294,7 +294,7 @@ if [ -z "$CHECKINTERFACE" ]; then
    fi
    echo "INTERFACE=$INTERFACEVALUE" >> /etc/lxc-to-go/lxc-to-go.conf
 fi
-check lxc-to-go interface configcheck
+checkhard lxc-to-go interface configcheck
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -312,7 +312,7 @@ else
       apt-get -y install cgmanager
       echo "<--- --- --->"
    fi
-   check look over cgmanager
+   checkhard look over cgmanager
 fi
 
 SCREEN=$(/usr/bin/which screen)
@@ -324,7 +324,7 @@ if [ -z "$SCREEN" ]; then
    apt-get -y install screen
    echo "<--- --- --->"
 fi
-check look over screen
+checkhard look over screen
 
 IPTABLES=$(/usr/bin/which iptables)
 if [ -z "$IPTABLES" ]; then
@@ -335,7 +335,7 @@ if [ -z "$IPTABLES" ]; then
    apt-get -y install iptables
    echo "<--- --- --->"
 fi
-check look over iptables
+checkhard look over iptables
 
 IP6TABLES=$(/usr/bin/which ip6tables)
 if [ -z "$IP6TABLES" ]; then
@@ -346,7 +346,7 @@ if [ -z "$IP6TABLES" ]; then
    apt-get -y install ip6tables
    echo "<--- --- --->"
 fi
-check look over ip6tables
+checkhard look over ip6tables
 
 LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
 if [ -z "$LXC" ]; then
@@ -357,7 +357,7 @@ if [ -z "$LXC" ]; then
    DEBIAN_FRONTEND=noninteractive apt-get -y install lxc
    echo "<--- --- --->"
 fi
-check look over lxc
+checkhard look over lxc
 
 DEBOOTSTRAP=$(/usr/bin/which debootstrap)
 if [ -z "$DEBOOTSTRAP" ]; then
@@ -368,7 +368,7 @@ if [ -z "$DEBOOTSTRAP" ]; then
    apt-get -y install debootstrap
    echo "<--- --- --->"
 fi
-check look over debootstrap
+checkhard look over debootstrap
 
 ### LXC TEMPLATE - WHEEZY // ###
 CHECKLXCTEMPLATEWHEEZY="/usr/share/lxc/templates/lxc-debian-wheezy"
@@ -387,7 +387,7 @@ else
       sed -i 's/debootstrap --verbose --variant=minbase --arch=$arch/debootstrap --verbose --variant=minbase --arch=powerpc/g' /usr/share/lxc/templates/lxc-debian-wheezy
    fi
 fi
-check lxc template - wheezy configcheck
+checkhard lxc template - wheezy configcheck
 ### // LXC TEMPLATE - WHEEZY ###
 
 BRIDGEUTILS=$(/usr/bin/dpkg -l | grep bridge-utils | awk '{print $2}')
@@ -399,7 +399,7 @@ if [ -z "$BRIDGEUTILS" ]; then
    apt-get -y install bridge-utils
    echo "<--- --- --->"
 fi
-check look over bridge-utils
+checkhard look over bridge-utils
 
 NETTOOLS=$(/usr/bin/dpkg -l | grep net-tools | awk '{print $2}')
 if [ -z "$NETTOOLS" ]; then
@@ -410,7 +410,7 @@ if [ -z "$NETTOOLS" ]; then
    apt-get -y install net-tools
    echo "<--- --- --->"
 fi
-check look over net-tools
+checkhard look over net-tools
 
 sleep 1
 
@@ -503,7 +503,7 @@ CHECKDEB7WHEEZYBACKPORTSFILE
       fi
    fi
 fi
-check optional: wheezy kernel upgrade
+checkhard optional: wheezy kernel upgrade
 ### // Wheezy KERNEL UPGRADE ###
 
 ### Wheezy - Jessie LXC // ###
@@ -589,7 +589,7 @@ CHECKDEB7PREFERENCESFILE
       apt-get -y install --no-install-recommends --reinstall -t jessie lxc
    fi
 fi
-check optional: wheezy lxc upgrade
+checkhard optional: wheezy lxc upgrade
 ### // Wheezy - Jessie LXC ###
 
 ##/ modify grub
@@ -638,7 +638,7 @@ else
       fi
    fi
 fi
-check grub configcheck
+checkhard grub configcheck
 
 #// ignore PowerPC Environment
 CHECKYABOOT2=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
@@ -655,7 +655,7 @@ then
       exit 0
    fi
 fi
-check optional: powerpc environment configcheck
+checkhard optional: powerpc environment configcheck
 
 ##/ check ip_tables/ip6_tables kernel module
 
@@ -676,7 +676,7 @@ else
       modprobe ip6_tables
    fi
 fi
-check modprobe: iptables
+checkhard modprobe: iptables
 
 CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
 if [ "$CREATEBRIDGE0" = "1" ]; then
@@ -759,7 +759,7 @@ else
    ### // NAT ###
    fi
 fi
-check prepare bridge zones - stage 1
+checkhard prepare bridge zones - stage 1
 
 ### NEW IP - Bridge Environment // ###
 if [ "$GETENVIRONMENT" = "bridge" ]; then
@@ -832,7 +832,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    echo "" > /dev/null 2>&1 # dummy (workaround for rc.local check failed)
    ### // rc.local reload ###
 fi
-check prepare bridge zones - stage 2
+checkhard prepare bridge zones - stage 2
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -956,7 +956,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check prepare bridge zones - stage 3
+checkhard prepare bridge zones - stage 3
 ### // NEW IP - Proxy Environment ###
 
 ### ### ###
@@ -987,7 +987,7 @@ else
       echo "" # dummy
    fi
 fi
-check lxc: managed bootstrap - stage 1
+checkhard lxc: managed bootstrap - stage 1
 ### // NEW 'managed' lxc bootstrap ###
 
 CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
@@ -1006,7 +1006,7 @@ else
       exit 1
    fi
 fi
-check lxc: managed bootstrap - stage 2
+checkhard lxc: managed bootstrap - stage 2
 
 CREATEBRIDGE1=$(ip a | grep -c "vswitch1:")
 if [ "$CREATEBRIDGE1" = "1" ]; then
@@ -1017,7 +1017,7 @@ else
    sysctl -w net.ipv4.conf.vswitch1.forwarding=1 >/dev/null 2>&1
    sysctl -w net.ipv6.conf.vswitch1.forwarding=1 >/dev/null 2>&1
 fi
-check configure host sysctl
+checkhard configure host sysctl
 
 touch /etc/lxc/fstab.empty
 
@@ -1306,7 +1306,7 @@ CHECKMANAGEDNETFILE2
    fi
 ### // fix
 fi
-check optional: fixes for ubuntu
+checkhard optional: fixes for ubuntu
 
 CHECKTEMPLATEDEB7=$(lxc-ls | grep -c "deb7template")
 if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
@@ -1339,7 +1339,7 @@ else
       "$DIR"/hooks/hook_deb7.sh
    echo "" # dummy
 fi
-check lxc: deb7template
+checkhard lxc: deb7template
 
 CHECKMANAGED1STATUS=$(screen -list | grep "managed" | awk '{print $1}')
 
@@ -1409,7 +1409,7 @@ else
       fi
    fi
 fi
-check lxc: managed bootstrap - stage 3
+checkhard lxc: managed bootstrap - stage 3
 
 CHECKUPDATELIST1=$(grep "jessie" /var/lib/lxc/managed/rootfs/etc/apt/sources.list | head -n 1 | grep -c "jessie")
 if [ "$CHECKUPDATELIST1" = "1" ]; then
@@ -1436,7 +1436,7 @@ CHECKUPDATELIST1IN
       exit 1
    fi
 fi
-check lxc: managed upgrade - stage 1
+checkhard lxc: managed upgrade - stage 1
 
 DEBVERSIONMANAGED=$(grep "VERSION_ID" /var/lib/lxc/managed/rootfs/etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSIONMANAGED" = "8" ]; then
@@ -1553,7 +1553,7 @@ else
    screen -list | grep "managed"
    echo "" # dummy
 fi
-check lxc: managed upgrade - stage 2
+checkhard lxc: managed upgrade - stage 2
 
 CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c "iptables")
 if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
@@ -1561,7 +1561,7 @@ if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install iptables
 fi
-check lxc: managed look over iptables
+checkhard lxc: managed look over iptables
 
 SYSCTLMANAGED=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/sysctl.conf | awk '{print $4}' | head -n 1)
 if [ X"$SYSCTLMANAGED" = X"lxc-to-go" ]; then
@@ -1580,7 +1580,7 @@ net.ipv6.conf.all.forwarding=1
 # EOF
 SYSCTLFILEMANAGED
 fi
-check lxc: managed sysctl
+checkhard lxc: managed sysctl
 
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth0.forwarding=1 >/dev/null 2>&1
 lxc-attach -n managed -- sysctl -w net.ipv4.conf.eth1.forwarding=1 >/dev/null 2>&1
@@ -1695,7 +1695,7 @@ exit 0
 # EOF
 RCLOCALFILEMANAGED
 fi
-check lxc: managed rc.local
+checkhard lxc: managed rc.local
 
 CHECKMANAGEDNET=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/network/interfaces | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDNET" = X"lxc-to-go" ]; then
@@ -1736,7 +1736,7 @@ CHECKMANAGEDNETFILE
    screen -list | grep "managed"
    echo "" # dummy
 fi
-check lxc: managed network settings
+checkhard lxc: managed network settings
 
 ##/ less for systemd
 CHECKMANAGEDLESS=$(lxc-attach -n managed -- dpkg -l | grep -c "less")
@@ -1745,7 +1745,7 @@ if [ "$CHECKMANAGEDLESS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install less
 fi
-check lxc: managed look over less
+checkhard lxc: managed look over less
 
 ##/ DHCP-Service
 
@@ -1755,7 +1755,7 @@ if [ "$CHECKMANAGEDDHCP" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install isc-dhcp-server
 fi
-check lxc: managed look over isc-dhcp-server
+checkhard lxc: managed look over isc-dhcp-server
 
 CHECKMANAGEDDHCPCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/dhcp/dhcpd.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDHCPCONFIG" = X"lxc-to-go" ]; then
@@ -1853,7 +1853,7 @@ log-facility local7;
 CHECKMANAGEDDHCPCONFIGFILE
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
 fi
-check lxc: managed isc-dhcp-server configcheck
+checkhard lxc: managed isc-dhcp-server configcheck
 
 ##/ DNS-Service (unbound)
 
@@ -1863,7 +1863,7 @@ if [ "$CHECKMANAGEDDNS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install unbound
 fi
-check lxc: managed look over unbound
+checkhard lxc: managed look over unbound
 
 CHECKMANAGEDDNSCONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/unbound/unbound.conf | awk '{print $4}' | head -n 1)
 if [ X"$CHECKMANAGEDDNSCONFIG" = X"lxc-to-go" ]; then
@@ -1960,7 +1960,7 @@ remote-control:
 CHECKMANAGEDDNSCONFIGFILE
    lxc-attach -n managed -- systemctl restart unbound
 fi
-check lxc: managed unbound configcheck
+checkhard lxc: managed unbound configcheck
 
 ##/ RA-Service
 
@@ -1970,7 +1970,7 @@ if [ "$CHECKMANAGEDIPV6D" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install radvd
 fi
-check lxc: managed look over radvd
+checkhard lxc: managed look over radvd
 
 touch /var/lib/lxc/managed/rootfs/etc/radvd.conf
 CHECKMANAGEDIPV6CONFIG=$(grep "lxc-to-go" /var/lib/lxc/managed/rootfs/etc/radvd.conf | awk '{print $4}' | head -n 1)
@@ -2007,7 +2007,7 @@ CHECKMANAGEDIPV6CONFIGFILE
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    # set iptables rules // ###
 fi
-check lxc: managed radvd configcheck
+checkhard lxc: managed radvd configcheck
 
 ### network debug tools // ###
 CHECKMANAGEDIPUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "iputils-ping")
@@ -2016,7 +2016,7 @@ if [ "$CHECKMANAGEDIPUTILS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install iputils-ping
 fi
-check lxc: managed look over iputils-ping
+checkhard lxc: managed look over iputils-ping
 
 CHECKMANAGEDTRACEROUTE=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "traceroute")
 if [ "$CHECKMANAGEDTRACEROUTE" = "1" ]; then
@@ -2024,7 +2024,7 @@ if [ "$CHECKMANAGEDTRACEROUTE" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install traceroute
 fi
-check lxc: managed look over traceroute
+checkhard lxc: managed look over traceroute
 
 CHECKMANAGEDDNSUTILS=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "dnsutils")
 if [ "$CHECKMANAGEDDNSUTILS" = "1" ]; then
@@ -2032,7 +2032,7 @@ if [ "$CHECKMANAGEDDNSUTILS" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install dnsutils
 fi
-check lxc: managed look over dnsutils
+checkhard lxc: managed look over dnsutils
 
 CHECKMANAGEDMTRTINY=$(lxc-attach -n managed -- dpkg -l | awk '{print $2}' | grep -xc "mtr-tiny")
 if [ "$CHECKMANAGEDMTRTINY" = "1" ]; then
@@ -2040,7 +2040,7 @@ if [ "$CHECKMANAGEDMTRTINY" = "1" ]; then
 else
    lxc-attach -n managed -- apt-get -y install mtr-tiny
 fi
-check lxc: managed look over mtr-tiny
+checkhard lxc: managed look over mtr-tiny
 ### // network debug tools ###
 
 ### NEW IP - Bridge Environment // ###
@@ -2112,7 +2112,7 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
    lxc-attach -n managed -- /etc/rc.local >/dev/null 2>&1
    ### // rc.local reload ###
 fi
-check prepare bridge zones - stage 4
+checkhard prepare bridge zones - stage 4
 ### // NEW IP - Bridge Environment ###
 
 ### NEW IP - Proxy Environment // ###
@@ -2235,7 +2235,7 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
       ### // rc.local reload ###
    fi
 fi
-check prepare bridge zones - stage 5
+checkhard prepare bridge zones - stage 5
 ### // NEW IP - Proxy Environment ###
 
 ### RP_FILTER // ###
@@ -2249,7 +2249,7 @@ sysctl -w net.ipv4.conf.vswitch1.rp_filter=1 >/dev/null 2>&1
 if [ -e "$UDEVNET" ]; then
    sysctl -w net.ipv4.conf."$GETBRIDGEPORT0".rp_filter=1 >/dev/null 2>&1
 fi
-check configure rp_filter sysctl
+checkhard configure rp_filter sysctl
 ### // RP_FILTER ###
 
 ### SYMBOLIC LINKS // ###
@@ -2261,7 +2261,7 @@ else
    ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
    ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
 fi
-check configure lxc-to-go symlinks - stage 1
+checkhard configure lxc-to-go symlinks - stage 1
 #
 #/CHECKSYMLINK2="/usr/sbin/lxc-to-go-ci"
 #/if [ -e "$CHECKSYMLINK2" ]; then
@@ -2274,7 +2274,7 @@ then
 else
    : # dummy
 fi
-check configure lxc-to-go symlinks - stage 2
+checkhard configure lxc-to-go symlinks - stage 2
 ### // SYMBOLIC LINKS ###
 
 CHECKETCHOSTS0=$(grep -c "lxc-to-go" /etc/hosts)
@@ -2282,7 +2282,7 @@ if [ "$CHECKETCHOSTS0" = "0" ]
 then
    echo "192.168.253.254   lxc-to-go" >> /etc/hosts
 fi
-check configure lxc-to-go etc/hosts entry
+checkhard configure lxc-to-go etc/hosts entry
 
 ### LXC-inside-LXC // ###
 ## echo "" # dummy
@@ -2344,7 +2344,7 @@ then
       fi
    fi
 fi
-check optional: prepare lxc x11 video / audio environment
+checkhard optional: prepare lxc x11 video / audio environment
 ### // LXC X11 Video & Audio ###
 
 ### LXC: managed Service State // ###
@@ -2358,7 +2358,7 @@ then
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
    sleep 2
    lxc-attach -n managed -- systemctl status isc-dhcp-server
-   checkhidden LXC Managed: isc-dhcp-server restart
+   checksoft LXC Managed: isc-dhcp-server restart
    echo "" # dummy
 fi
 ### // fix
@@ -2371,7 +2371,7 @@ then
    lxc-attach -n managed -- systemctl restart unbound
    sleep 2
    lxc-attach -n managed -- systemctl status unbound
-   checkhidden LXC Managed: unbound restart
+   checksoft LXC Managed: unbound restart
    echo "" # dummy
 fi
 ### // fix
@@ -2380,7 +2380,7 @@ echo "" # dummy
 ### // LXC: managed Service State ###
 
 cleanup
-check clean up tmp files
+checkhard clean up tmp files
 ### ### ### ### ### ### ### ### ###
 echo "" # printf
 printf "\033[1;32mlxc-to-go bootstrap finished.\033[0m\n"
@@ -2420,7 +2420,7 @@ if [ -z "$CHECKLXCINSTALL1" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -2432,7 +2432,7 @@ if [ "$CHECKCONTAINER1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 2
+checkhard lxc-to-go environment - stage 2
 
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
@@ -2442,7 +2442,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 3
+checkhard lxc-to-go environment - stage 3
 
 CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCSTART1" = "0" ]; then
@@ -2450,7 +2450,7 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 4
+checkhard lxc-to-go environment - stage 4
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -2468,7 +2468,7 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 ###else
 ###   lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> starting: '"%"'";screen -d -m -S "%" -- lxc-start -n "%"; sleep 5; }' & spinner $!
 ###fi
-###check lxc-to-go start
+###checkhard lxc-to-go start
 ### // fix
 
 lxcstartall
@@ -2476,7 +2476,7 @@ lxcstartall
 #/echo "" # dummy
 echo "... LXC Container (screen sessions): ..."
 lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ screen -list | grep "%"; }'
-checkhidden lxc-to-go screen sessions
+checksoft lxc-to-go screen sessions
 ### ### ###
 
 ### FORWARDING // ###
@@ -2939,7 +2939,7 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    ### // set iptable rules ###
    # // ipv4
 fi
-check lxc-to-go portforwarding
+checkhard lxc-to-go portforwarding
 ### // FORWARDING ###
 
 ### CHECK FORWARDING RULES // ###
@@ -2958,11 +2958,11 @@ else
    echo "--5--> lxc-to-go bootstrap"
    echo "--6--> lxc-to-go start"
 fi
-check lxc-to-go duplicated portforwarding rules
+checkhard lxc-to-go duplicated portforwarding rules
 ### // CHECK FORWARDING RULES ###
 
 cleanup
-check clean up tmp files
+checkhard clean up tmp files
 ### ### ###
 echo "" # printf
 printf "\033[1;32mlxc-to-go start finished.\033[0m\n"
@@ -3004,7 +3004,7 @@ if [ -z "$CHECKLXCINSTALL2" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3016,7 +3016,7 @@ if [ "$CHECKCONTAINER2" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 2
+checkhard lxc-to-go environment - stage 2
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3281,16 +3281,16 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    ### // set iptable rules ###
    # // ipv4
 fi
-check lxc-to-go portforwarding
+checkhard lxc-to-go portforwarding
 ### // FORWARDING ###
 
 #/lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
-#/check lxc-to-go shutdown
+#/checkhard lxc-to-go shutdown
 
 lxcstopall
 
 cleanup
-check clean up tmp files
+checkhard clean up tmp files
 ### ### ###
 echo "" # printf
 printf "\033[1;32mlxc-to-go stop finished.\033[0m\n"
@@ -3332,7 +3332,7 @@ if [ -z "$CHECKLXCINSTALL2" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3608,13 +3608,13 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    ### // set iptable rules ###
    # // ipv4
 fi
-check lxc-to-go portforwarding
+checkhard lxc-to-go portforwarding
 ### // FORWARDING ###
 
 #/lxc-ls --active | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
-#/check lxc-to-go stop
+#/checkhard lxc-to-go stop
 #/lxc-ls --active | grep "managed" | xargs -L1 -I % sh -c '{ echo ""; echo "---> shutdown: '"%"'"; lxc-stop -n "%"; sleep 5; }' & spinner $!
-#/check lxc-to-go shutdown
+#/checkhard lxc-to-go shutdown
 
 lxcstopall
 lxcstopmanaged
@@ -3642,7 +3642,7 @@ sysctl -w net.ipv4.conf."$GETINTERFACE".rp_filter=0 >/dev/null 2>&1
 #/ sysctl -w net.ipv4.conf.vswitch0.rp_filter=0 >/dev/null 2>&1
 #/ sysctl -w net.ipv4.conf.vswitch1.rp_filter=0 >/dev/null 2>&1
 #
-# check lxc-to-go-ci
+# checkhard lxc-to-go-ci
 CHECKLXCTOGOCI=$(basename $0)
 if [ "$CHECKLXCTOGOCI" = "lxc-to-go-ci.sh" ];then
    : # dummy
@@ -3654,7 +3654,7 @@ fi
 ### // RP_FILTER ###
 
 cleanup
-check clean up tmp files
+checkhard clean up tmp files
 ### ### ###
 echo "" # printf
 printf "\033[1;32mlxc-to-go shutdown finished.\033[0m\n"
@@ -3696,7 +3696,7 @@ if [ -z "$CHECKLXCINSTALL3" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3710,7 +3710,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
-check lxc-to-go environment - stage 2
+checkhard lxc-to-go environment - stage 2
 
 CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCCONTAINER" = "3" ]; then
@@ -3722,7 +3722,7 @@ else
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
-check lxc-to-go environment - stage 3
+checkhard lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3732,7 +3732,7 @@ if [ -z "$LXCNAME" ]; then
    echo "[ERROR] empty name"
    exit 1
 fi
-check lxc-to-go environment - stage 4
+checkhard lxc-to-go environment - stage 4
 
 CHECKLXCEXIST=$(lxc-ls | grep -c "$LXCNAME")
 if [ "$CHECKLXCEXIST" = "1" ]; then
@@ -3740,7 +3740,7 @@ if [ "$CHECKLXCEXIST" = "1" ]; then
    echo "[ERROR] lxc already exists!"
    exit 1
 fi
-check lxc-to-go environment - stage 5
+checkhard lxc-to-go environment - stage 5
 
 echo ""
 echo "Choose the LXC template:"
@@ -3791,7 +3791,7 @@ case $LXCCREATETEMPLATE in
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
 esac
-check lxc-to-go create - stage 1
+checkhard lxc-to-go create - stage 1
 
 ### randomized MAC address // ###
 #/ RANDOMMAC1=$(shuf -i 10-99 -n 1)
@@ -3827,7 +3827,7 @@ if [ "$LXCSTART" = "y" ]; then
   sleep 1
   screen -list | grep "$LXCNAME"
   echo ""
-check lxc-to-go create - stage 2
+checkhard lxc-to-go create - stage 2
 
 ### flavor hooks // ###
 #
@@ -3851,7 +3851,7 @@ else
    : # dummy
    #
 fi
-check lxc-to-go create - stage 3
+checkhard lxc-to-go create - stage 3
 #
 ### // flavor hooks ###
 
@@ -3862,7 +3862,7 @@ else
 fi
 
 cleanup
-check clean up tmp files
+checkhard clean up tmp files
 ### ### ### ### ### ### ### ### ###
 #
 ### // stage4 ###
@@ -3899,7 +3899,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3911,7 +3911,7 @@ if [ "$CHECKCONTAINER3" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 2
+checkhard lxc-to-go environment - stage 2
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3925,28 +3925,28 @@ if [ -z "$LXCDESTROY" ]; then
    echo "[ERROR] empty name"
    exit 1
 fi
-check lxc-to-go delete - stage 1
+checkhard lxc-to-go delete - stage 1
 
 if [ "$LXCDESTROY" = "managed" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n managed' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
-check lxc-to-go delete - stage 2
+checkhard lxc-to-go delete - stage 2
 
 if [ "$LXCDESTROY" = "deb7template" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb7template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
-check lxc-to-go delete - stage 3
+checkhard lxc-to-go delete - stage 3
 
 if [ "$LXCDESTROY" = "deb8template" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
-check lxc-to-go delete - stage 4
+checkhard lxc-to-go delete - stage 4
 
 ### FORWARDING // ###
 echo "" # dummy
@@ -4207,17 +4207,17 @@ if [ -e "$CHECKFORWARDINGFILE" ]; then
    sed -i '/'"$LXCDESTROY"'/d' "$CHECKFORWARDINGFILE"
    ###
 fi
-check lxc-to-go portforwarding
+checkhard lxc-to-go portforwarding
 ### // FORWARDING ###
 
    echo "" # dummy
    echo "... shutdown & delete the lxc container ..."
    lxc-stop -n "$LXCDESTROY" -k > /dev/null 2>&1
    lxc-destroy -n "$LXCDESTROY"
-check lxc-to-go destroy
+checkhard lxc-to-go destroy
 
 cleanup
-check clean up tmp files
+checkhard clean up tmp files
 ### ### ###
 echo ""
 printf "\033[1;32mlxc-to-go delete finished.\033[0m\n"
@@ -4259,7 +4259,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -4329,7 +4329,7 @@ if [ -z "$DIALOG" ]; then
    apt-get -y install dialog
    echo "<--- --- --->"
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -4341,7 +4341,7 @@ if [ "$CHECKCONTAINER1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 2
+checkhard lxc-to-go environment - stage 2
 
 CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
@@ -4351,7 +4351,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 3
+checkhard lxc-to-go environment - stage 3
 
 CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCSTART1" = "0" ]; then
@@ -4359,7 +4359,7 @@ if [ "$CHECKLXCSTART1" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 4
+checkhard lxc-to-go environment - stage 4
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -4438,7 +4438,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhard lxc-to-go environment - stage 1
 
 DIALOG=$(/usr/bin/which dialog)
 if [ -z "$DIALOG" ]; then
@@ -4449,7 +4449,7 @@ if [ -z "$DIALOG" ]; then
    apt-get -y install dialog
    echo "<--- --- --->"
 fi
-check lxc-to-go environment - stage 2
+checkhard lxc-to-go environment - stage 2
 #
 ### stage4 // ###
 #
@@ -4463,7 +4463,7 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 3
+checkhard lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -4638,7 +4638,7 @@ else
    printf "\033[1;32m Password:        admin \033[0m\n"
    printf "\033[1;32m default gateway: 192.168.252.254 \033[0m\n"
 fi
-check lxc-to-go lxc-inside-lxc webpanel
+checkhard lxc-to-go lxc-inside-lxc webpanel
 
 ### ### ###
 echo ""
