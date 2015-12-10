@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 ### LICENSE - (BSD 2-Clause) // ###
 #
@@ -182,63 +182,63 @@ lxcstartportforwarding() {
       do
          set -- $line
          #// delete old port mapping
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$2"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$2"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          if [ ! -z "$3" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$3"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$3"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "$4" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$4"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$4"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "$5" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$5"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$5"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "$6" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$6"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$6"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "$7" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$7"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$7"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "$8" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$8"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$8"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "$9" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$9"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$9"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${10}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$10"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$10"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${11}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$11"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$11"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${12}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$12"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$12"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${13}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$13"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$13"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${14}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$14"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$14"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${15}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$15"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$15"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${16}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$16"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$16"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${17}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$17"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$17"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${18}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$18"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$18"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${19}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$19"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$19"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${20}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$20"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$20"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          if [ ! -z "${21}" ]; then
-            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$21"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -D DNAT % ' > /dev/null 2>&1
+            lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -L --line-numbers | grep "dpt:'"$21"'" | awk {"print \$1"} | xargs -L 1 -I % iptables -t nat -D PREROUTING % ' > /dev/null 2>&1
          fi
          #// add new port mapping
             lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2"
