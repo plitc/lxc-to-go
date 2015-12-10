@@ -214,7 +214,7 @@ lxcportforwarding() {
       #// convert ipv4 list
       cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp
       #// set ipv4 iptables rules inside lxc: managed
-      (
+      #/(
       while read -r line
       do
          set -- $line
@@ -384,7 +384,7 @@ lxcportforwarding() {
          fi
          ### // set iptable rules on HOST ###
       done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp"
-      )
+      #/)
       ### // set iptable rules ###
 # // ipv4
 # ipv6 //
@@ -394,7 +394,7 @@ lxcportforwarding() {
       #// convert ipv6 list
       cat /etc/lxc-to-go/tmp/lxc.ipv6.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv6.running.list.conv.tmp
       #// set ipv6 iptables rules inside lxc: managed
-      (
+      #/(
       while read -r line
       do
          set -- $line
@@ -564,7 +564,7 @@ lxcportforwarding() {
          fi
          ### // set iptable rules on HOST ###
       done < "/etc/lxc-to-go/tmp/lxc.ipv6.running.list.conv.tmp"
-      )
+      #/)
       ### // set iptable rules ###
 # // ipv6
    fi
