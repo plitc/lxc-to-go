@@ -164,6 +164,11 @@ lxcstopall() {
       (sleep 5) & spinner $!
    done
 }
+
+#// FUNCTION: set up lxc start portforwarding
+lxcstartportfw() {
+
+}
 ### // stage0 ###
 
 case "$1" in
