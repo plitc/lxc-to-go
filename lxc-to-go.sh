@@ -2757,6 +2757,7 @@ checkhard optional: prepare lxc x11 video / audio environment
 ### LXC: managed Service State // ###
 echo "" # dummy
 lxc-attach -n managed -- systemctl status isc-dhcp-server
+checksoft lxc: managed isc-dhcp-server
 echo "" # dummy
 ### fix //
 CHECKLXCMANAGEDDHCP=$(lxc-attach -n managed -- /bin/sh -c ' systemctl status isc-dhcp-server | egrep -c "inactive (dead)" ')
@@ -2770,6 +2771,7 @@ then
 fi
 ### // fix
 lxc-attach -n managed -- systemctl status unbound
+checksoft lxc: managed unbound
 echo "" # dummy
 ### fix //
 CHECKLXCMANAGEDUNBOUND=$(lxc-attach -n managed -- /bin/sh -c ' systemctl status unbound | egrep -c "Starting (null)|fatal error" ')
@@ -2783,6 +2785,7 @@ then
 fi
 ### // fix
 lxc-attach -n managed -- systemctl status radvd
+checksoft lxc: managed radvd
 echo "" # dummy
 ### // LXC: managed Service State ###
 
