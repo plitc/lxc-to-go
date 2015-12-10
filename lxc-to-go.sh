@@ -3045,6 +3045,11 @@ else
 fi
 ### // RP_FILTER ###
 
+### clean up lxc: managed dhcp // ###
+rm -f /var/lib/lxc/managed/rootfs/var/lib/dhcp/dhcpd.leases
+rm -f /var/lib/lxc/managed/rootfs/var/lib/dhcp/dhcpd.leases~
+### // clean up lxc: managed dhcp ###
+
 cleanup
 checkhard clean up tmp files
 ### ### ###
