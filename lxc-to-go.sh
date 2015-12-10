@@ -2962,6 +2962,7 @@ CHECKLXCINLXCWEBPANELINSTALL="/var/lib/lxc/managed/rootfs/srv/lwp"
 if [ -e "$CHECKLXCINLXCWEBPANELINSTALL" ]
 then
    lxc-attach -n managed -- /etc/init.d/lwp restart
+   checksoft LXC Managed: LXC-in-LXC Webpanel restart
 fi
 ### // LXC-in-LXC Webpanel check // ###
 ### // LXC: managed Service State ###
