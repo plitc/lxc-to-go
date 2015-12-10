@@ -2957,6 +2957,13 @@ fi
 ### // fix
 lxc-attach -n managed -- systemctl status radvd
 checksoft lxc: managed radvd
+### LXC-in-LXC Webpanel check // ###
+CHECKLXCINLXCWEBPANELINSTALL="/var/lib/lxc/managed/rootfs/srv/lwp"
+if [ -e "$CHECKLXCINLXCWEBPANELINSTALL" ]
+then
+   lxc-attach -n managed -- /etc/init.d/lwp restart
+fi
+### // LXC-in-LXC Webpanel check // ###
 ### // LXC: managed Service State ###
 
 cleanup
