@@ -165,8 +165,8 @@ lxcstopall() {
    done
 }
 
-#// FUNCTION: set up lxc start portforwarding (new)
-lxcstartportforwardingnew() {
+#// FUNCTION: set up lxc start portforwarding
+lxcstartportforwarding() {
    CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
    if [ -e "$CHECKFORWARDINGFILE" ]
    then
@@ -494,8 +494,10 @@ checkhard lxc-to-go portforwardingnew
 ### // FORWARDING ###
 }
 
-#// FUNCTION: set up lxc start portforwarding
-lxcstartportforwarding() {
+
+
+#// FUNCTION: set up lxc start portforwarding (old)
+lxcstartportforwardingold() {
 ### FORWARDING // ###
 #/echo "" # dummy
 sleep 5
@@ -3274,8 +3276,7 @@ lxc-ls | egrep -v "managed|deb7template|deb8template" | xargs -L1 -I % sh -c '{ 
 checksoft lxc-to-go screen sessions
 ### ### ###
 
-#/lxcstartportforwarding
-lxcstartportforwardingnew
+lxcstartportforwarding
 
 ### CHECK FORWARDING RULES // ###
 CHECKFORWARDINGRULES=$(cat /etc/lxc-to-go/portforwarding.conf | awk '{print $3}' | sed 's/,/ /g' | tr ' ' '\n' | awk 'array[$0]++' | grep -sc "")
