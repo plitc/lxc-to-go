@@ -2786,7 +2786,6 @@ fi
 ### // fix
 lxc-attach -n managed -- systemctl status radvd
 checksoft lxc: managed radvd
-echo "" # dummy
 ### // LXC: managed Service State ###
 
 cleanup
