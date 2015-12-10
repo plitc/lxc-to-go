@@ -483,83 +483,83 @@ lxcportforwarding() {
          if [ "$CHECKENVIRONMENT" = "proxy" ]
          then
             #// add new port mapping
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination [fd00:aaaa:253::253]:"$2"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination [fd00:aaaa:253::253]:"$2"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination [fd00:aaaa:253::254]:"$2"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination [fd00:aaaa:253::254]:"$2"
             if [ ! -z "$3" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination [fd00:aaaa:253::253]:"$3"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination [fd00:aaaa:253::253]:"$3"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination [fd00:aaaa:253::254]:"$3"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination [fd00:aaaa:253::254]:"$3"
             fi
             if [ ! -z "$4" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination [fd00:aaaa:253::253]:"$4"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination [fd00:aaaa:253::253]:"$4"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination [fd00:aaaa:253::254]:"$4"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination [fd00:aaaa:253::254]:"$4"
             fi
             if [ ! -z "$5" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination [fd00:aaaa:253::253]:"$5"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination [fd00:aaaa:253::253]:"$5"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination [fd00:aaaa:253::254]:"$5"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination [fd00:aaaa:253::254]:"$5"
             fi
             if [ ! -z "$6" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination [fd00:aaaa:253::253]:"$6"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination [fd00:aaaa:253::253]:"$6"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination [fd00:aaaa:253::254]:"$6"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination [fd00:aaaa:253::254]:"$6"
             fi
             if [ ! -z "$7" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination [fd00:aaaa:253::253]:"$7"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination [fd00:aaaa:253::253]:"$7"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination [fd00:aaaa:253::254]:"$7"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination [fd00:aaaa:253::254]:"$7"
             fi
             if [ ! -z "$8" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination [fd00:aaaa:253::253]:"$8"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination [fd00:aaaa:253::253]:"$8"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination [fd00:aaaa:253::254]:"$8"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination [fd00:aaaa:253::254]:"$8"
             fi
             if [ ! -z "$9" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination [fd00:aaaa:253::253]:"$9"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination [fd00:aaaa:253::253]:"$9"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination [fd00:aaaa:253::254]:"$9"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination [fd00:aaaa:253::254]:"$9"
             fi
             if [ ! -z "${10}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${10}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${10}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${10}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${10}"
             fi
             if [ ! -z "${11}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${11}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${11}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${11}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${11}"
             fi
             if [ ! -z "${12}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${12}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${12}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${12}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${12}"
             fi
             if [ ! -z "${13}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${13}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${13}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${13}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${13}"
             fi
             if [ ! -z "${14}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${14}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${14}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${14}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${14}"
             fi
             if [ ! -z "${15}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${15}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${15}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${15}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${15}"
             fi
             if [ ! -z "${16}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${16}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${16}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${16}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${16}"
             fi
             if [ ! -z "${17}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${17}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${17}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${17}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${17}"
             fi
             if [ ! -z "${18}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${18}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${18}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${18}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${18}"
             fi
             if [ ! -z "${19}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${19}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${19}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${19}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${19}"
             fi
             if [ ! -z "${20}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${20}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${20}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${20}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${20}"
             fi
             if [ ! -z "${21}" ]; then
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${21}"
-               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination [fd00:aaaa:253::253]:"${21}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${21}"
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${21}"
             fi
          fi
          ### // set iptable rules on HOST ###
