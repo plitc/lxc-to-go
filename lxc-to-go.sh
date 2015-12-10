@@ -165,6 +165,38 @@ lxcstopall() {
    done
 }
 
+#// FUNCTION: set up lxc start portforwarding (new)
+lxcstartportforwardingnew() {
+   CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
+   if [ -e "$CHECKFORWARDINGFILE" ]
+   then
+      # ipv4 //
+      lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
+      #// merge ipv4 list
+      awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp
+      #// convert ipv4 list
+      cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp
+      #// set ipv4 iptables rules inside managed lxc
+      LXCSTARTPORTFORWARDINGHOSTV4=$(cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp | awk '{print $1}')
+      LXCSTARTPORTFORWARDINGPORTV4=$(cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp | awk '{ $1=""; print }' | sed 's/^ *//')
+      (
+      for h in "$LXCSTARTPORTFORWARDINGHOSTV4"
+      do
+         for p in "$LXCSTARTPORTFORWARDINGPORTV4"
+         do
+            #// set ipv4 rules
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p tcp --dport "$p" -j DNAT --to-destination "$h":"$p" > /dev/null 2>&1
+            lxc-attach -n managed -- iptables -t nat -D PREROUTING -i eth0 -p udp --dport "$p" -j DNAT --to-destination "$h":"$p" > /dev/null 2>&1
+            #
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$p" -j DNAT --to-destination "$h":"$p"
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$p" -j DNAT --to-destination "$h":"$p"
+         done
+      done
+      )
+      #
+   fi
+}
+
 #// FUNCTION: set up lxc start portforwarding
 lxcstartportforwarding() {
 ### FORWARDING // ###
