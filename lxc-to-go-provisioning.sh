@@ -113,6 +113,573 @@ else
    exit 1
 fi
 }
+
+#// FUNCTION: clean up lxc portforwarding (version 1.0)
+cleanlxcportforwarding() {
+   CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+   GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+   CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
+   if [ -e "$CHECKFORWARDINGFILE" ]
+   then
+      #// clean up old iptables nat rules inside lxc: managed
+      lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -F; iptables -t nat -X '
+      lxc-attach -n managed -- /bin/sh -c ' ip6tables -t nat -F; ip6tables -t nat -X '
+      if [ "$CHECKENVIRONMENT" = "proxy" ]
+      then
+         #// clean up old iptables nat rules on HOST
+         iptables -t nat -F; iptables -t nat -X
+         ip6tables -t nat -F; ip6tables -t nat -X
+      fi
+   fi
+checkhard lxc-to-go clean up portforwarding
+}
+
+#// FUNCTION: set up lxc portforwarding (version 1.0)
+lxcportforwarding() {
+   CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+   GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+   CHECKFORWARDINGFILE="/etc/lxc-to-go/portforwarding.conf"
+   if [ -e "$CHECKFORWARDINGFILE" ]
+   then
+      #// clean up old iptables nat rules inside lxc: managed
+      lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -F; iptables -t nat -X '
+      lxc-attach -n managed -- /bin/sh -c ' ip6tables -t nat -F; ip6tables -t nat -X '
+      #// set up nat inside lxc: managed
+      lxc-attach -n managed -- /bin/sh -c ' iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE '
+      lxc-attach -n managed -- /bin/sh -c ' ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE '
+      if [ "$CHECKENVIRONMENT" = "proxy" ]
+      then
+         #// clean up old iptables nat rules on HOST
+         iptables -t nat -F; iptables -t nat -X
+         ip6tables -t nat -F; ip6tables -t nat -X
+         #// set up nat on HOST
+         iptables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
+         ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
+      fi
+# ipv4 //
+      lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "192.168.254" | awk '{print $1,$3}' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
+      #// merge ipv4 list
+      awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168" > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp
+      #// convert ipv4 list
+      cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp
+      #// set ipv4 iptables rules inside lxc: managed
+      #/(
+      while read -r line
+      do
+         set -- $line
+         #// add new port mapping
+         if [ ! -z "$2" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination "$1":"$2"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination "$1":"$2"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$3" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination "$1":"$3"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination "$1":"$3"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$4" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination "$1":"$4"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination "$1":"$4"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$5" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination "$1":"$5"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination "$1":"$5"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$6" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination "$1":"$6"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination "$1":"$6"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$7" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination "$1":"$7"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination "$1":"$7"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$8" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination "$1":"$8"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination "$1":"$8"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$9" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination "$1":"$9"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination "$1":"$9"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${10}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination "$1":"${10}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination "$1":"${10}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${11}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination "$1":"${11}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination "$1":"${11}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${12}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination "$1":"${12}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination "$1":"${12}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${13}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination "$1":"${13}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination "$1":"${13}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${14}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination "$1":"${14}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination "$1":"${14}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${15}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination "$1":"${15}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination "$1":"${15}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${16}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination "$1":"${16}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination "$1":"${16}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${17}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination "$1":"${17}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination "$1":"${17}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${18}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination "$1":"${18}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination "$1":"${18}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${19}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination "$1":"${19}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination "$1":"${19}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${20}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination "$1":"${20}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination "$1":"${20}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${21}" ]; then
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination "$1":"${21}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination "$1":"${21}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         ### set iptable rules on HOST // ###
+         if [ "$CHECKENVIRONMENT" = "proxy" ]
+         then
+            #// add new port mapping
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination 192.168.253.254:"$2"
+               checkhiddenhard lxc: set up nat rules
+            if [ ! -z "$3" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination 192.168.253.254:"$3"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$4" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination 192.168.253.254:"$4"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$5" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination 192.168.253.254:"$5"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$6" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination 192.168.253.254:"$6"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$7" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination 192.168.253.254:"$7"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$8" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination 192.168.253.254:"$8"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$9" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination 192.168.253.254:"$9"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${10}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination 192.168.253.254:"${10}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${11}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination 192.168.253.254:"${11}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${12}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination 192.168.253.254:"${12}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${13}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination 192.168.253.254:"${13}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${14}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination 192.168.253.254:"${14}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${15}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination 192.168.253.254:"${15}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${16}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination 192.168.253.254:"${16}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${17}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination 192.168.253.254:"${17}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${18}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination 192.168.253.254:"${18}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${19}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination 192.168.253.254:"${19}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${20}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination 192.168.253.254:"${20}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${21}" ]; then
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}"
+               checkhiddenhard lxc: set up nat rules
+               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination 192.168.253.254:"${21}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+         fi
+         ### // set iptable rules on HOST ###
+      done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp"
+      #/)
+      ### // set iptable rules ###
+# // ipv4
+# ipv6 //
+      lxc-ls --active --fancy | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "fd00:aaaa:254" | awk '{print $1,$4}' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp
+      #// merge ipv6 list
+      awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/ ://' | grep "fd00:aaaa" > /etc/lxc-to-go/tmp/lxc.ipv6.running.list.tmp
+      #// convert ipv6 list
+      cat /etc/lxc-to-go/tmp/lxc.ipv6.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv6.running.list.conv.tmp
+      #// set ipv6 iptables rules inside lxc: managed
+      #/(
+      while read -r line
+      do
+         set -- $line
+         #// add new port mapping
+         if [ ! -z "$2" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$2" -j DNAT --to-destination ["$1"]:"$2"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$2" -j DNAT --to-destination ["$1"]:"$2"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$3" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$3" -j DNAT --to-destination ["$1"]:"$3"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$3" -j DNAT --to-destination ["$1"]:"$3"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$4" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$4" -j DNAT --to-destination ["$1"]:"$4"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$4" -j DNAT --to-destination ["$1"]:"$4"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$5" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$5" -j DNAT --to-destination ["$1"]:"$5"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$5" -j DNAT --to-destination ["$1"]:"$5"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$6" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$6" -j DNAT --to-destination ["$1"]:"$6"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$6" -j DNAT --to-destination ["$1"]:"$6"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$7" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$7" -j DNAT --to-destination ["$1"]:"$7"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$7" -j DNAT --to-destination ["$1"]:"$7"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$8" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$8" -j DNAT --to-destination ["$1"]:"$8"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$8" -j DNAT --to-destination ["$1"]:"$8"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "$9" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "$9" -j DNAT --to-destination ["$1"]:"$9"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "$9" -j DNAT --to-destination ["$1"]:"$9"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${10}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${10}" -j DNAT --to-destination ["$1"]:"${10}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${10}" -j DNAT --to-destination ["$1"]:"${10}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${11}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${11}" -j DNAT --to-destination ["$1"]:"${11}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${11}" -j DNAT --to-destination ["$1"]:"${11}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${12}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${12}" -j DNAT --to-destination ["$1"]:"${12}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${12}" -j DNAT --to-destination ["$1"]:"${12}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${13}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${13}" -j DNAT --to-destination ["$1"]:"${13}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${13}" -j DNAT --to-destination ["$1"]:"${13}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${14}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${14}" -j DNAT --to-destination ["$1"]:"${14}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${14}" -j DNAT --to-destination ["$1"]:"${14}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${15}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${15}" -j DNAT --to-destination ["$1"]:"${15}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${15}" -j DNAT --to-destination ["$1"]:"${15}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${16}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${16}" -j DNAT --to-destination ["$1"]:"${16}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${16}" -j DNAT --to-destination ["$1"]:"${16}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${17}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${17}" -j DNAT --to-destination ["$1"]:"${17}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${17}" -j DNAT --to-destination ["$1"]:"${17}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${18}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${18}" -j DNAT --to-destination ["$1"]:"${18}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${18}" -j DNAT --to-destination ["$1"]:"${18}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${19}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${19}" -j DNAT --to-destination ["$1"]:"${19}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${19}" -j DNAT --to-destination ["$1"]:"${19}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${20}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${20}" -j DNAT --to-destination ["$1"]:"${20}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${20}" -j DNAT --to-destination ["$1"]:"${20}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         if [ ! -z "${21}" ]; then
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p tcp --dport "${21}" -j DNAT --to-destination ["$1"]:"${21}"
+            checkhiddenhard lxc: set up nat rules
+            lxc-attach -n managed -- ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport "${21}" -j DNAT --to-destination ["$1"]:"${21}"
+            checkhiddenhard lxc: set up nat rules
+         fi
+         ### set iptable rules on HOST // ###
+         if [ "$CHECKENVIRONMENT" = "proxy" ]
+         then
+            #// add new port mapping
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$2" -j DNAT --to-destination [fd00:aaaa:253::254]:"$2"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$2" -j DNAT --to-destination [fd00:aaaa:253::254]:"$2"
+               checkhiddenhard lxc: set up nat rules
+            if [ ! -z "$3" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$3" -j DNAT --to-destination [fd00:aaaa:253::254]:"$3"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$3" -j DNAT --to-destination [fd00:aaaa:253::254]:"$3"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$4" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$4" -j DNAT --to-destination [fd00:aaaa:253::254]:"$4"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$4" -j DNAT --to-destination [fd00:aaaa:253::254]:"$4"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$5" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$5" -j DNAT --to-destination [fd00:aaaa:253::254]:"$5"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$5" -j DNAT --to-destination [fd00:aaaa:253::254]:"$5"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$6" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$6" -j DNAT --to-destination [fd00:aaaa:253::254]:"$6"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$6" -j DNAT --to-destination [fd00:aaaa:253::254]:"$6"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$7" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$7" -j DNAT --to-destination [fd00:aaaa:253::254]:"$7"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$7" -j DNAT --to-destination [fd00:aaaa:253::254]:"$7"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$8" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$8" -j DNAT --to-destination [fd00:aaaa:253::254]:"$8"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$8" -j DNAT --to-destination [fd00:aaaa:253::254]:"$8"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "$9" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$9" -j DNAT --to-destination [fd00:aaaa:253::254]:"$9"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$9" -j DNAT --to-destination [fd00:aaaa:253::254]:"$9"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${10}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${10}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${10}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${10}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${10}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${11}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${11}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${11}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${11}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${11}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${12}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${12}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${12}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${12}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${12}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${13}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${13}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${13}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${13}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${13}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${14}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${14}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${14}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${14}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${14}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${15}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${15}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${15}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${15}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${15}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${16}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${16}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${16}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${16}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${16}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${17}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${17}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${17}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${17}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${17}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${18}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${18}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${18}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${18}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${18}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${19}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${19}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${19}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${19}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${19}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${20}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${20}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${20}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${20}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${20}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+            if [ ! -z "${21}" ]; then
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "${21}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${21}"
+               checkhiddenhard lxc: set up nat rules
+               ip6tables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "${21}" -j DNAT --to-destination [fd00:aaaa:253::254]:"${21}"
+               checkhiddenhard lxc: set up nat rules
+            fi
+         fi
+         ### // set iptable rules on HOST ###
+      done < "/etc/lxc-to-go/tmp/lxc.ipv6.running.list.conv.tmp"
+      #/)
+      ### // set iptable rules ###
+# // ipv6
+   fi
+checkhard lxc-to-go portforwarding
+### // FORWARDING ###
+}
 ### // stage0 ###
 
 ### stage1 // ###
@@ -476,31 +1043,11 @@ else
             lxc-destroy -n "$name"
          exit 1
       else
-            #/ single port support
-         if [ "$cportmulti2" = "0" ]; then
-            # iptables - managed
-            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
-            lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "$port" -j DNAT --to-destination "$GETIPV4":"$port"
-            if [ "$CHECKENVIRONMENT" = "server" ]; then
-               # iptables - host
-               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST
-               iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "$port" -j DNAT --to-destination 192.168.253.254:"$port" # HOST
-            fi
-         else
-            #/ multi port support
-            grep -s "$name" /etc/lxc-to-go/portforwarding.conf | awk '{print $3}' | tr ',' '\n' > /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp
-            cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p tcp --dport "%" -j DNAT --to-destination "$GETIPV4":"%"
-            cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % lxc-attach -n managed -- iptables -t nat -A PREROUTING -i eth0 -p udp --dport "%" -j DNAT --to-destination "$GETIPV4":"%"
-            if [ "$CHECKENVIRONMENT" = "server" ]; then
-               # iptables - host
-               cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport "%" -j DNAT --to-destination 192.168.253.254:"%" # HOST
-               cat /etc/lxc-to-go/tmp/lxc.set.ipv4.multiport.tmp | xargs -L1 -I % iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport "%" -j DNAT --to-destination 192.168.253.254:"%" # HOST
-            fi
-         fi
+            lxcportforwarding
       fi
    fi
 fi
-check lxc-to-go portforwarding
+check lxc-to-go portforwarding END
 #
 ### // FORWARDING ###
 
