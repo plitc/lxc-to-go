@@ -75,7 +75,8 @@ run /etc/init.d/hostname.sh restart; check
 run hostname; check
 run hostname -f; check
 run apt-get -y install ssmtp; check
-run apt-get -y install bsd-mailx; check
+#/run apt-get -y install bsd-mailx; check
+run apt-get -y install mailutils; check
 
 lull 5
 
@@ -83,6 +84,11 @@ lull 5
 sed -i '/s/mailhub=mail/mailhub=mail.plitc.eu/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
 
 lull 6
+
+#// send mail
+run /bin/sh -c ' echo "dn42.connect test" | mail -s "dn42.connect" dn42.connect@plitc.eu -aFROM:dn42.connect@plitc.eu '; check
+
+lull 7
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
