@@ -81,7 +81,7 @@ run apt-get -y install mailutils; check
 lull 5
 
 #// configure: ssmtp
-sed -i '/s/mailhub=mail/mailhub=mail.plitc.eu/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
+sed -i 's/mailhub=mail/mailhub=mail.plitc.eu/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
 echo "FromLineOverride=YES" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
 
 lull 6
@@ -92,7 +92,7 @@ if [ $? -eq 0 ]
 then
    echo "next 0"
 else
-   echo "next 1"
+   printf "\033[1;32m Send me your private key via xmpp to daniel.plominski@jabber.plitc.eu \033[0m\n"
 fi
 
 lull 7
