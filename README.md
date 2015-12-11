@@ -467,7 +467,7 @@ TODO
 
 * 08.11.2015: deb9 testing template --- OPEN
 
-* 06.05.2015: ipv6 portforwarding --- OPEN --- FIXED in [0.40.3.6]
+* 06.05.2015: ipv6 portforwarding --- FIXED in [0.40.3.6]
 
 * 17.04.2015: useful ipv6 routing (ra/proxy_ndp) --- FIXED in [0.28.4] --- FIXED again in [0.39.9.7]
 
