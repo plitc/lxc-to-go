@@ -67,6 +67,21 @@ lull 3
 #// OpenVPN
 run apt-get -y install openvpn; check
 
+lull 4
+
+#// SSMTP
+echo "127.0.0.1   $LXCCREATENAME" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/hosts; check
+run /etc/init.d/hostname.sh restart; check
+run hostname; check
+run hostname -f; check
+run apt-get -y install ssmtp; check
+
+lull 5
+
+#// configure:
+
+lull 6
+
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
 # EOF
