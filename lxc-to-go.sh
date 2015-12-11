@@ -180,7 +180,7 @@ lxcstopmanaged() {
 lxcstopall() {
    for i in $(lxc-ls --active | egrep -v "managed|deb7template|deb8template")
    do
-      (lxc-stop -t 30 -n "$i") & spinner $!
+      (lxc-stop -t 60 -n "$i") & spinner $!
       checkhiddensoft LXC killed: "$i"
       lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
       checksoft LXC-Stop: "$i"
