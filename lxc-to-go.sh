@@ -135,6 +135,7 @@ then
 else
    #/return 1
    checkhard "$@"
+   return 1
 fi
 }
 
@@ -146,6 +147,7 @@ then
 else
    #/return 1
    checksoft "$@"
+   return 1
 fi
 }
 
