@@ -87,12 +87,16 @@ echo "FromLineOverride=YES" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ss
 lull 6
 
 #// mail delivery
-run /bin/sh -c ' echo "dn42.connect test" | mail -s "dn42.connect" -aFrom:dn42.connect\<dn42.connect@plitc.eu\> dn42.connect@plitc.eu '; checkhidden
+echo "... tries to deliver the mail ..."
+run /bin/sh -c ' echo "dn42.connect test" | mail -s "dn42.connect" -aFrom:dn42.connect\<dn42.connect@plitc.eu\> dn42.connect@plitc.eu '
 if [ $? -eq 0 ]
 then
-   echo "next 0"
+   echo "" # dummy
+   : # dummy
 else
-   printf "\033[1;32m Send me your private key via xmpp to daniel.plominski@jabber.plitc.eu \033[0m\n"
+   echo "" # dummy
+   printf "\033[1;32m Send me your private key via xmpp to: daniel.plominski@jabber.plitc.eu \033[0m\n"
+   printf "\033[1;32m Send me your private key via smtp to: daniel@plominski.eu \033[0m\n"
 fi
 
 lull 7
