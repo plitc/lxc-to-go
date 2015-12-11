@@ -184,7 +184,7 @@ lxcstopall() {
    do
       (lxc-stop -t 60 -n "$i") & spinner $!
       checkhiddensoft LXC killed: "$i"
-      lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
+      #/lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
       checksoft LXC-Stop: "$i"
       (sleep 5) & spinner $!
    done
