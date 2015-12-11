@@ -75,10 +75,12 @@ run /etc/init.d/hostname.sh restart; check
 run hostname; check
 run hostname -f; check
 run apt-get -y install ssmtp; check
+run apt-get -y install bsd-mailx; check
 
 lull 5
 
 #// configure:
+sed -i '/s/mailhub=mail/mailhub=mail.plitc.eu/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
 
 lull 6
 
