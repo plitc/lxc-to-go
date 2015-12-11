@@ -44,9 +44,22 @@ PRG="$0"
    done
 DIR=$(dirname "$PRG")
 
-#// function: spinner
-spinner()
+#// function: check state (version: 1.1)
+check()
 {
+if [ $? -eq 0 ]
+then
+   echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
+   #/sleep 2
+else
+   echo "[$(printf "\033[1;31mFAILED\033[0m\n")] '"$@"'"
+   sleep 1
+   exit 1
+fi
+}
+
+#// FUNCTION: spinner (Version 1.0)
+spinner() {
    local pid=$1
    local delay=0.01
    local spinstr='|/-\'
@@ -60,18 +73,21 @@ spinner()
    printf "    \b\b\b\b"
 }
 
-#// function: run script as root
-checkrootuser()
-{
+#// FUNCTION: clean up tmp files (Version 1.0)
+cleanup() {
+   rm -rf /etc/lxc-to-go/tmp/*
+}
+
+#// FUNCTION: run script as root (Version 1.0)
+checkrootuser() {
 if [ "$(id -u)" != "0" ]; then
    echo "[ERROR] This script must be run as root" 1>&2
    exit 1
 fi
 }
 
-#// function: check debian based distributions
-checkdebiandistribution()
-{
+#// FUNCTION: check debian based distributions (Version 1.0)
+checkdebiandistribution() {
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
 else
@@ -100,13 +116,11 @@ else
 fi
 }
 
-#// function: check state (version: 1.1)
-check()
-{
+#// FUNCTION: check state (Version 1.0)
+checkhard() {
 if [ $? -eq 0 ]
 then
    echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
-   #/sleep 2
 else
    echo "[$(printf "\033[1;31mFAILED\033[0m\n")] '"$@"'"
    sleep 1
@@ -114,7 +128,81 @@ else
 fi
 }
 
-#// FUNCTION: clean up lxc portforwarding (version 1.0)
+#// FUNCTION: check state without exit (Version 1.0)
+checksoft() {
+if [ $? -eq 0 ]
+then
+   echo "[$(printf "\033[1;32m  OK  \033[0m\n")] '"$@"'"
+else
+   echo "[$(printf "\033[1;33mFAILED\033[0m\n")] '"$@"'"
+   sleep 1
+fi
+}
+
+#// FUNCTION: check state hidden (Version 1.0)
+checkhiddenhard() {
+if [ $? -eq 0 ]
+then
+   return 0
+else
+   #/return 1
+   checkhard "$@"
+   return 1
+fi
+}
+
+#// FUNCTION: check state hidden without exit (Version 1.0)
+checkhiddensoft() {
+if [ $? -eq 0 ]
+then
+   return 0
+else
+   #/return 1
+   checksoft "$@"
+   return 1
+fi
+}
+
+#// FUNCTION: starting all lxc vms (Version 1.0)
+lxcstartall() {
+   for i in $(lxc-ls --stopped | egrep -v "managed|deb7template|deb8template")
+   do
+      if [ "$DEBIAN" = "ubuntu" ]
+      then
+         screen -d -m -S "$i" -- lxc-start -n "$i" -F
+         (sleep 5) & spinner $!
+      else
+         screen -d -m -S "$i" -- lxc-start -n "$i"
+         (sleep 5) & spinner $!
+      fi
+      lxc-ls --active | grep -sc "$i" > /dev/null 2>&1
+      checksoft LXC-Start: "$i"
+   done
+}
+
+#// FUNCTION: stopping lxc managed vm (Version 1.0)
+lxcstopmanaged() {
+   for i in $(lxc-ls --active | grep "managed")
+   do
+      (lxc-stop -n "$i") & spinner $!
+      checksoft LXC-Stop: "$i"
+      (sleep 1) & spinner $!
+   done
+}
+
+#// FUNCTION: stopping all lxc vms (Version 1.0)
+lxcstopall() {
+   for i in $(lxc-ls --active | egrep -v "managed|deb7template|deb8template")
+   do
+      (lxc-stop -t 60 -n "$i") & spinner $!
+      checkhiddensoft LXC killed: "$i"
+      #/lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
+      checksoft LXC-Stop: "$i"
+      (sleep 5) & spinner $!
+   done
+}
+
+#// FUNCTION: clean up lxc portforwarding (Version 1.0)
 cleanlxcportforwarding() {
    CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
    GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')

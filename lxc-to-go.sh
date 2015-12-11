@@ -46,7 +46,7 @@ DIR=$(dirname "$PRG")
 #
 ADIR="$PWD"
 
-#// FUNCTION: spinner
+#// FUNCTION: spinner (Version 1.0)
 spinner() {
    local pid=$1
    local delay=0.01
@@ -61,12 +61,12 @@ spinner() {
    printf "    \b\b\b\b"
 }
 
-#// FUNCTION: clean up tmp files
+#// FUNCTION: clean up tmp files (Version 1.0)
 cleanup() {
    rm -rf /etc/lxc-to-go/tmp/*
 }
 
-#// FUNCTION: run script as root
+#// FUNCTION: run script as root (Version 1.0)
 checkrootuser() {
 if [ "$(id -u)" != "0" ]; then
    echo "[ERROR] This script must be run as root" 1>&2
@@ -74,7 +74,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 }
 
-#// FUNCTION: check debian based distributions
+#// FUNCTION: check debian based distributions (Version 1.0)
 checkdebiandistribution() {
 if [ "$DEBVERSION" = "7" ]; then
    : # dummy
@@ -104,7 +104,7 @@ else
 fi
 }
 
-#// FUNCTION: check state
+#// FUNCTION: check state (Version 1.0)
 checkhard() {
 if [ $? -eq 0 ]
 then
@@ -116,7 +116,7 @@ else
 fi
 }
 
-#// FUNCTION: check state without exit
+#// FUNCTION: check state without exit (Version 1.0)
 checksoft() {
 if [ $? -eq 0 ]
 then
@@ -127,7 +127,7 @@ else
 fi
 }
 
-#// FUNCTION: check state hidden
+#// FUNCTION: check state hidden (Version 1.0)
 checkhiddenhard() {
 if [ $? -eq 0 ]
 then
@@ -139,7 +139,7 @@ else
 fi
 }
 
-#// FUNCTION: check state hidden without exit
+#// FUNCTION: check state hidden without exit (Version 1.0)
 checkhiddensoft() {
 if [ $? -eq 0 ]
 then
@@ -151,7 +151,7 @@ else
 fi
 }
 
-#// FUNCTION: starting all lxc vms
+#// FUNCTION: starting all lxc vms (Version 1.0)
 lxcstartall() {
    for i in $(lxc-ls --stopped | egrep -v "managed|deb7template|deb8template")
    do
@@ -168,7 +168,7 @@ lxcstartall() {
    done
 }
 
-#// FUNCTION: stopping lxc managed vm
+#// FUNCTION: stopping lxc managed vm (Version 1.0)
 lxcstopmanaged() {
    for i in $(lxc-ls --active | grep "managed")
    do
@@ -178,7 +178,7 @@ lxcstopmanaged() {
    done
 }
 
-#// FUNCTION: stopping all lxc vms
+#// FUNCTION: stopping all lxc vms (Version 1.0)
 lxcstopall() {
    for i in $(lxc-ls --active | egrep -v "managed|deb7template|deb8template")
    do
@@ -190,7 +190,7 @@ lxcstopall() {
    done
 }
 
-#// FUNCTION: clean up lxc portforwarding
+#// FUNCTION: clean up lxc portforwarding (Version 1.0)
 cleanlxcportforwarding() {
    CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
    GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
@@ -210,7 +210,7 @@ cleanlxcportforwarding() {
 checkhard lxc-to-go clean up portforwarding
 }
 
-#// FUNCTION: set up lxc portforwarding
+#// FUNCTION: set up lxc portforwarding (Version 1.0)
 lxcportforwarding() {
    CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
    GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
