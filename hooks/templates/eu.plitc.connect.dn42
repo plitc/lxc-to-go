@@ -94,7 +94,7 @@ then
    echo "" # dummy
    : # dummy
 else
-   echo "" # dummy
+   run journalctl -n
    printf "\033[1;32m [ERROR]   :( \033[0m\n"
    printf "\033[1;32m Send me your OpenVPN private key via: \033[0m\n"
    printf "\033[1;32m xmpp: daniel.plominski@jabber.plitc.eu \033[0m\n"
