@@ -3998,10 +3998,86 @@ esac
 #
 ### // stage1 ###
 ;;
+'security')
+### stage1 // ###
+case $DEBIAN in
+debian|linuxmint|ubuntu|devuan)
+### stage2 // ###
+checkrootuser
+checkdebiandistribution
+### // stage2 ###
+#
+### stage3 // ###
+#
+
+CHECKLXCINSTALL4=$(/usr/bin/which lxc-checkconfig)
+if [ -z "$CHECKLXCINSTALL4" ]; then
+   echo "" # dummy
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
+checkhard lxc-to-go environment - stage 1
+
+DIALOG=$(/usr/bin/which dialog)
+if [ -z "$DIALOG" ]; then
+   echo "<--- --- --->"
+   echo "need dialog"
+   echo "<--- --- --->"
+   apt-get update
+   apt-get -y install dialog
+   echo "<--- --- --->"
+fi
+checkhard lxc-to-go environment - stage 2
+#
+### stage4 // ###
+#
+### ### ### ### ### ### ### ### ###
+
+CHECKLXCSTARTMANAGED=$(lxc-ls --active | grep -c "managed")
+if [ "$CHECKLXCSTARTMANAGED" = "1" ]; then
+   : # dummy
+else
+   echo "" # dummy
+   printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
+   exit 1
+fi
+checkhard lxc-to-go environment - stage 3
+
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+
+### ### ###
+
+echo "coming soon"; return 1
+checkhard lxc-to-go additional security
+
+### ### ###
+echo ""
+printf "\033[1;32mlxc-to-go security finished.\033[0m\n"
+### ### ###
+
+### ### ### ### ### ### ### ### ###
+#
+### // stage4 ###
+#
+### // stage3 ###
+#
+### // stage2 ###
+;;
+*)
+   # error 1
+   : # dummy
+   : # dummy
+   echo "[ERROR] Plattform = unknown"
+   exit 1
+   ;;
+esac
+#
+### // stage1 ###
+;;
 *)
 printf "\033[1;31mWARNING: lxc-to-go is experimental and its not ready for production. Do it at your own risk.\033[0m\n"
 echo "" # usage
-echo "usage: $0 { bootstrap | start | stop | shutdown | create | delete | show | login | lxc-in-lxc-webpanel }"
+echo "usage: $0 { bootstrap | start | stop | shutdown | create | delete | show | login | lxc-in-lxc-webpanel | security }"
 ;;
 esac
 exit 0
