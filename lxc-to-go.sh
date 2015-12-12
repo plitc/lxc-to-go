@@ -3597,7 +3597,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go environment - stage 1
+checkhiddenhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3713,6 +3713,7 @@ case $loginlist1 in
        awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,h[$1]}' /etc/lxc-to-go/tmp/loginlist1.tmp /etc/lxc-to-go/tmp/loginlist2.tmp | awk '{print $2}' | sed 's/"//g' > /etc/lxc-to-go/tmp/loginlist3.tmp
        echo "" # dummy
        echo "" # dummy
+       clear
        lxc-attach -n "$(cat /etc/lxc-to-go/tmp/loginlist3.tmp)"
     ;;
     1)
