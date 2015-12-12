@@ -44,6 +44,9 @@ RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git ';
 LOL 3
 
 RUN useradd etherpad-lite; CHECK LXC: useradd etherpad-lite
+RUN mkdir -p /home/etherpad-lite; CHECK LXC: make directory /home/etherpad-lite
+RUN chown -R etherpad-lite:etherpad-lite /home/etherpad-lite; CHECK LXC: change owner for /home/etherpad-lite
+
 RUN mkdir -p /lxc-to-go; CHECK LXC: make directory /lxc-to-go
 RUN mv -f /root/etherpad-lite /lxc-to-go; CHECK LXC: move etherpad-lite to /lxc-to-go
 RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK LXC: change owner for /lxc-to-go
