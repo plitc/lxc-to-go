@@ -3572,7 +3572,11 @@ then
    if [ "$GETREMOVENAME" = "1" ]
    then
       sed -i '/'"$LXCDESTROY"' /d' /etc/lxc-to-go/portforwarding.conf
+   else
+      : # dummy
    fi
+else
+   : # dummy
 fi
 checkhard lxc-to-go remove portforwarding rule
 
