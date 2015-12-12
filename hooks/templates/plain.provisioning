@@ -1,36 +1,23 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
 
-run(){
-   # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- "$@"
-}
-
-lull(){
-   # break
-   sleep 2
-   echo ""
-   echo "---> next step <---"
-   echo ""
-}
+# include functions
+. /etc/lxc-to-go/template.func.sh
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
-(
-
-#/ version: 1
+#// version: 1.0
 
 ### EXAMPLE // ###
 #
 
-lull
+LOL
 
-run echo example
+RUN echo example
 
 #
 ### // EXAMPLE ###
 
-)
 echo "<--- --- --- // provisioning hooks --- --- --->"
-#/ exit 0
 ### ### ### // lxc-to-go ### ### ###
 # EOF

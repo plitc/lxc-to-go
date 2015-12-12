@@ -25,9 +25,9 @@ Security Conditions
    apt-get install sudo
    visudo
 ### INPUT // ###
-   myusername ALL = (root) NOPASSWD: /usr/sbin/lxc-to-go
-   myusername ALL = (root) NOPASSWD: /usr/sbin/lxc-to-go-template
-   myusername ALL = (root) NOPASSWD: /usr/sbin/lxc-to-go-provisioning
+   myusername ALL = (root) NOPASSWD: /usr/local/sbin/lxc-to-go
+   myusername ALL = (root) NOPASSWD: /usr/local/sbin/lxc-to-go-template
+   myusername ALL = (root) NOPASSWD: /usr/local/sbin/lxc-to-go-provisioning
 ### // INPUT ###
 ```
 
@@ -122,7 +122,7 @@ Features
    # ./lxc-to-go-template.sh
 ```
 
-* /usr/sbin symbolic link support
+* /usr/local/sbin symbolic link support
 
 ```
    lxc-to-go

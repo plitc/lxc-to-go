@@ -851,12 +851,25 @@ mkdir -p /etc/lxc-to-go/tmp
 checkhard create lxc-to-go/tmp directory
 
 CHECKHOOKPROVISIONINGFILE="/etc/lxc-to-go/hook_provisioning.sh"
-if [ -e "$CHECKHOOKPROVISIONINGFILE" ]; then
+if [ -e "$CHECKHOOKPROVISIONINGFILE" ]
+then
    : # dummy
 else
    cp -prf "$DIR"/hooks/hook_provisioning.sh /etc/lxc-to-go/hook_provisioning.sh
 fi
 checkhard copy hook_provisioning.sh
+
+### Template Functions // ###
+CHECKTEMPLATEFUNCTIONS="/etc/lxc-to-go/template.func.sh"
+if [ -e "$CHECKTEMPLATEFUNCTIONS" ]
+then
+   : # dummy
+else
+   cp -prf "$DIR"/hooks/template.func.sh /etc/lxc-to-go
+   chmod 0750 /etc/lxc-to-go/template.func.sh
+fi
+checkhard copy template.func.sh
+### // Template Functions ###
 
 CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
 if [ -z "$CHECKENVIRONMENT" ]; then
@@ -2879,17 +2892,6 @@ then
    echo "192.168.253.254   lxc-to-go" >> /etc/hosts
 fi
 checkhard configure lxc-to-go etc/hosts entry
-
-### Template Functions // ###
-CHECKTEMPLATEFUNCTIONS="/etc/lxc-to-go/template.func.sh"
-if [ -e "$CHECKTEMPLATEFUNCTIONS" ]
-then
-   : # dummy
-else
-   cp -f "$ADIR"/hooks/template.func.sh /etc/lxc-to-go
-   chmod 0750 /etc/lxc-to-go/template.func.sh
-fi
-### // Template Functions ###
 
 ### LXC-inside-LXC // ###
 ## echo "" # dummy
