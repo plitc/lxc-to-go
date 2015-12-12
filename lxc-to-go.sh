@@ -3582,8 +3582,10 @@ checkhard lxc-to-go remove portforwarding rule
 ### then
 ###    : # dummy
 ### else
-lxcportforwarding
+###    lxcportforwarding
 ### fi
+
+lxcportforwarding
 
 cleanup
 checkhard clean up tmp files
