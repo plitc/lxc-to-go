@@ -393,6 +393,17 @@ Screencast
 
 Errata
 ======
+* 12.12.2015: [lxc-to-go < 0.40.8.8]: lxc-to-go start / delete [FAILED] 'lxc: set up nat rules' --- OPEN
+
+```
+  Another app is currently holding the xtables lock. Perhaps you want to use the -w option?
+  [FAILED] 'lxc: set up nat rules'
+
+  WORKAROUND:
+
+  ~# ./lxc-to-go.sh start
+```
+
 * 04.12.2015: [lxc-to-go < 0.40.0.0]: lxc-to-go "bootstrap" (proxy mode) on Ubuntu with double ip mapping (phy./bridge) disturbs the routing --- OPEN again
 
 ```
