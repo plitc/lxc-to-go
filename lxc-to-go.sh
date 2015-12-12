@@ -2880,6 +2880,17 @@ then
 fi
 checkhard configure lxc-to-go etc/hosts entry
 
+### Template Functions // ###
+CHECKTEMPLATEFUNCTIONS="/etc/lxc-to-go/template.func.sh"
+if [ -e "$CHECKTEMPLATEFUNCTIONS" ]
+then
+   : # dummy
+else
+   cp -f "$ADIR"/hooks/template.func.sh /etc/lxc-to-go
+   chmod 0750 /etc/lxc-to-go/template.func.sh
+fi
+### // Template Functions ###
+
 ### LXC-inside-LXC // ###
 ## echo "" # dummy
 ## echo "... prepare LXC-inside-LXC (if necessary) ..."
