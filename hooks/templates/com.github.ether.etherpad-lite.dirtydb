@@ -44,9 +44,9 @@ RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git ';
 
 LOL 3
 
-#/ RUN /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/RUN.sh --root '
-#/ RUN /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/RUN.sh --root"
-#/ RUN /bin/sh -c ' su -m etherpad -c "screen -d -m -S etherpad -- /lxc-to-go/etherpad-lite/bin/RUN.sh" '
+#/ RUN /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root '
+#/ RUN /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root"
+#/ RUN /bin/sh -c ' su -m etherpad -c "screen -d -m -S etherpad -- /lxc-to-go/etherpad-lite/bin/run.sh" '
 
 RUN useradd etherpad-lite; CHECK
 RUN mkdir -p /lxc-to-go; CHECK
@@ -68,8 +68,8 @@ if [ "$DEBVERSIONX" = "8" ]; then
    RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK
    RUN /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
    RUN /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   #/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/RUN.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/RUN.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   #/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK
    RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK
    RUN /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
    RUN /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK
