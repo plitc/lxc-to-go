@@ -233,7 +233,9 @@ lxcportforwarding() {
          ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
       fi
 # ipv4 //
-lxc-ls --active --fancy -F name,state,ipv4 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "192.168.254" | awk 'BEGIN{ORS=" "}{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^192.168.254/) != 0){print $1,$2,$fields;break}fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
+      #/lxc-ls --active --fancy -F name,state,ipv4 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "192.168.254" | awk 'BEGIN{ORS=" "}{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^192.168.254/) != 0){print $1,$2,$fields;break}fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
+      #// get ip list
+      lxc-ls --active --fancy -F name,state,ipv4,ipv6 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "192.168.254" | awk '{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^192.168.254/) != 0 || match($fields,/fd00:aaaa:254/) != 0){print $1,$2,$fields;break};fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
       #// merge ipv4 list
       awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/://' | grep "192.168.254" > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp
       #// convert ipv4 list
@@ -493,7 +495,9 @@ lxc-ls --active --fancy -F name,state,ipv4 | grep "RUNNING" | egrep -v "managed|
       ### // set iptable rules ###
 # // ipv4
 # ipv6 //
-lxc-ls --active --fancy -F name,state,ipv6 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "fd00:aaaa:254" | awk 'BEGIN{ORS=" "}{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^fd00:aaaa:254/) != 0){print $1,$2,$fields;break}fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp
+      #/lxc-ls --active --fancy -F name,state,ipv6 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "fd00:aaaa:254" | awk 'BEGIN{ORS=" "}{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^fd00:aaaa:254/) != 0){print $1,$2,$fields;break}fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp
+      #// get ip list
+      lxc-ls --active --fancy -F name,state,ipv6,ipv4 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "fd00:aaaa:254" | awk '{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^fd00:aaaa:254/) != 0 || match($fields,/192.168.254/) != 0){print $1,$2,$fields;break};fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp
       #// merge ipv6 list
       awk 'NR==FNR {h[$1] = $2; next} {print $1,$2,$3,h[$1]}' /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp /etc/lxc-to-go/portforwarding.conf | sort | uniq -u | sed 's/ ://' | grep "fd00:aaaa:254" > /etc/lxc-to-go/tmp/lxc.ipv6.running.list.tmp
       #// convert ipv6 list
