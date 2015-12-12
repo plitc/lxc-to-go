@@ -6,7 +6,7 @@
 . /etc/lxc-to-go/template.func.sh
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
-#// version: 1.1
+#// version: 1.2
 
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
@@ -85,10 +85,21 @@ fi
 
 #/ --- info --- #/
 
-GETHOSTIP4=$(ip addr show vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+GETHOSTBRIDGEIP4=$(ip addr show vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETHOSTPROXYIP4=$(ip addr show "$GETINTERFACE" | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
 GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
+
 echo ""
-echo "IP: (external)    $GETHOSTIP4"
+if [ "$GETENVIRONMENT" = "bridge" ]
+then
+   echo "IP: (external)    $GETHOSTBRIDGEIP4"
+fi
+if [ "$GETENVIRONMENT" = "proxy" ]
+then
+   echo "IP: (external)    $GETHOSTPROXYIP4"
+fi
 echo "IP: (internal)    192.168.253.254"
 echo "IP: (internal)    lxc-to-go"
 echo "Port:             $GETIPV4PORTINSIDE"
