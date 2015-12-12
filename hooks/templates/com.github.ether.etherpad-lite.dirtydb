@@ -8,24 +8,23 @@
 echo "<--- --- --- provisioning hooks // --- --- --->"
 #// version: 1.1
 
-RUN apt-get -y update; CHECK
-RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
 
 LOL 1
 
-RUN apt-get -y install screen; CHECK
-RUN apt-get -y install vim; CHECK
-RUN apt-get -y install gzip git curl python libssl-dev pkg-config build-essential; CHECK
+RUN apt-get -y install screen; CHECK LXC: installing screen
+RUN apt-get -y install vim; CHECK LXC: installing vim
+RUN apt-get -y install gzip git curl python libssl-dev pkg-config build-essential; CHECK LXC: installing gzip git curl python libssl-dev pkg-config build-essential
 
 #// for AMD64 or PowerPC Environment
 CHECKYABOOT01=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
 if [ -z "$CHECKYABOOT01" ]
 then
    #// amd64
-   RUN apt-get -y install nodejs npm; CHECK
+   RUN apt-get -y install nodejs npm; CHECK LXC: installing nodejs npm
 else
    #// powerpc
-   #RUN /bin/sh -c ' cd /root; git clone git://github.com/nodejs/node; cd /root/node; ./configure; make install '; CHECK
    RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/v8ppc.git; cd /root/v8ppc; ./configure; make install '; CHECK
    RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; CHECK
    RUN apt-get -y install npm; CHECK
@@ -33,25 +32,21 @@ fi
 CHECK
 
 ### FIX // ###
-RUN ln -s /usr/bin/nodejs /usr/bin/node; CHECK
+RUN ln -s /usr/bin/nodejs /usr/bin/node; CHECK LXC: symlink for nodejs
 ### // FIX ###
 
 LOL 2
 
 #/ --- etherpad-lite --- #/
 
-RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git '; CHECK
+RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git '; CHECK LXC: git clone etherpad-lite
 
 LOL 3
 
-#/ RUN /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root '
-#/ RUN /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/run.sh --root"
-#/ RUN /bin/sh -c ' su -m etherpad -c "screen -d -m -S etherpad -- /lxc-to-go/etherpad-lite/bin/run.sh" '
-
-RUN useradd etherpad-lite; CHECK
-RUN mkdir -p /lxc-to-go; CHECK
-RUN mv -f /root/etherpad-lite /lxc-to-go; CHECK
-RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK
+RUN useradd etherpad-lite; CHECK LXC: useradd etherpad-lite
+RUN mkdir -p /lxc-to-go; CHECK LXC: make directory /lxc-to-go
+RUN mv -f /root/etherpad-lite /lxc-to-go; CHECK LXC: move etherpad-lite to /lxc-to-go
+RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK LXC: change owner for /lxc-to-go
 
 #/ --- configuration --- #/
 
@@ -61,29 +56,31 @@ if [ "$DEBVERSIONX" = "7" ]; then
 fi
 if [ "$DEBVERSIONX" = "8" ]; then
    #// systemd service file
-   RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "[Unit]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "Description=Run Etherpad-lite, the collaborative editor." >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "After=syslog.target network.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 1
+   RUN /bin/sh -c ' echo "[Unit]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 2
+   RUN /bin/sh -c ' echo "Description=Run Etherpad-lite, the collaborative editor." >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 3
+   RUN /bin/sh -c ' echo "After=syslog.target network.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 4
+   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 5
+   RUN /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 6
+   RUN /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 7
    #/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "# EOF" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 8
+   RUN /bin/sh -c ' echo "User=etherpad-lite" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 9
+   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 10
+   RUN /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 11
+   RUN /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 12
+   RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 13
+   RUN /bin/sh -c ' echo "# EOF" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 14
 LOL 4
-   RUN systemctl enable etherpad-lite.service; CHECK
-   RUN systemctl start etherpad-lite.service; CHECK
+   RUN systemctl daemon-reload; CHECK LXC: systemd daemon-reload
+   RUN systemctl enable etherpad-lite.service; CHECK LXC: enable etherpad-lite service
+   RUN systemctl start etherpad-lite.service; CHECK LXC: starting etherpad-lite service
    echo "" # dummy
    echo "... starting etherpad-lite.service ..."
    echo "" # dummy
    (sleep 120) & SPINNER $!
 LOL 5
-   RUN systemctl status etherpad-lite.service; CHECK
+   RUN systemctl status etherpad-lite.service; CHECK LXC: etherpad-lite service status
 fi
 
 #/ --- info --- #/
