@@ -1,0 +1,102 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
+
+# include functions
+. /etc/lxc-to-go/template.func.sh
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 1.1
+
+RUN apt-get -y update; CHECK
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK
+
+LOL 1
+
+RUN apt-get -y install screen; CHECK
+RUN apt-get -y install vim; CHECK
+RUN apt-get -y install gzip git curl python libssl-dev pkg-config build-essential; CHECK
+
+#// for AMD64 or PowerPC Environment
+CHECKYABOOT01=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+if [ -z "$CHECKYABOOT01" ]
+then
+   #// amd64
+   RUN apt-get -y install nodejs npm; CHECK
+else
+   #// powerpc
+   #RUN /bin/sh -c ' cd /root; git clone git://github.com/nodejs/node; cd /root/node; ./configure; make install '; CHECK
+   RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/v8ppc.git; cd /root/v8ppc; ./configure; make install '; CHECK
+   RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; CHECK
+   RUN apt-get -y install npm; CHECK
+fi
+CHECK
+
+### FIX // ###
+RUN ln -s /usr/bin/nodejs /usr/bin/node; CHECK
+### // FIX ###
+
+LOL 2
+
+#/ --- etherpad-lite --- #/
+
+RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git '; CHECK
+
+LOL 3
+
+#/ RUN /bin/sh -c ' screen -d -m -S etherpad -- /root/etherpad-lite/bin/RUN.sh --root '
+#/ RUN /bin/sh -c "exec >/dev/tty 2>/dev/tty </dev/tty && /usr/bin/screen -d -m -S etherpad -- /root/etherpad-lite/bin/RUN.sh --root"
+#/ RUN /bin/sh -c ' su -m etherpad -c "screen -d -m -S etherpad -- /lxc-to-go/etherpad-lite/bin/RUN.sh" '
+
+RUN useradd etherpad-lite; CHECK
+RUN mkdir -p /lxc-to-go; CHECK
+RUN mv -f /root/etherpad-lite /lxc-to-go; CHECK
+RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK
+
+#/ --- configuration --- #/
+
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]; then
+   : # dummy
+fi
+if [ "$DEBVERSIONX" = "8" ]; then
+   #// systemd service file
+   RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "[Unit]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "Description=Run Etherpad-lite, the collaborative editor." >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "After=syslog.target network.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   #/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/RUN.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/RUN.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   RUN /bin/sh -c ' echo "# EOF" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+LOL 4
+   RUN systemctl enable etherpad-lite.service; CHECK
+   RUN systemctl start etherpad-lite.service; CHECK
+   echo "" # dummy
+   echo "... starting etherpad-lite.service ..."
+   echo "" # dummy
+   (sleep 120) & SPINNER $!
+LOL 5
+   RUN systemctl status etherpad-lite.service; CHECK
+fi
+
+#/ --- info --- #/
+
+GETHOSTIP4=$(ip addr show vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
+echo ""
+echo "IP: (external)    $GETHOSTIP4"
+echo "IP: (internal)    192.168.253.254"
+echo "IP: (internal)    lxc-to-go"
+echo "Port:             $GETIPV4PORTINSIDE"
+echo ""
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF

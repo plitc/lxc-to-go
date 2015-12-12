@@ -1,96 +1,83 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
 
-run(){
-   # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- "$@"
-}
-
-lull(){
-   # break
-   sleep 2
-   echo ""
-   echo "---> next step <---"
-   echo ""
-}
+# include functions
+. /etc/lxc-to-go/template.func.sh
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
-(
+#// version: 0.9
 
-#/ version: 1.2
+RUN apt-get -y update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 
-run apt-get -y update
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+LOL 1
 
-lull
+RUN apt-get -y install freeradius
 
-run apt-get -y install freeradius
-
-lull
+LOL 2
 
 #/ --- configuration --- #/
 
 #/ CONFIGUSERS="/etc/freeradius/users"
-run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "anonymous         Cleartext-Password := \"anonymous\"" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "#/ wildcard, accept any credentials" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "DEFAULT    FreeRADIUS-Proxied-To == 127.0.0.1, Auth-Type := Accept" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "#" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/freeradius/users '
-run /bin/sh -c ' echo "# EOF" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "anonymous         Cleartext-Password := \"anonymous\"" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "#/ wildcard, accept any credentials" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "DEFAULT    FreeRADIUS-Proxied-To == 127.0.0.1, Auth-Type := Accept" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/freeradius/users '
+RUN /bin/sh -c ' echo "# EOF" >> /etc/freeradius/users '
 
 #/ CONFIGRADIUSD="/etc/freeradius/radiusd.conf"
-run /bin/sh -c ' sed -i "s/auth = no/auth = yes/g" /etc/freeradius/radiusd.conf '
-#/ run /bin/sh -c ' sed -i "1,/interface = eth0/s/#//" /etc/freeradius/radiusd.conf '
+RUN /bin/sh -c ' sed -i "s/auth = no/auth = yes/g" /etc/freeradius/radiusd.conf '
+#/ RUN /bin/sh -c ' sed -i "1,/interface = eth0/s/#//" /etc/freeradius/radiusd.conf '
 
 #/ CONFIGCLIENTS="/etc/freeradius/clients.conf"
-run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "client 0.0.0.0/0 {" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "        secret                        = anonymous" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "        require_message_authenticator = no" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "}" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/freeradius/clients.conf '
-run /bin/sh -c ' echo "# EOF" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "client 0.0.0.0/0 {" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "        secret                        = anonymous" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "        require_message_authenticator = no" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "}" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "#" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/freeradius/clients.conf '
+RUN /bin/sh -c ' echo "# EOF" >> /etc/freeradius/clients.conf '
 
-lull
+LOL 3
 
-run cp -pf /etc/freeradius/sites-available/default /etc/freeradius/sites-available/default.DEFAULT
-run cp -pf /etc/freeradius/sites-available/inner-tunnel /etc/freeradius/sites-available/inner-tunnel.DEFAULT
+RUN cp -pf /etc/freeradius/sites-available/default /etc/freeradius/sites-available/default.DEFAULT
+RUN cp -pf /etc/freeradius/sites-available/inner-tunnel /etc/freeradius/sites-available/inner-tunnel.DEFAULT
 
-lull
+LOL 4
 
 #/ #/ --- new keys --- #/
 
-run /bin/sh -c ' echo "" > /var/log/freeradius/radius.log '
-run service freeradius restart
-run service freeradius status
+RUN /bin/sh -c ' echo "" > /var/log/freeradius/radius.log '
+RUN service freeradius restart
+RUN service freeradius status
 
-lull
+LOL 5
 
-run cat /var/log/freeradius/radius.log
+RUN cat /var/log/freeradius/radius.log
 
-lull
+LOL 6
 
-DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
-if [ "$DEBVERSION" = "7" ]; then
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]; then
    : # dummy
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSIONX" = "8" ]; then
    : # dummy
 fi
-
-)
 
 #/ --- info --- #/
 
 GETHOSTIP4=$(ifconfig vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
-GETIPV4PORTINSIDE=$(run cat /root/PORT)
+GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
 
 echo "IP:               $GETHOSTIP4"
 echo "Port:             $GETIPV4PORTINSIDE"

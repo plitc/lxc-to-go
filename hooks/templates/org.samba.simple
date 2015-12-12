@@ -1,50 +1,39 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
 
-run(){
-   # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- "$@"
-}
+# include functions
+. /etc/lxc-to-go/template.func.sh
 
-lull(){
-   # break
-   sleep 2
-   echo ""
-   echo "---> next step <---"
-   echo ""
-}
+echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 0.9
 
 ### ### ### CUSTOM // ### ### ###
 DOMAINNAME=$(echo "federation.network")
 ### ### ### // CUSTOM ### ### ###
 
-echo "<--- --- --- provisioning hooks // --- --- --->"
-(
+RUN apt-get -y update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 
-#/ version: 1.1
+LOL 1
 
-run apt-get -y update
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+RUN apt-get -y install samba
 
-lull
+LOL 2
 
-run apt-get -y install samba
-
-lull
-
-DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
-if [ "$DEBVERSION" = "7" ]; then
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]; then
    cp -prfv /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf_ORI
    mkdir -p /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
    chmod 0777 /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
 fi
-if [ "$DEBVERSION" = "8" ]; then
+if [ "$DEBVERSIONX" = "8" ]; then
    cp -prfv /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf_ORI
    mkdir -p /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
    chmod 0777 /var/lib/lxc/"$LXCCREATENAME"/rootfs/DATA
 fi
 
-/bin/cat <<"SMBCONFIG" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf
+/bin/cat << "SMBCONFIG" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/samba/smb.conf
 ### ### ### lxc-to-go // ### ### ###
 
 [global]
@@ -81,25 +70,21 @@ fi
 # EOF
 SMBCONFIG
 
-if [ "$DEBVERSION" = "8" ]; then
-   run systemctl enable samba
-   run sleep 1
-   run systemctl stop samba-ad-dc
-   run systemctl stop smbd
-   run systemctl stop nmbd
-   run sleep 1
-   run systemctl start samba-ad-dc
-   run systemctl start smbd
-   run systemctl start nmbd
-   run sleep 1
-   run systemctl status samba-ad-dc
-   run systemctl status smbd
-   run systemctl status nmbd
+if [ "$DEBVERSIONX" = "8" ]; then
+   RUN systemctl enable samba
+   RUN sleep 1
+   RUN systemctl stop samba-ad-dc
+   RUN systemctl stop smbd
+   RUN systemctl stop nmbd
+   RUN sleep 1
+   RUN systemctl start samba-ad-dc
+   RUN systemctl start smbd
+   RUN systemctl start nmbd
+   RUN sleep 1
+   RUN systemctl status samba-ad-dc
+   RUN systemctl status smbd
+   RUN systemctl status nmbd
 fi
-
-)
-
-#/ --- samba --- #/
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###

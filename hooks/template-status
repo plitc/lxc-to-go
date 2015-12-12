@@ -14,7 +14,7 @@ com.github.plitc.flower
 com.github.santex.flower
 org.openwrt.freeradius.public
 org.openwrt.freeradius.anonymous-eap-ttls
-com.github.ether.etherpad-lite
+com.github.ether.etherpad-lite.dirtydb
 
 FAIL
 

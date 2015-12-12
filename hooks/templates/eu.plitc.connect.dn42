@@ -1,43 +1,21 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
 
-run(){
-   # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- "$@"
-}
+# include functions
+. /etc/lxc-to-go/template.func.sh
 
-check(){
-   # check state
-   if [ $? -eq 0 ]
-   then
-      printf "\033[1;32m OK \033[0m\n"
-      sleep 2
-   else
-      printf "\033[1;31m FAILED \033[0m\n"
-      sleep 1
-      exit 1
-   fi
-}
-
-lull(){
-   # break
-   sleep 2
-   echo ""
-   echo "---> next step: "$@" <---"
-   echo ""
-}
-
-#// version: 2.0
 echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 1.0
 
 ### LXC Config // ###
 #/echo "###" >> /var/lib/lxc/"$LXCCREATENAME"/config
 ### // LXC Config ###
 
-run apt-get -y update; check
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; check
+RUN apt-get -y update; CHECK
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK
 
-lull 1
+LOL 1
 
 /bin/cat << "RCLOCAL" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 #!/bin/sh
@@ -52,49 +30,49 @@ chmod 666 /dev/net/tun
 exit 0
 # EOF
 RCLOCAL
-check
+CHECK
 
-lull 2
+LOL 2
 
 #// Users
-run apt-get -y install zsh; check
-run useradd -m -c "lxc-to-go" lxctogo; check
-run /bin/sh -c ' echo lxctogo:lxctogo | chpasswd '; check
-run chsh -s /usr/bin/zsh lxctogo; check
+RUN apt-get -y install zsh; CHECK
+RUN useradd -m -c "lxc-to-go" lxctogo; CHECK
+RUN /bin/sh -c ' echo lxctogo:lxctogo | chpasswd '; CHECK
+RUN chsh -s /usr/bin/zsh lxctogo; CHECK
 
-lull 3
+LOL 3
 
 #// OpenVPN
-run apt-get -y install openvpn; check
+RUN apt-get -y install openvpn; CHECK
 
-lull 4
+LOL 4
 
 #// SSMTP
-echo "127.0.0.1   $LXCCREATENAME" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/hosts; check
-run /etc/init.d/hostname.sh restart; check
-run hostname; check
-run hostname -f; check
-run apt-get -y install ssmtp; check
-#/run apt-get -y install bsd-mailx; check
-run apt-get -y install mailutils; check
+echo "127.0.0.1   $LXCCREATENAME" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/hosts; CHECK
+RUN /etc/init.d/hostname.sh restart; CHECK
+RUN hostname; CHECK
+RUN hostname -f; CHECK
+RUN apt-get -y install ssmtp; CHECK
+#/RUN apt-get -y install bsd-mailx; CHECK
+RUN apt-get -y install mailutils; CHECK
 
-lull 5
+LOL 5
 
 #// configure: ssmtp
-sed -i 's/mailhub=mail/mailhub=mail.plitc.eu/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
-echo "FromLineOverride=YES" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; check
+sed -i 's/mailhub=mail/mailhub=mail.plitc.eu/g' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; CHECK
+echo "FromLineOverride=YES" >> /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/ssmtp/ssmtp.conf; CHECK
 
-lull 6
+LOL 6
 
 #// mail delivery
 echo "... tries to deliver the mail ..."
-run /bin/sh -c ' echo "dn42.connect test" | mail -s "dn42.connect" -aFrom:dn42.connect\<dn42.connect@plitc.eu\> dn42.connect@plitc.eu '
+RUN /bin/sh -c ' echo "dn42.connect test" | mail -s "dn42.connect" -aFrom:dn42.connect\<dn42.connect@plitc.eu\> dn42.connect@plitc.eu '
 if [ $? -eq 0 ]
 then
    echo "" # dummy
    : # dummy
 else
-   run journalctl -n
+   RUN journalctl -n
    printf "\033[1;32m [ERROR]   :( \033[0m\n"
    echo "" # dummy
    printf "\033[1;32m Send me your OpenVPN Private Key to: \033[0m\n"
@@ -103,7 +81,7 @@ else
    echo "" # dummy
 fi
 
-#/lull 7
+#/LOL 7
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###

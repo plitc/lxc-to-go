@@ -1,90 +1,68 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
 
-run(){
-   # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- "$@"
-}
+# include functions
+. /etc/lxc-to-go/template.func.sh
 
-check(){
-   # check state
-   if [ $? -eq 0 ]
-   then
-      printf "\033[1;32m OK \033[0m\n"
-      sleep 2
-   else
-      printf "\033[1;31m FAILED \033[0m\n"
-      sleep 1
-      exit 1
-   fi
-}
-
-lull(){
-   # break
-   sleep 4
-   echo ""
-   echo "---> next step: "$@" <---"
-   echo ""
-}
+echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 1.0
 
 ### ### ### CUSTOM // ### ### ###
 DOMAINNAME=$(echo "federation.network")
 ### ### ### // CUSTOM ### ### ###
 
-echo "<--- --- --- provisioning hooks // --- --- --->"
-#/ version: 2.0
+RUN apt-get -y update; CHECK
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK
 
-run apt-get -y update; check
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; check
+LOL 1
 
-lull 1
+RUN apt-get -y install cron; CHECK
+RUN apt-get -y install curl; CHECK
+RUN apt-get -y install wget; CHECK
+RUN apt-get -y install openssh-server ca-certificates; CHECK
 
-run apt-get -y install cron; check
-run apt-get -y install curl; check
-run apt-get -y install wget; check
-run apt-get -y install openssh-server ca-certificates; check
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
-
-lull 2
+LOL 2
 
 ### FIX // ###
-run sed -i 's/privat.local./'"$DOMAINNAME"'/g' /etc/postfix/main.cf; check
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
+RUN sed -i 's/privat.local./'"$DOMAINNAME"'/g' /etc/postfix/main.cf; CHECK
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 ### // FIX ###
 
-run apt-get -y autoremove; check
+RUN apt-get -y autoremove; CHECK
 
-lull 3
+LOL 3
 
-DEBVERSION=$(run grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
-if [ "$DEBVERSION" = "7" ]; then
-   run /bin/sh -c ' cd /root; curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh '; check
-   run chmod 0755 /root/script.deb.sh; check
-   run /root/script.deb.sh; check
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]; then
+   RUN /bin/sh -c ' cd /root; curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh '; CHECK
+   RUN chmod 0755 /root/script.deb.sh; CHECK
+   RUN /root/script.deb.sh; CHECK
 fi
-if [ "$DEBVERSION" = "8" ]; then
-   run /bin/sh -c ' cd /root; curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh '; check
-   run chmod 0755 /root/script.deb.sh; check
-   run /root/script.deb.sh; check
+if [ "$DEBVERSIONX" = "8" ]; then
+   RUN /bin/sh -c ' cd /root; curl -O https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh '; CHECK
+   RUN chmod 0755 /root/script.deb.sh; CHECK
+   RUN /root/script.deb.sh; CHECK
 fi
 
-run apt-get install gitlab-ce; check
+RUN apt-get install gitlab-ce; CHECK
 
 #/ --- gitlab ce --- #/
-run gitlab-ctl reconfigure; check
+RUN gitlab-ctl reconfigure; CHECK
 
-lull 4
+LOL 4
 
-GETIPV4PORTINSIDE=$(run cat /root/PORT)
-run sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/'"$LXCCREATENAME"'.'"$DOMAINNAME"':'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb; check
-run gitlab-ctl reconfigure; check
+GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
+RUN sed -i 's/external_url \x27http:\/\/gitlab.example.com\x27/external_url \x27http:\/\/'"$LXCCREATENAME"'.'"$DOMAINNAME"':'"$GETIPV4PORTINSIDE"'\/\x27/' /etc/gitlab/gitlab.rb; CHECK
+RUN gitlab-ctl reconfigure; CHECK
 
-lull 5
-run gitlab-ctl stop; check
-lull 6
-run gitlab-ctl start; check
-lull 7
+LOL 5
+RUN gitlab-ctl stop; CHECK
+LOL 6
+RUN gitlab-ctl start; CHECK
+LOL 7
 
 echo "Username:   root"
 echo "Password:   5iveL!fe"

@@ -1,44 +1,31 @@
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
 
-run(){
-   # execute commands inside the lxc template
-   lxc-attach -n "$LXCCREATENAME" -- "$@"
-}
-
-lull(){
-   # break
-   sleep 2
-   echo ""
-   echo "---> next step <---"
-   echo ""
-}
+# include functions
+. /etc/lxc-to-go/template.func.sh
 
 echo "<--- --- --- provisioning hooks // --- --- --->"
-(
+#// version: 0.9
 
-#/ version: 1
+RUN apt-get -y update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
 
-run apt-get -y update
-run /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"
+LOL 1
 
-lull
+RUN apt-get -y install git
+RUN apt-get -y install python python-setuptools python-virtualenv python-dev gcc swig dialog libaugeas0 libssl-dev ca-certificates python-m2crypto python-augeas
 
-run apt-get -y install git
-run apt-get -y install python python-setuptools python-virtualenv python-dev gcc swig dialog libaugeas0 libssl-dev ca-certificates python-m2crypto python-augeas
-
-lull
-
-)
+LOL 2
 
 #/ --- letsencrypt --- #/
 
-run mkdir -p /github
-run /bin/sh -c "cd /github; git clone https://github.com/letsencrypt/letsencrypt.git"
-run /bin/sh -c "cd /github/letsencrypt; ./letsencrypt-auto"
-run ln -s /root/.local/share/letsencrypt/bin/letsencrypt /usr/bin/letsencrypt
+RUN mkdir -p /github
+RUN /bin/sh -c "cd /github; git clone https://github.com/letsencrypt/letsencrypt.git"
+RUN /bin/sh -c "cd /github/letsencrypt; ./letsencrypt-auto"
+RUN ln -s /root/.local/share/letsencrypt/bin/letsencrypt /usr/bin/letsencrypt
 
-#/GETIPV4PORTINSIDE=$(run cat /root/PORT)
+#/GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
 
 /bin/cat << "RCLOCAL" > /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/rc.local
 #!/bin/sh
@@ -53,7 +40,7 @@ RCLOCAL
 
 #/GETIPV4INSIDE=$(lxc-ls --active --fancy | grep "RUNNING" | grep "$LXCCREATENAME" | awk '{print $3}' | egrep -v "-")
 
-lull
+LOL 3
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
