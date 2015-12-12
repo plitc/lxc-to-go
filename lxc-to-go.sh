@@ -3576,7 +3576,14 @@ then
 fi
 checkhard lxc-to-go remove portforwarding rule
 
-lxcportforwarding
+#// dirty but: The weakest goes to the wall (can't run lxcportforwarding without new lxc vm)
+CHECKNEWLXC=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+if [ "$CHECKNEWLXC" = "0" ]
+then
+   : # dummy
+else
+   lxcportforwarding
+fi
 
 cleanup
 checkhard clean up tmp files
