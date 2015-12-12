@@ -29,7 +29,7 @@ else
    RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; CHECK
    RUN apt-get -y install npm; CHECK
 fi
-CHECK
+CHECK LXC: configure amd64 or powerpc environment dependencies
 
 ### FIX // ###
 RUN ln -s /usr/bin/nodejs /usr/bin/node; CHECK LXC: symlink for nodejs
@@ -63,8 +63,9 @@ if [ "$DEBVERSIONX" = "8" ]; then
    RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 5
    RUN /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 6
    RUN /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 7
-   #/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
-   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 8
+#/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   #/RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 8
+   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 8
    RUN /bin/sh -c ' echo "User=etherpad-lite" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 9
    RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 10
    RUN /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 11
