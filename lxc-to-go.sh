@@ -3568,26 +3568,22 @@ checkhard lxc-to-go destroy
 CHECKFORWARDINGFILE00="/etc/lxc-to-go/portforwarding.conf"
 if [ -e "$CHECKFORWARDINGFILE00" ]
 then
-   GETREMOVENAME=$(grep -scw "$LXCDESTROY")
+   GETREMOVENAME=$(grep -scw "$LXCDESTROY" /etc/lxc-to-go/portforwarding.conf)
    if [ "$GETREMOVENAME" = "1" ]
    then
       sed -i '/'"$LXCDESTROY"' /d' /etc/lxc-to-go/portforwarding.conf
-   else
-      : # dummy
    fi
-else
-   : # dummy
 fi
 checkhard lxc-to-go remove portforwarding rule
 
-#// dirty but: The weakest goes to the wall (can't run lxcportforwarding without new lxc vm)
-CHECKNEWLXC=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
-if [ "$CHECKNEWLXC" = "0" ]
-then
-   : # dummy
-else
-   lxcportforwarding
-fi
+### #// dirty but: The weakest goes to the wall (can't run lxcportforwarding without new lxc vm)
+### CHECKNEWLXC=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+### if [ "$CHECKNEWLXC" = "0" ]
+### then
+###    : # dummy
+### else
+lxcportforwarding
+### fi
 
 cleanup
 checkhard clean up tmp files
