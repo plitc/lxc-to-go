@@ -3508,7 +3508,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go environment - stage 1
+checkhiddenhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -3520,7 +3520,7 @@ if [ "$CHECKCONTAINER3" = "0" ]; then
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go environment - stage 2
+checkhiddenhard lxc-to-go environment - stage 2
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
@@ -3541,31 +3541,42 @@ if [ "$LXCDESTROY" = "managed" ]; then
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n managed' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go delete - stage 2
+checkhiddenhard lxc-to-go delete - stage 2
 
 if [ "$LXCDESTROY" = "deb7template" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb7template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go delete - stage 3
+checkhiddenhard lxc-to-go delete - stage 3
 
 if [ "$LXCDESTROY" = "deb8template" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't destroy this essential LXC Container, if you have any problems, delete it with 'lxc-destroy -n deb8template' and repeat the bootstrap\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go delete - stage 4
+checkhiddenhard lxc-to-go delete - stage 4
 
 ### ### ###
-
-lxcportforwarding
 
    echo "" # dummy
    echo "... shutdown & delete the lxc container ..."
    lxc-stop -n "$LXCDESTROY" -k > /dev/null 2>&1
    lxc-destroy -n "$LXCDESTROY"
 checkhard lxc-to-go destroy
+
+CHECKFORWARDINGFILE00="/etc/lxc-to-go/portforwarding.conf"
+if [ -e "$CHECKFORWARDINGFILE00" ]
+then
+   GETREMOVENAME=$(grep -scw "$LXCDESTROY")
+   if [ "$GETREMOVENAME" = "1" ]
+   then
+      sed -i '/'"$LXCDESTROY"'/d' /etc/lxc-to-go/portforwarding.conf
+   fi
+fi
+checkhard lxc-to-go remove portforwarding rule
+
+lxcportforwarding
 
 cleanup
 checkhard clean up tmp files
