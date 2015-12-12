@@ -2849,13 +2849,13 @@ checkhard configure rp_filter sysctl
 ### // RP_FILTER ###
 
 ### SYMBOLIC LINKS // ###
-CHECKSYMLINK1="/usr/sbin/lxc-to-go"
+CHECKSYMLINK1="/usr/local/sbin/lxc-to-go"
 if [ -e "$CHECKSYMLINK1" ]; then
    : # dummy
 else
-   ln -sf "$ADIR"/lxc-to-go.sh /usr/sbin/lxc-to-go
-   ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/sbin/lxc-to-go-provisioning
-   ln -sf "$ADIR"/lxc-to-go-template.sh /usr/sbin/lxc-to-go-template
+   ln -sf "$ADIR"/lxc-to-go.sh /usr/local/sbin/lxc-to-go
+   ln -sf "$ADIR"/lxc-to-go-provisioning.sh /usr/local/sbin/lxc-to-go-provisioning
+   ln -sf "$ADIR"/lxc-to-go-template.sh /usr/local/sbin/lxc-to-go-template
 fi
 checkhard configure lxc-to-go symlinks - stage 1
 #
