@@ -53,7 +53,24 @@ RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK LXC: change owner for
 
 #/ --- backend: mariadb --- #/
 
+RUN apt-get -y install debconf-utils; CHECK LXC: installing debconf-utils
+
+#// prepare unattended mariadb-server root password
+RUN echo "mariadb-server-10.0 mysql-server/root_password password lxc-to-go" | debconf-set-selections; CHECK LXC: define default root password for mariadb-server - stage 1
+RUN echo "mariadb-server-10.0 mysql-server/root_password_again password lxc-to-go" | debconf-set-selections; CHECK LXC: define default root password for mariadb-server - stage 2
+
+#// installing mariadb-server
 RUN apt-get -y install mariadb-server-10.0; CHECK LXC: installing mariadb server
+RUN /etc/init.d/mysql start; CHECK LXC: starting mariadb server
+
+#// create database user: lxc-to-go
+RUN mysql -h localhost -uroot -plxc-to-go -e "CREATE USER 'lxc-to-go'@'localhost' IDENTIFIED BY 'lxc-to-go'"; CHECK LXC: create mariadb-server database user
+
+#// prepare database user: lxc-to-go permissions
+RUN mysql -h localhost -uroot -plxc-to-go -e "GRANT ALL PRIVILEGES ON * . * TO 'lxc-to-go'@'localhost'"; CHECK LXC: prepare mariadb-server database user permissions
+
+#// mariadb-server flush privileges
+RUN mysql -h localhost -uroot -plxc-to-go -e "FLUSH PRIVILEGES"; CHECK LXC: mariadb-server flush privileges
 
 exit 1
 --- DEV
