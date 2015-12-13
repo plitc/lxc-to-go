@@ -72,7 +72,13 @@ RUN mysqladmin -u root password lxc-to-go; CHECK LXC: define default root passwo
 RUN mysql -h localhost -uroot -plxc-to-go -e "CREATE USER 'lxc-to-go'@'localhost' IDENTIFIED BY 'lxc-to-go'"; CHECK LXC: create mariadb-server database user
 
 #// prepare database user: lxc-to-go permissions
-RUN mysql -h localhost -uroot -plxc-to-go -e "GRANT ALL PRIVILEGES ON * . * TO 'lxc-to-go'@'localhost'"; CHECK LXC: prepare mariadb-server database user permissions
+#/RUN mysql -h localhost -uroot -plxc-to-go -e "GRANT ALL PRIVILEGES ON * . * TO 'lxc-to-go'@'localhost'"; CHECK LXC: prepare mariadb-server database user permissions
+
+#// create database: store
+RUN mysql -h localhost -uroot -plxc-to-go -e "create database store"; CHECK LXC: create mariadb-server database store
+
+#// prepare database user: lxc-to-go permissions
+RUN mysql -h localhost -uroot -plxc-to-go -e "grant CREATE,ALTER,SELECT,INSERT,UPDATE,DELETE on store.* to 'lxc-to-go'@'localhost' identified by 'lxc-to-go'"; CHECK LXC: prepare mariadb-server database user permissions
 
 #// mariadb-server flush privileges
 RUN mysql -h localhost -uroot -plxc-to-go -e "FLUSH PRIVILEGES"; CHECK LXC: mariadb-server flush privileges
