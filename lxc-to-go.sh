@@ -1239,7 +1239,6 @@ else
             update-grub
             exit 1
          fi
-         : # dummy
          touch /etc/lxc-to-go/STAGE1
          echo "" # dummy
          printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
@@ -1249,7 +1248,7 @@ else
 fi
 checkhard grub configcheck
 
-#// ignore PowerPC Environment
+#// ignore PowerPC / Travis-CI Environment
 CHECKYABOOT2=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
 if [ -z "$CHECKYABOOT2" ]
 then
@@ -1257,14 +1256,21 @@ then
    if [ "$CHECKGRUB2" = "1" ]; then
       : # dummy
    else
-      : # dummy
-      touch /etc/lxc-to-go/STAGE1
-      echo "" # dummy
-      printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
-      exit 0
+### travis continuous integration support // ###
+      CHECKTRAVISCI=$(hostname | grep -sc "testing-gce-")
+      if [ "$CHECKTRAVISCI" = "1" ]
+      then
+         : # dummy
+      else
+### // travis continuous integration support ###
+         touch /etc/lxc-to-go/STAGE1
+         echo "" # dummy
+         printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
+         exit 0
+      fi
    fi
 fi
-checkhard optional: powerpc environment configcheck
+checkhard optional: powerpc / travis-ci environment configcheck
 
 ##/ check ip_tables/ip6_tables kernel module
 
