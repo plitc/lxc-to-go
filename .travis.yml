@@ -11,4 +11,5 @@ cache:
 script:
       - sudo ./lxc-to-go.sh
       - (echo "proxy"; echo "eth0") | sudo ./lxc-to-go.sh bootstrap
+      - dmesg
 
