@@ -10,4 +10,5 @@ cache:
 
 script:
       - ./lxc-to-go.sh
+      - ./lxc-to-go.sh bootstrap
 
