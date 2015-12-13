@@ -28,6 +28,18 @@ script:
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning_x11gui_browser /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plainx11brow -t deb8 -h yes -p 60003 -s yes
       - echo "< --- --- --- Travis CI - stage 7 --- --- --- >"
+      - echo "Template - com.github.ether.etherpad-lite.dirtydb"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.ether.etherpad-lite.dirtydb /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n etherpdirty -t deb8 -h yes -p 60004 -s yes
+      - echo "< --- --- --- Travis CI - stage 8 --- --- --- >"
+      - echo "Template - com.github.ether.etherpad-lite.mariadb"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.ether.etherpad-lite.mariadb /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n etherpmaria -t deb8 -h yes -p 60005 -s yes
+      - echo "< --- --- --- Travis CI - stage 9 --- --- --- >"
+      - echo "Template - com.github.ether.etherpad-lite.mariadb-utf8mb4"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.ether.etherpad-lite.mariadb-utf8mb4 /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n etherpmariaf8 -t deb8 -h yes -p 60006 -s yes
+      - echo "< --- --- --- Travis CI - stage 10 --- --- --- >"
       - echo "" # dummy
       - sudo ./lxc-to-go.sh start
       - echo "< --- --- --- Travis CI - - END - --- --- --- >"
