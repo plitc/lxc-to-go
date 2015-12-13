@@ -16,4 +16,5 @@ script:
       - echo "< --- --- --- Travis CI - stage 3 --- --- --- >"
       - sudo ./lxc-to-go-provisioning.sh -n test1 -t deb8 -h yes -p 60001 -s yes
       - echo "< --- --- --- Travis CI - stage 4 --- --- --- >"
+      - pwd
 
