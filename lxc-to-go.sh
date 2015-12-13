@@ -1239,10 +1239,18 @@ else
             update-grub
             exit 1
          fi
-         touch /etc/lxc-to-go/STAGE1
-         echo "" # dummy
-         printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
-         exit 0
+### travis continuous integration support // ###
+         CHECKTRAVISCI1=$(hostname | grep -sc "testing-gce-")
+         if [ "$CHECKTRAVISCI1" = "1" ]
+         then
+            : # dummy
+         else
+### // travis continuous integration support ###
+            touch /etc/lxc-to-go/STAGE1
+            echo "" # dummy
+            printf "\033[1;31mStage 1 finished. Please Reboot your System immediately! and continue the bootstrap\033[0m\n"
+            exit 0
+         fi
       fi
    fi
 fi
@@ -1257,8 +1265,8 @@ then
       : # dummy
    else
 ### travis continuous integration support // ###
-      CHECKTRAVISCI=$(hostname | grep -sc "testing-gce-")
-      if [ "$CHECKTRAVISCI" = "1" ]
+      CHECKTRAVISCI2=$(hostname | grep -sc "testing-gce-")
+      if [ "$CHECKTRAVISCI2" = "1" ]
       then
          : # dummy
       else
