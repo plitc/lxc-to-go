@@ -1,3 +1,11 @@
+
 sudo: true
 language: shell
+
+cache:
+   directories:
+      - lxc-to-go
+
+script:
+      - ./lxc-to-go.sh bootstrap
 
