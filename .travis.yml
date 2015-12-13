@@ -8,4 +8,5 @@ cache:
 
 script:
       - ./lxc-to-go.sh
+      - ./lxc-to-go-provisioning.sh
 
