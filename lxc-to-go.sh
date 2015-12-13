@@ -210,7 +210,7 @@ cleanlxcportforwarding() {
 checkhard lxc-to-go clean up portforwarding
 }
 
-#// FUNCTION: set up lxc portforwarding (Version 1.0)
+#// FUNCTION: set up lxc portforwarding (Version 1.2)
 lxcportforwarding() {
    CHECKENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
    GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
