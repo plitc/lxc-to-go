@@ -10,5 +10,5 @@ cache:
 
 script:
       - sudo ./lxc-to-go.sh
-      - sudo (echo "proxy"; echo "eth0") | ./lxc-to-go.sh bootstrap
+      - (echo "proxy"; echo "eth0") | sudo ./lxc-to-go.sh bootstrap
 
