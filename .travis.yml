@@ -1,5 +1,5 @@
 
-sudo: true
+sudo: false
 language: shell
 
 cache:
