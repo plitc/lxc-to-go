@@ -10,7 +10,8 @@ cache:
 
 script:
       - sudo ./lxc-to-go.sh
-      - (echo "proxy"; echo "eth0") | sudo ./lxc-to-go.sh bootstrap
+      - (echo "proxy"; echo "eth0"; echo "y") | sudo ./lxc-to-go.sh bootstrap
+      - echo "--- --- --- --- --- --- --- --- ---"
       - dmesg
       - whoami
       - hostname
