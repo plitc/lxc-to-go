@@ -78,9 +78,10 @@ script:
         #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/eu.plitc.connect.dn42 /etc/lxc-to-go/hook_provisioning.sh
         #- sudo ./lxc-to-go-provisioning.sh -n dn42 -t deb8 -h yes -p 60012 -s yes
 
-      - echo "<  Travis CI - stage 10  >"
-      - sudo ./lxc-to-go.sh start
 
 
-      - echo "<  Travis CI - END  >"
+        #- echo "<  Travis CI - stage X  >"
+        #- sudo ./lxc-to-go.sh start
+
+        #- echo "<  Travis CI - END  >"
 
