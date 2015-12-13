@@ -9,11 +9,11 @@ cache:
       - lxc-to-go
 
 script:
+      - echo "< --- --- --- Travis CI - stage 1 --- --- --- >"
       - sudo ./lxc-to-go.sh
+      - echo "< --- --- --- Travis CI - stage 2 --- --- --- >"
       - (echo "proxy"; echo "eth0"; echo "y") | sudo ./lxc-to-go.sh bootstrap
-      - echo "--- --- --- --- --- --- --- --- ---"
-      - dmesg
-      - whoami
-      - hostname
-      - uname -a
+      - echo "< --- --- --- Travis CI - stage 3 --- --- --- >"
+      - sudo ./lxc-to-go-provisioning.sh -n test1 -t deb8 -h yes -p 60001 -s yes
+      - echo "< --- --- --- Travis CI - stage 4 --- --- --- >"
 
