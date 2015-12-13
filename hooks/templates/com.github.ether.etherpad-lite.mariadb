@@ -117,10 +117,10 @@ fi
 
 GETIPV4PORTINSIDEFIRST=$(RUN cat /root/PORT | awk -F"," '{print $1}')
 GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
-if [ "$GETIPV4PORTINSIDE" = "9001" ]
-then
-   : # dummy
-else
+### if [ "$GETIPV4PORTINSIDE" = "9001" ]
+### then
+###    : # dummy
+### else
    ETHERPADCONFIG="/var/lib/lxc/"$LXCCREATENAME"/rootfs/lxc-to-go/etherpad-lite/settings.json"
    if [ -e "$ETHERPADCONFIG" ]
    then
@@ -132,6 +132,14 @@ else
       fi
       if [ "$DEBVERSIONX" = "8" ]
       then
+         #// change database type
+         sed -i -e '38,42d' "$ETHERPADCONFIG"
+         CHECK LXC: remove dirtydb settings
+         sed -i '0,/user/s/root/lxc-to-go/' "$ETHERPADCONFIG"
+         CHECK LXC: set up mariadb-server user
+         sed -i '0,/password/s/""/"lxc-to-go"/' "$ETHERPADCONFIG"
+         CHECK LXC: set up mariadb-server user password
+         #
          RUN systemctl restart etherpad-lite.service; CHECK LXC: restarting etherpad-lite service
          echo "" # dummy
          echo "... restarting etherpad-lite.service ..."
@@ -141,7 +149,7 @@ LOL 6
          RUN systemctl status etherpad-lite.service; CHECK LXC: etherpad-lite service status
       fi
    fi
-fi
+### fi
 
 #/ --- info --- #/
 
