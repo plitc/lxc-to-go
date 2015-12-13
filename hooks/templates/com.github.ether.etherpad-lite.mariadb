@@ -133,7 +133,7 @@ GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
       if [ "$DEBVERSIONX" = "8" ]
       then
          #// change database type
-         sed -i -e '38,42d' "$ETHERPADCONFIG"
+         sed -i -e '38,42d;44d;52d' "$ETHERPADCONFIG"
          CHECK LXC: remove dirtydb settings
          sed -i '0,/user/s/root/lxc-to-go/' "$ETHERPADCONFIG"
          CHECK LXC: set up mariadb-server user
@@ -142,7 +142,7 @@ GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
          #
          RUN systemctl restart etherpad-lite.service; CHECK LXC: restarting etherpad-lite service
          echo "" # dummy
-         echo "... restarting etherpad-lite.service ..."
+         echo "... restarting etherpad-lite.service with mariadb backend ..."
          echo "" # dummy
          (sleep 120) & SPINNER $!
 LOL 6
