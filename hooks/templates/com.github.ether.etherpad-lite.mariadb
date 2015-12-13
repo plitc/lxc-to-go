@@ -77,9 +77,6 @@ RUN mysql -h localhost -uroot -plxc-to-go -e "GRANT ALL PRIVILEGES ON * . * TO '
 #// mariadb-server flush privileges
 RUN mysql -h localhost -uroot -plxc-to-go -e "FLUSH PRIVILEGES"; CHECK LXC: mariadb-server flush privileges
 
-exit 1
---- DEV
-
 #/ --- configuration --- #/
 
 DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
