@@ -216,19 +216,22 @@ TEMPLATESTATUS3=$(cat "$DIR"/hooks/template-status | sed -n '/FAIL/,//p' | grep 
 if [ "$GETTEMPLATE" = "$TEMPLATESTATUS1" ]; then
    echo "" # dummy
    echo "STATUS:"
-   printf "\033[1;32mBuilding process could be OK\033[0m\n"
+   printf "\033[1;32m Building process should be OK \033[0m\n"
+   printf "\033[1;32m (continuous integration tests based on: https://travis-ci.org/plitc/lxc-to-go) \033[0m\n"
 fi
 
 if [ "$GETTEMPLATE" = "$TEMPLATESTATUS2" ]; then
    echo "" # dummy
    echo "STATUS:"
-   printf "\033[1;33mBuilding process could be with warnings (please read the github.com/plitc/lxc-to-go README)\033[0m\n"
+   printf "\033[1;33m Building process could be with warnings \033[0m\n"
+   printf "\033[1;33m (please read the github.com/plitc/lxc-to-go README) \033[0m\n"
 fi
 
 if [ "$GETTEMPLATE" = "$TEMPLATESTATUS3" ]; then
    echo "" # dummy
    echo "STATUS:"
-   printf "\033[1;31mBuilding process could be faulty (please read the github.com/plitc/lxc-to-go README)\033[0m\n"
+   printf "\033[1;31m Building process could be faulty \033[0m\n"
+   printf "\033[1;31m (please read the github.com/plitc/lxc-to-go README) \033[0m\n"
 fi
 
 ### // TEMPLATE BUILD STATUS ###
