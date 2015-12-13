@@ -7,5 +7,5 @@ cache:
       - lxc-to-go
 
 script:
-      - ./lxc-to-go.sh bootstrap
+      - ./lxc-to-go.sh
 
