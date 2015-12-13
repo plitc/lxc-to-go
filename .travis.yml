@@ -73,10 +73,10 @@ script:
         #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.letsencrypt /etc/lxc-to-go/hook_provisioning.sh
         #- sudo ./lxc-to-go-provisioning.sh -n letsencrypt -t deb8 -h yes -p 60011 -s yes
 
-      - echo "<  Travis CI - stage 14  >"
-      - echo "Template - eu.plitc.connect.dn42"
-      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/eu.plitc.connect.dn42 /etc/lxc-to-go/hook_provisioning.sh
-      - sudo ./lxc-to-go-provisioning.sh -n dn42 -t deb8 -h yes -p 60012 -s yes
+        #- echo "<  Travis CI - stage 14  >"
+        #- echo "Template - eu.plitc.connect.dn42"
+        #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/eu.plitc.connect.dn42 /etc/lxc-to-go/hook_provisioning.sh
+        #- sudo ./lxc-to-go-provisioning.sh -n dn42 -t deb8 -h yes -p 60012 -s yes
 
       - echo "<  Travis CI - stage 10  >"
       - sudo ./lxc-to-go.sh start

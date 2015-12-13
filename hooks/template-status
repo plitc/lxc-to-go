@@ -11,7 +11,6 @@ org.openwrt.freeradius.anonymous-eap-ttls
 org.samba.simple
 com.gitlab.communityedition
 com.github.letsencrypt
-eu.plitc.connect.dn42
 
 WARNING
 
@@ -21,4 +20,5 @@ com.github.santex.flower
 FAIL
 
 com.github.santex.ai-microstructure
+eu.plitc.connect.dn42
 
