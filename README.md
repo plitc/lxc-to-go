@@ -362,6 +362,17 @@ Provisioning Template Support
    * (lxc-to-go-provisioning -n etherpad2 -t deb8 -h yes -p 9002 -s yes)
       * (works currently only with deb8 lxc)
 
+* [com.github.ether.etherpad-lite.mariadb-utf8mb4](https://github.com/ether/etherpad-lite)
+   * (lxc-to-go-provisioning -n etherpad3 -t deb8 -h yes -p 9003 -s yes)
+      * (works currently only with deb8 lxc)
+      * https://github.com/ether/etherpad-lite/wiki/How-to-use-Etherpad-Lite-with-MySQL
+
+```
+    ALTER DATABASE store CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+    USE store;
+    ALTER TABLE store CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+```
+
 * [org.samba.simple](https://www.samba.org)
    * (lxc-to-go-provisioning -n samba -t deb8 -h yes -p 135,136,137,138,139,445 -s yes)
       * (works currently only with deb8 lxc)
