@@ -9,6 +9,6 @@ cache:
       - lxc-to-go
 
 script:
-      - ./lxc-to-go.sh
-      - ./lxc-to-go.sh bootstrap
+      - sudo ./lxc-to-go.sh
+      - sudo ./lxc-to-go.sh bootstrap
 
