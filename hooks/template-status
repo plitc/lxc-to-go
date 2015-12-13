@@ -3,8 +3,13 @@ OK
 plain.provisioning
 plain.provisioning_x11gui
 plain.provisioning_x11gui_browser
-com.gitlab.communityedition
+com.github.ether.etherpad-lite.dirtydb
+com.github.ether.etherpad-lite.mariadb
+com.github.ether.etherpad-lite.mariadb-utf8mb4
+org.openwrt.freeradius.public
+org.openwrt.freeradius.anonymous-eap-ttls
 org.samba.simple
+com.gitlab.communityedition
 com.github.letsencrypt
 eu.plitc.connect.dn42
 
@@ -12,11 +17,6 @@ WARNING
 
 com.github.plitc.flower
 com.github.santex.flower
-org.openwrt.freeradius.public
-org.openwrt.freeradius.anonymous-eap-ttls
-com.github.ether.etherpad-lite.dirtydb
-com.github.ether.etherpad-lite.mariadb
-com.github.ether.etherpad-lite.mariadb-utf8mb4
 
 FAIL
 

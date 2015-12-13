@@ -9,38 +9,78 @@ cache:
       - lxc-to-go
 
 script:
-      - echo "< --- --- --- Travis CI - stage 1 --- --- --- >"
+      - echo "<  Travis CI - stage 1  >"
       - sudo ./lxc-to-go.sh
-      - echo "< --- --- --- Travis CI - stage 2 --- --- --- >"
+
+      - echo "<  Travis CI - stage 2  >"
       - (echo "proxy"; echo "eth0"; echo "y") | sudo ./lxc-to-go.sh bootstrap
-      - echo "< --- --- --- Travis CI - stage 3 --- --- --- >"
+
+      - echo "<  Travis CI - stage 3  >"
       - sudo ./lxc-to-go-provisioning.sh -n test0 -t deb8 -h yes -p 60000 -s yes
-      - echo "< --- --- --- Travis CI - stage 4 --- --- --- >"
+
+      - echo "<  Travis CI - stage 4  >"
       - echo "Template - plain.provisioning"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plain -t deb8 -h yes -p 60001 -s yes
-      - echo "< --- --- --- Travis CI - stage 5 --- --- --- >"
+
+      - echo "<  Travis CI - stage 5  >"
       - echo "Template - plain.provisioning_x11gui"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning_x11gui /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plainx11 -t deb8 -h yes -p 60002 -s yes
-      - echo "< --- --- --- Travis CI - stage 6 --- --- --- >"
+
+      - echo "<  Travis CI - stage 6  >"
       - echo "Template - plain.provisioning_x11gui_browser"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning_x11gui_browser /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plainx11brow -t deb8 -h yes -p 60003 -s yes
-      - echo "< --- --- --- Travis CI - stage 7 --- --- --- >"
+
+      - echo "<  Travis CI - stage 7  >"
       - echo "Template - com.github.ether.etherpad-lite.dirtydb"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.ether.etherpad-lite.dirtydb /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n etherpdirty -t deb8 -h yes -p 60004 -s yes
-      - echo "< --- --- --- Travis CI - stage 8 --- --- --- >"
+
+      - echo "<  Travis CI - stage 8  >"
       - echo "Template - com.github.ether.etherpad-lite.mariadb"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.ether.etherpad-lite.mariadb /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n etherpmaria -t deb8 -h yes -p 60005 -s yes
-      - echo "< --- --- --- Travis CI - stage 9 --- --- --- >"
+
+      - echo "<  Travis CI - stage 9  >"
       - echo "Template - com.github.ether.etherpad-lite.mariadb-utf8mb4"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.ether.etherpad-lite.mariadb-utf8mb4 /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n etherpmariaf8 -t deb8 -h yes -p 60006 -s yes
-      - echo "< --- --- --- Travis CI - stage 10 --- --- --- >"
-      - echo "" # dummy
+
+      - echo "<  Travis CI - stage 10  >"
+      - echo "Template - org.openwrt.freeradius.public"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/org.openwrt.freeradius.public /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n freerad -t deb8 -h yes -p 60007 -s yes
+
+      - echo "<  Travis CI - stage 11  >"
+      - echo "Template - org.openwrt.freeradius.anonymous-eap-ttls"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/org.openwrt.freeradius.anonymous-eap-ttls /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n freeradeap -t deb8 -h yes -p 60008 -s yes
+
+      - echo "<  Travis CI - stage 12  >"
+      - echo "Template - org.samba.simple"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/org.samba.simple /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n samba -t deb8 -h yes -p 60009 -s yes
+
+      - echo "<  Travis CI - stage 13  >"
+      - echo "Template - com.gitlab.communityedition"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.gitlab.communityedition /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n gitlab -t deb8 -h yes -p 60010 -s yes
+
+      - echo "<  Travis CI - stage 14  >"
+      - echo "Template - com.github.letsencrypt"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.github.letsencrypt /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n letsencrypt -t deb8 -h yes -p 60011 -s yes
+
+      - echo "<  Travis CI - stage 14  >"
+      - echo "Template - eu.plitc.connect.dn42"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/eu.plitc.connect.dn42 /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n dn42 -t deb8 -h yes -p 60012 -s yes
+
+      - echo "<  Travis CI - stage 10  >"
       - sudo ./lxc-to-go.sh start
-      - echo "< --- --- --- Travis CI - - END - --- --- --- >"
+
+
+      - echo "<  Travis CI - END  >"
 
