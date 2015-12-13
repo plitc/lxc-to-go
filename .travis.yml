@@ -16,16 +16,19 @@ script:
       - echo "< --- --- --- Travis CI - stage 3 --- --- --- >"
       - sudo ./lxc-to-go-provisioning.sh -n test0 -t deb8 -h yes -p 60000 -s yes
       - echo "< --- --- --- Travis CI - stage 4 --- --- --- >"
-      - echo "BUILD: plain.provisioning"
+      - echo "Template - plain.provisioning"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plain -t deb8 -h yes -p 60001 -s yes
       - echo "< --- --- --- Travis CI - stage 5 --- --- --- >"
-      - echo "BUILD: plain.provisioning_x11gui"
+      - echo "Template - plain.provisioning_x11gui"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning_x11gui /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plainx11 -t deb8 -h yes -p 60002 -s yes
       - echo "< --- --- --- Travis CI - stage 6 --- --- --- >"
-      - echo "BUILD: plain.provisioning_x11gui_browser"
+      - echo "Template - plain.provisioning_x11gui_browser"
       - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/plain.provisioning_x11gui_browser /etc/lxc-to-go/hook_provisioning.sh
       - sudo ./lxc-to-go-provisioning.sh -n plainx11brow -t deb8 -h yes -p 60003 -s yes
       - echo "< --- --- --- Travis CI - stage 7 --- --- --- >"
+      - echo "" # dummy
+      - sudo ./lxc-to-go.sh start
+      - echo "< --- --- --- Travis CI - - END - --- --- --- >"
 
