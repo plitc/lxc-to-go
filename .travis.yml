@@ -1,5 +1,5 @@
 
-sudo: false
+sudo: true
 language: shell
 
 cache:
@@ -8,5 +8,4 @@ cache:
 
 script:
       - ./lxc-to-go.sh
-      - ./lxc-to-go-provisioning.sh
 
