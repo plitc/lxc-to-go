@@ -155,9 +155,9 @@ GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
          #// db fixes
          RUN systemctl stop etherpad-lite.service; CHECK LXC: stopping etherpad-lite service
          #// mariadb-server database utf8mb4
-         RUN mysql -h localhost -uroot -plxc-to-go -e "ALTER DATABASE store CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"; CHECK LXC: mariadb-server database utf8mb4
+         RUN mysql -h localhost -uroot -plxc-to-go -e "ALTER DATABASE store CHARACTER SET utf8mb4 COLLATE utf8mb4_bin"; CHECK LXC: mariadb-server database utf8mb4 fix
          #// mariadb-server table utf8mb4
-         RUN /bin/sh -c ' mysql -h localhost -uroot -plxc-to-go -e "USE store; ALTER TABLE store CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin" '; CHECK LXC: mariadb-server table utf8mb4
+         RUN /bin/sh -c ' mysql -h localhost -uroot -plxc-to-go -e "USE store; ALTER TABLE store CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin" '; CHECK LXC: mariadb-server table utf8mb4 fix
          sleep 1
          #
          RUN systemctl restart etherpad-lite.service; CHECK LXC: restarting etherpad-lite service
