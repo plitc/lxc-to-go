@@ -64,12 +64,12 @@ then
    RUN systemctl enable docker; CHECK LXC: enable docker service
 fi
 
-LOL 6
+LOL 5
 
 #// docker test
 #RUN docker run hello-world; CHECK LXC: testing docker
 
-LOL 7
+LOL 6
 
 #// configure docker
 RUN /bin/sh -c ' echo "### lxc-to-go // ###" >> /etc/default/docker '; CHECK LXC: change the docker configuration - stage 1
@@ -77,9 +77,9 @@ RUN /bin/sh -c ' echo "DOCKER_OPTS=\"-e lxc -G lxc-to-go --ipv6=true\"" >> /etc/
 RUN /bin/sh -c ' echo "### // lxc-to-go ###" >> /etc/default/docker '; CHECK LXC: change the docker configuration - stage 3
 
 #// configure systemd unit
-RUN sed -i 's/fd:\/\//fd:\/\/ $DOCKER_OPTS/g' /lib/systemd/system/docker.service
+RUN sed -i 's/fd:\/\//fd:\/\/ $DOCKER_OPTS/g' /lib/systemd/system/docker.service; CHECK LXC: change the docker systemd unit
 
-LOL 8
+LOL 7
 
 #/ force reboot for lxc.mount changes
 #/RUN poweroff

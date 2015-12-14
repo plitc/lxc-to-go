@@ -1281,26 +1281,37 @@ then
 fi
 checkhard optional: powerpc / travis-ci environment configcheck
 
-##/ check ip_tables/ip6_tables kernel module
+##/ check ip_tables/ip6_tables and nf_nat (for docker lxc) kernel modules
 
-if [ "$CHECKLXCINSIDELXC" = "1" ]; then
+if [ "$CHECKLXCINSIDELXC" = "1" ]
+then
    : ### LXC inside LXC ###
 else
-   CHECKIPTABLES=$(lsmod | awk '{print $1}' | grep -c "ip_tables")
-   if [ "$CHECKIPTABLES" = "1" ]; then
+   CHECKIPTABLES=$(lsmod | awk '{print $1}' | grep -sc "ip_tables")
+   if [ "$CHECKIPTABLES" = "1" ]
+   then
       : # dummy
    else
       modprobe ip_tables
    fi
 
-   CHECKIP6TABLES=$(lsmod | awk '{print $1}' | grep -c "ip6_tables")
-   if [ "$CHECKIP6TABLES" = "1" ]; then
+   CHECKIP6TABLES=$(lsmod | awk '{print $1}' | grep -sc "ip6_tables")
+   if [ "$CHECKIP6TABLES" = "1" ]
+   then
       : # dummy
    else
       modprobe ip6_tables
    fi
+
+   CHECKNFNAT=$(lsmod | awk '{print $1}' | grep -sc "nf_nat")
+   if [ "$CHECKNFNAT" = "0" ]
+   then
+      modprobe nf_nat nf_nat_ipv4 nt_nat_ip6 nf_nat_masquerade_ipv4 nf_nat_masquerade_ipv6
+   else
+      : # dummy
+   fi
 fi
-checkhard modprobe: iptables
+checkhard modprobe: iptables/nf_nat
 
 CREATEBRIDGE0=$(ip a | grep -c "vswitch0:")
 if [ "$CREATEBRIDGE0" = "1" ]; then
