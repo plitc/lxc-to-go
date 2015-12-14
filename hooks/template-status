@@ -13,6 +13,7 @@ com.gitlab.communityedition
 com.github.letsencrypt
 com.docker
 com.docker_lxcdriver
+com.docker_x11gui
 
 WARNING
 

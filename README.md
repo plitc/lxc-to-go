@@ -391,10 +391,14 @@ Provisioning Template Support
 * [com.docker](https://docker.com/)
    * (lxc-to-go-provisioning -n docker -t deb8 -h yes -p 9999 -s yes)
       * (works currently only with deb8 lxc)
-      * (Docker WebGUI: docker run -d -p 9999:9999 --privileged -v /var/run/docker.sock:/var/run/docker.sock dockerui/dockerui)
+      * (Docker WebGUI: docker run -d -p 9999:9999 -v /var/run/docker.sock:/var/run/docker.sock dockerui/dockerui)
 
 * [com.docker.lxcdriver](https://docker.com/)
    * (lxc-to-go-provisioning -n dockerlxc -t deb8 -h yes -p 9998 -s yes)
+      * (works currently only with deb8 lxc)
+
+* [com.docker.x11gui](https://docker.com/)
+   * (lxc-to-go-provisioning -n dockerx11gui -t deb8 -h yes -p 9995 -s yes)
       * (works currently only with deb8 lxc)
 
 Diagram
