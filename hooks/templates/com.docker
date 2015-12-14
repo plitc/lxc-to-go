@@ -9,8 +9,11 @@ echo "<--- --- --- provisioning hooks // --- --- --->"
 #// version: 1.0
 
 ### LXC Config // ###
-#/echo "###" >> /var/lib/lxc/"$LXCCREATENAME"/config
+#// lxc.cgroup.devices.allow = a
+sed -i '/lxc.cgroup/d' /var/lib/lxc/"$LXCCREATENAME"/config
 ### // LXC Config ###
+
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
@@ -30,7 +33,6 @@ RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 581
 
 LOL 3
 
-DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSIONX" = "7" ]
 then
    RUN /bin/sh -c ' echo "deb https://apt.dockerproject.org/repo debian-wheezy main" > /etc/apt/sources.list.d/docker.list '; CHECK LXC: add the docker repository
@@ -52,7 +54,11 @@ LOL 4
 #// installing docker
 RUN apt-get -y install docker-engine; CHECK LXC: installing docker
 RUN service docker start; CHECK LXC: starting docker service
-RUN service docker enable; CHECK LXC: enable docker service
+
+if [ "$DEBVERSIONX" = "8" ]
+then
+   RUN systemctl enable docker; CHECK LXC: enable docker service
+fi
 
 LOL 6
 
