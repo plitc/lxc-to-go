@@ -12,7 +12,7 @@ org.samba.simple
 com.gitlab.communityedition
 com.github.letsencrypt
 com.docker
-com.docker.lxcdriver
+com.docker_lxcdriver
 
 WARNING
 
