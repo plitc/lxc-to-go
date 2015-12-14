@@ -392,6 +392,10 @@ Provisioning Template Support
    * (lxc-to-go-provisioning -n docker -t deb8 -h yes -p 9999 -s yes)
       * (works currently only with deb8 lxc)
 
+* [com.docker.lxcdriver](https://docker.com/)
+   * (lxc-to-go-provisioning -n dockerlxc -t deb8 -h yes -p 9998 -s yes)
+      * (works currently only with deb8 lxc)
+
 Diagram
 =======
 * lxc-to-go LXC inside LXC Support
