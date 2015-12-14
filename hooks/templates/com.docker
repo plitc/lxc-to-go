@@ -40,7 +40,7 @@ then
    RUN /bin/sh -c ' echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list '; CHECK LXC: add the docker repository
 fi
 
-RUN apt-get -y install apt-transport-https
+RUN apt-get -y install apt-transport-https; CHECK LXC: installing apt-transport-https
 RUN apt-get -y update; CHECK LXC: apt-get update
 
 #// verify the new docker repository
