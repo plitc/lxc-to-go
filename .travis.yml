@@ -15,8 +15,8 @@ script:
       - echo "<  Travis CI - stage 2  >"
       - (echo "proxy"; echo "eth0"; echo "y") | sudo ./lxc-to-go.sh bootstrap
 
-        #- echo "<  Travis CI - stage 3  >"
-        #- sudo ./lxc-to-go-provisioning.sh -n test0 -t deb8 -h yes -p 60000 -s yes
+      - echo "<  Travis CI - stage 3  >"
+      - sudo ./lxc-to-go-provisioning.sh -n test0 -t deb8 -h yes -p 60000 -s yes
 
         #- echo "<  Travis CI - stage 4  >"
         #- echo "Template - plain.provisioning"
@@ -80,8 +80,14 @@ script:
 
 
 
-        #- echo "<  Travis CI - stage X  >"
-        #- sudo ./lxc-to-go.sh start
+      - echo "<  Travis CI - stage X  >"
+      - sudo ./lxc-to-go.sh start
 
-        #- echo "<  Travis CI - END  >"
+      - echo "<  Travis CI - stage X  >"
+      - sudo ./lxc-to-go.sh stop
+
+      - echo "<  Travis CI - stage X  >"
+      - sudo ./lxc-to-go.sh shutdown
+
+      - echo "<  Travis CI - END  >"
 
