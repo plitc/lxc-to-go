@@ -1,0 +1,33 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
+
+# include functions
+. /etc/lxc-to-go/template.func.sh
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 1.0
+
+### LXC Config // ###
+#/echo "###" >> /var/lib/lxc/"$LXCCREATENAME"/config
+### // LXC Config ###
+
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
+
+LOL 1
+
+#// Users
+RUN apt-get -y install zsh; CHECK LXC: installing zsh
+RUN useradd -m -c "lxc-to-go" lxc-to-go; CHECK LXC: create user lxc-to-go
+RUN /bin/sh -c ' echo lxc-to-go:lxc-to-go | chpasswd '; CHECK LXC: set up lxc-to-go password
+RUN chsh -s /usr/bin/zsh lxc-to-go; CHECK LXC: configure zsh as default lxc-to-go shell
+
+LOL 2
+
+#// add docker repository
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D; CHECK LXC: add docker repository key
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF

@@ -78,6 +78,11 @@ script:
         #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/eu.plitc.connect.dn42 /etc/lxc-to-go/hook_provisioning.sh
         #- sudo ./lxc-to-go-provisioning.sh -n dn42 -t deb8 -h yes -p 60012 -s yes
 
+      - echo "<  Travis CI - stage 15  >"
+      - echo "Template - com.docker"
+      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker /etc/lxc-to-go/hook_provisioning.sh
+      - sudo ./lxc-to-go-provisioning.sh -n docker -t deb8 -h yes -p 60013 -s yes
+
 
 
       - echo "<  Travis CI - stage X  >"

@@ -11,6 +11,7 @@ org.openwrt.freeradius.anonymous-eap-ttls
 org.samba.simple
 com.gitlab.communityedition
 com.github.letsencrypt
+com.docker
 
 WARNING
 
