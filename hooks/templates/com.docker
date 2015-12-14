@@ -25,8 +25,26 @@ RUN chsh -s /usr/bin/zsh lxc-to-go; CHECK LXC: configure zsh as default lxc-to-g
 
 LOL 2
 
-#// add docker repository
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D; CHECK LXC: add docker repository key
+#// add the docker repository
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D; CHECK LXC: add the docker repository key
+
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]
+then
+   RUN echo "deb https://apt.dockerproject.org/repo debian-wheezy main" > /etc/apt/sources.list.d/docker.list; CHECK LXC: add the docker repository
+fi
+if [ "$DEBVERSIONX" = "8" ]
+then
+   RUN echo "deb https://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list; CHECK LXC: add the docker repository
+fi
+
+RUN apt-get -y update; CHECK LXC: apt-get update
+
+#// verify the new docker repository
+RUN apt-cache policy docker-engine; CHECK LXC: verify the new docker repository
+RUN apt-get -y upgrade; CHECK LXC: apt-get upgrade
+
+LOL 3
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
