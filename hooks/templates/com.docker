@@ -10,7 +10,11 @@ echo "<--- --- --- provisioning hooks // --- --- --->"
 
 ### LXC Config // ###
 #// lxc.cgroup.devices.allow = a
-sed -i '/lxc.cgroup/d' /var/lib/lxc/"$LXCCREATENAME"/config
+sed -i '/lxc.cgroup/d' /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set less secure capabilities for docker - stage 1
+#
+sed -i '/lxc.cap.drop = sys_pacct/d' /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set less secure capabilities for docker - stage 2
+sed -i '/lxc.cap.drop = sys_rawio/d' /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set less secure capabilities for docker - stage 3
+sed -i '/lxc.cap.drop = sys_tty_config/d' /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set less secure capabilities for docker - stage 4
 ### // LXC Config ###
 
 DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
