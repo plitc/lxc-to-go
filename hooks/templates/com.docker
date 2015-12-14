@@ -73,8 +73,11 @@ LOL 7
 
 #// configure docker
 RUN /bin/sh -c ' echo "### lxc-to-go // ###" >> /etc/default/docker '; CHECK LXC: change the docker configuration - stage 1
-RUN /bin/sh -c ' echo "DOCKER_OPTS=\"--group=lxc-to-go --ipv6=true\"" >> /etc/default/docker '; CHECK LXC: change the docker configuration - stage 2
+RUN /bin/sh -c ' echo "DOCKER_OPTS=\"-e lxc -G lxc-to-go --ipv6=true\"" >> /etc/default/docker '; CHECK LXC: change the docker configuration - stage 2
 RUN /bin/sh -c ' echo "### // lxc-to-go ###" >> /etc/default/docker '; CHECK LXC: change the docker configuration - stage 3
+
+#// configure systemd unit
+RUN sed -i 's/fd:\/\//fd:\/\/ $DOCKER_OPTS/g' /lib/systemd/system/docker.service
 
 LOL 8
 
