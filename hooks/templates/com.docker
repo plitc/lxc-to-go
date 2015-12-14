@@ -49,6 +49,18 @@ RUN apt-cache policy docker-engine; CHECK LXC: verify the new docker repository
 
 LOL 4
 
+#// installing docker
+RUN apt-get -y install docker-engine; CHECK LXC: installing docker
+RUN service docker start; CHECK LXC: starting docker service
+RUN service docker enable; CHECK LXC: enable docker service
+
+LOL 6
+
+#// docker test
+RUN docker run hello-world; CHECK LXC: testing docker
+
+LOL 7
+
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###
 # EOF
