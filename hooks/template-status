@@ -6,6 +6,7 @@ plain.provisioning_x11gui_browser
 com.github.ether.etherpad-lite.dirtydb
 com.github.ether.etherpad-lite.mariadb
 com.github.ether.etherpad-lite.mariadb-utf8mb4
+com.github.ether.etherpad-lite.release.dirtydb
 org.openwrt.freeradius.public
 org.openwrt.freeradius.anonymous-eap-ttls
 org.samba.simple

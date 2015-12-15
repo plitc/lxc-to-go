@@ -1,0 +1,149 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
+
+# include functions
+. /etc/lxc-to-go/template.func.sh
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 1.2
+
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
+
+LOL 1
+
+RUN apt-get -y install screen; CHECK LXC: installing screen
+RUN apt-get -y install vim; CHECK LXC: installing vim
+RUN apt-get -y install gzip git curl python libssl-dev pkg-config build-essential; CHECK LXC: installing gzip git curl python libssl-dev pkg-config build-essential
+
+#// for AMD64 or PowerPC Environment
+CHECKYABOOT01=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+if [ -z "$CHECKYABOOT01" ]
+then
+   #// amd64
+   RUN apt-get -y install nodejs npm; CHECK LXC: installing nodejs npm
+else
+   #// powerpc
+   RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/v8ppc.git; cd /root/v8ppc; ./configure; make install '; CHECK
+   RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; CHECK
+   RUN apt-get -y install npm; CHECK
+fi
+CHECK LXC: configure amd64 or powerpc environment dependencies
+
+### FIX // ###
+RUN ln -s /usr/bin/nodejs /usr/bin/node; CHECK LXC: symlink for nodejs
+### // FIX ###
+
+LOL 2
+
+#/ --- etherpad-lite --- #/
+
+RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git '; CHECK LXC: git clone etherpad-lite
+
+LOL 3
+
+#// checkout latest tag
+RUN /bin/sh -c ' cd /root/etherpad-lite; git describe --tags | cut -d "-" -f1 | xargs -L 1 -I % git checkout % '; CHECK LXC: git checkout latest tag for etherpad-lite
+
+LOL 3.1
+
+RUN useradd etherpad-lite; CHECK LXC: useradd etherpad-lite
+RUN mkdir -p /home/etherpad-lite; CHECK LXC: make directory /home/etherpad-lite
+RUN chown -R etherpad-lite:etherpad-lite /home/etherpad-lite; CHECK LXC: change owner for /home/etherpad-lite
+
+RUN mkdir -p /lxc-to-go; CHECK LXC: make directory /lxc-to-go
+RUN mv -f /root/etherpad-lite /lxc-to-go; CHECK LXC: move etherpad-lite to /lxc-to-go
+RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK LXC: change owner for /lxc-to-go
+
+#/ --- configuration --- #/
+
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]; then
+   : # dummy
+fi
+if [ "$DEBVERSIONX" = "8" ]; then
+   #// systemd service file
+   RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 1
+   RUN /bin/sh -c ' echo "[Unit]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 2
+   RUN /bin/sh -c ' echo "Description=Run Etherpad-lite, the collaborative editor." >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 3
+   RUN /bin/sh -c ' echo "After=syslog.target network.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 4
+   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 5
+   RUN /bin/sh -c ' echo "[Service]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 6
+   RUN /bin/sh -c ' echo "Type=simple" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 7
+#/RUN /bin/sh -c ' echo "ExecStart=/bin/su -m etherpad-lite -c \"/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &\"" >> /lib/systemd/system/etherpad-lite.service '; CHECK
+   #/RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh --root 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 8
+   RUN /bin/sh -c ' echo "ExecStart=/lxc-to-go/etherpad-lite/bin/run.sh 2>$1 < /dev/null &" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 8
+   RUN /bin/sh -c ' echo "User=etherpad-lite" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 9
+   RUN /bin/sh -c ' echo "" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 10
+   RUN /bin/sh -c ' echo "[Install]" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 11
+   RUN /bin/sh -c ' echo "WantedBy=multi-user.target" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 12
+   RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 13
+   RUN /bin/sh -c ' echo "# EOF" >> /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 14
+LOL 4
+   RUN systemctl daemon-reload; CHECK LXC: systemd daemon-reload
+   RUN systemctl enable etherpad-lite.service; CHECK LXC: enable etherpad-lite service
+   RUN systemctl start etherpad-lite.service; CHECK LXC: starting etherpad-lite service
+   echo "" # dummy
+   echo "... starting etherpad-lite.service ..."
+   echo "" # dummy
+   (sleep 120) & SPINNER $!
+LOL 5
+   RUN systemctl status etherpad-lite.service; CHECK LXC: etherpad-lite service status
+fi
+
+#/ --- restart for port change --- #/
+
+GETIPV4PORTINSIDEFIRST=$(RUN cat /root/PORT | awk -F"," '{print $1}')
+GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
+if [ "$GETIPV4PORTINSIDE" = "9001" ]
+then
+   : # dummy
+else
+   ETHERPADCONFIG="/var/lib/lxc/"$LXCCREATENAME"/rootfs/lxc-to-go/etherpad-lite/settings.json"
+   if [ -e "$ETHERPADCONFIG" ]
+   then
+      sed -i 's/9001/'"$GETIPV4PORTINSIDEFIRST"'/g' "$ETHERPADCONFIG"
+      CHECK LXC: change etherpad-lite port to "$GETIPV4PORTINSIDEFIRST"
+      if [ "$DEBVERSIONX" = "7" ]
+      then
+         : # dummy
+      fi
+      if [ "$DEBVERSIONX" = "8" ]
+      then
+         RUN systemctl restart etherpad-lite.service; CHECK LXC: restarting etherpad-lite service
+         echo "" # dummy
+         echo "... restarting etherpad-lite.service ..."
+         echo "" # dummy
+         (sleep 120) & SPINNER $!
+LOL 6
+         RUN systemctl status etherpad-lite.service; CHECK LXC: etherpad-lite service status
+      fi
+   fi
+fi
+
+#/ --- info --- #/
+
+GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+GETHOSTBRIDGEIP4=$(ip addr show vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETHOSTPROXYIP4=$(ip addr show "$GETINTERFACE" | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+
+echo ""
+if [ "$GETENVIRONMENT" = "bridge" ]
+then
+   echo "IP: (external)    $GETHOSTBRIDGEIP4"
+fi
+if [ "$GETENVIRONMENT" = "proxy" ]
+then
+   echo "IP: (external)    $GETHOSTPROXYIP4"
+fi
+echo "IP: (internal)    192.168.253.254"
+echo "IP: (internal)    lxc-to-go"
+echo "Port: (bind on)   $GETIPV4PORTINSIDEFIRST"
+echo "Ports:            $GETIPV4PORTINSIDE"
+echo ""
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
