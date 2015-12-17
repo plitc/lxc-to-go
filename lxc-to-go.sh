@@ -4111,14 +4111,32 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 
 ### ### ###
 
+if [ "$DEBVERSION" = "8" ]
+then
+   : # dummy
+else
+   if [ "$DEBTESTVERSION" = "1" ]
+   then
+      : # dummy
+   else
+      echo "[ERROR] We currently only support: Debian 8,9 (testing) for Security Improvements!"
+      exit 0
+   fi
+fi
+checkhiddenhard lxc-to-go environment - stage 4
+
 #// feature: unprivileged containers
 #// Unprivileged Containers
-printf "\033[1;33m Unprivileged Containers \033[0m\n"
+echo "Feature: $(printf "\033[1;33mUnprivileged Containers\033[0m\n")"
 echo "" # dummy
 echo "I mention that LXC should be considered unsafe because while running in a separate namespace, uid 0 in your container is still equal to uid 0 outside of the container, meaning that if you somehow get access to any host resource through proc, sys or some random syscalls, you can potentially escape the container and then you’ll be root on the host."
 echo "" # dummy
 echo "We try now to configure a safe unprivileged containers environment"
-read -p "continue: (yes/no) ? " UNPRIVILEGED
+read -p "continue: (yes/no/skip) ? " UNPRIVILEGED
+if [ "$UNPRIVILEGED" = "skip" ]
+then
+   : # dummy
+fi
 if [ "$UNPRIVILEGED" = "no" ]
 then
    echo "" # dummy
@@ -4134,11 +4152,11 @@ fi
 if [ "$UNPRIVILEGED" = "yes" ]
 then
 ### Unprivileged Containers //
-   CHECKUNPRIVILEGEDMANAGED=$(grep -sc "lxc.id_map" /var/lib/lxc/managed/config)
-   if [ "$CHECKUNPRIVILEGEDMANAGED" = "0" ]
-   then
-      : # dummy
-   else
+###   CHECKUNPRIVILEGEDMANAGED=$(grep -sc "lxc.id_map" /var/lib/lxc/managed/config)
+###   if [ "$CHECKUNPRIVILEGEDMANAGED" != "0" ]
+###   then
+###      : # dummy
+###   else
       echo "" # dummy
       printf "\033[1;33m Unprivileged Containers appears to be correctly configured \033[0m\n"
       echo "" # dummy
@@ -4159,12 +4177,145 @@ then
       if [ "$UNPRIVILEGEDRECONFIGURE" = "yes" ]
       then
 ### Unprivileged Containers - stage 1 //
-         : # dummy
+         #// clear old lxc: managed modification
+         sed -i "/unprivileged containers/d" /var/lib/lxc/managed/config
+         checkhard LXC: remove old managed modifications - stage 1
+         sed -i "/lxc.id_map/d" /var/lib/lxc/managed/config
+         checkhard LXC: remove old managed modifications - stage 2
+         #// set new lxc: managed settings
+         echo "### unprivileged containers // ###" >> /var/lib/lxc/managed/config
+         checkhard LXC: add id_map settings for managed - stage 1
+         echo "lxc.id_map = u 0 100000 65537" >> /var/lib/lxc/managed/config
+         checkhard LXC: add id_map settings for managed - stage 2
+         echo "lxc.id_map = g 0 100000 65537" >> /var/lib/lxc/managed/config
+         checkhard LXC: add id_map settings for managed - stage 3
+         echo "### // unprivileged containers ###" >> /var/lib/lxc/managed/config
+         checkhard LXC: add id_map settings for managed - stage 4
+         #// allow lxcmanaged user to create veth bridge connections
+         echo "lxcmanaged veth vswitch0 1" > /etc/lxc/lxc-usernet
+         checkhard allow up to 99 veth bridge connections for user: lxcmanaged - stage 1
+         echo "lxcmanaged veth vswitch1 99" >> /etc/lxc/lxc-usernet
+         checkhard allow up to 99 veth bridge connections for user: lxcmanaged - stage 2
+         #// installing uidmap
+         UIDMAP=$(/usr/bin/dpkg -l | grep -sc " uidmap")
+         if [ "$UIDMAP" = "0" ]
+         then
+            echo "<--- --- --->"
+            echo "need uidmap"
+            echo "<--- --- --->"
+            apt-get update
+            apt-get -y install uidmap
+            echo "<--- --- --->"
+         fi
+         checkhard look over uidmap package
+         #// installing cgroup-bin
+         CGROUPBIN=$(/usr/bin/dpkg -l | grep -sc " cgroup-bin")
+         if [ "$CGROUPBIN" = "0" ]
+         then
+            echo "<--- --- --->"
+            echo "need cgroup-bin"
+            echo "<--- --- --->"
+            apt-get update
+            apt-get -y install cgroup-bin
+            echo "<--- --- --->"
+         fi
+         checkhard look over cgroup-bin package
+         #// installing libpam-systemd
+         LIBPAMSYSTEMD=$(/usr/bin/dpkg -l | grep -sc " libpam-systemd")
+         if [ "$LIBPAMSYSTEMD" = "0" ]
+         then
+            echo "<--- --- --->"
+            echo "need libpam-systemd"
+            echo "<--- --- --->"
+            apt-get update
+            apt-get -y install libpam-systemd
+            echo "<--- --- --->"
+         fi
+         checkhard look over libpam-systemd package
+         #// create user & group lxcmanaged
+         CHECKUCGROUP=$(grep -scw "lxcmanaged" /etc/group)
+         if [ "$CHECKUCGROUP" = "0" ]
+         then
+            groupadd -g 65533 lxcmanaged
+         fi
+         checkhard create group: lxcmanaged with id: 65533
+         CHECKUCUSER=$(grep -scw "lxcmanaged" /etc/passwd)
+         if [ "$CHECKUCUSER" = "0" ]
+         then
+            useradd -m -c "lxcmanaged" -u 65533 -g lxcmanaged -s /bin/sh lxcmanaged
+         fi
+         checkhard create user: lxcmanaged with id: 65533
+         #// clean uid mapping
+         usermod --del-subuids 100000-165536 lxcmanaged
+         checksoft remove old subuid mapping for lxcmanaged
+         usermod --del-subgids 100000-165536 lxcmanaged
+         checksoft remove old subgid mapping for lxcmanaged
+         #// build uid mapping
+         usermod --add-subuids 100000-165536 lxcmanaged
+         checkhard add new subuid mapping for lxcmanaged
+         usermod --add-subgids 100000-165536 lxcmanaged
+         checkhard add new subgid mapping for lxcmanaged
+         #// show current subid
+         grep "lxcmanaged" /etc/sub* 2>/dev/null
+         checkhard show current subid
+         #// check uid mapping
+         CHECKUCSUBID=$(grep "lxcmanaged" /etc/sub* 2>/dev/null | grep -scw "100000:65537")
+         if [ "$CHECKUCSUBID" != "2" ]
+         then
+            echo "[$(printf "\033[1;31mFAILED\033[0m\n")] subid mismatch for user: lxcmanaged"
+            #// disaster config recovery
+            sed -i "/unprivileged containers/d" /var/lib/lxc/managed/config
+            sed -i "/lxc.id_map/d" /var/lib/lxc/managed/config
+            exit 1
+         fi
+         #// lxcmanaged home directory
+         chmod +x /home/lxcmanaged
+         checkhard set lxcmanaged home directory permissions
+         #// transmit the lxc structure
+         mkdir -p /home/lxcmanaged/.config/lxc
+         checkhard create directory home/lxcmanaged/.config/lxc
+         mkdir -p /home/lxcmanaged/.local/share
+         checkhard create directory home/lxcmanaged/.local/share
+         mkdir -p /home/lxcmanaged/.cache
+         checkhard create directory home/lxcmanaged/.cache
+         chown -R lxcmanaged:lxcmanaged /home/lxcmanaged
+         checkhard set permissions on home/lxcmanaged
+            #// lxc configs
+            ln -sf /etc/lxc/lxc.conf /home/lxcmanaged/.config/lxc/lxc.conf
+            checkhard create symbolic link for etc/lxc/lxc.conf
+            ln -sf /etc/lxc/default.conf /home/lxcmanaged/.config/lxc/default.conf
+            checkhard create symbolic link for etc/lxc/default.conf
+            ln -sf /etc/lxc/fstab.empty /home/lxcmanaged/.config/lxc/fstab.empty
+            checkhard create symbolic link for etc/lxc/fstab.empty
+            ln -sf /etc/lxc/lxc-usernet /home/lxcmanaged/.config/lxc/lxc-usernet
+            checkhard create symbolic link for etc/lxc/lxc-usernet
+            #// lxc share
+            ln -sf /var/lib/lxc /home/lxcmanaged/.local/share/lxc
+            checkhard create symbolic link for var/lib/lxc
+            #// lxc snaps
+            #/ln -sf /var/lib/lxcsnaps /home/lxcmanaged/.local/share/lxcsnaps
+            #/checkhard create symbolic link for var/lib/lxcsnaps
+            #// lxc cache
+            ln -sf /var/cache/lxc /home/lxcmanaged/.cache
+            checkhard create symbolic link for var/cache/lxc
+         mkdir -p /home/lxcmanaged/.cache/lxc/run
+         checkhard create directory home/lxcmanaged/.cache/lxc/run
+         chown -R lxcmanaged:lxcmanaged /home/lxcmanaged/.cache/lxc/run
+         checkhard set permissions on home/lxcmanaged/.cache/lxc/run
+### debug selftest //
+CHECKUCCGROUPCOUNTER=$(/usr/bin/sudo /bin/su -s /bin/sh -c ' grep -sc "user" /proc/self/cgroup ' lxcmanaged)
+### // debug selftest
+
+
+echo "" # fuubar
+echo "" # fuubar
+echo "" # fuubar
+
 ### // Unprivileged Containers - stage 1
       fi
-   fi
-fi
+###   fi
 checksoft LXC: Unprivileged Containers
+fi
 ### // Unprivileged Containers
 
 checkhard lxc-to-go additional security
