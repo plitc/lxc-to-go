@@ -78,20 +78,23 @@ script:
         #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/eu.plitc.connect.dn42 /etc/lxc-to-go/hook_provisioning.sh
         #- sudo ./lxc-to-go-provisioning.sh -n dn42 -t deb8 -h yes -p 60012 -s yes
 
-      - echo "<  Travis CI - stage 15  >"
-      - echo "Template - com.docker"
-      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker /etc/lxc-to-go/hook_provisioning.sh
-      - sudo ./lxc-to-go-provisioning.sh -n docker -t deb8 -h yes -p 60013 -s yes
+        #- echo "<  Travis CI - stage 15  >"
+        #- echo "Template - com.docker"
+        #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker /etc/lxc-to-go/hook_provisioning.sh
+        #- sudo ./lxc-to-go-provisioning.sh -n docker -t deb8 -h yes -p 60013 -s yes
 
-      - echo "<  Travis CI - stage 16  >"
-      - echo "Template - com.docker_lxcdriver"
-      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker_lxcdriver /etc/lxc-to-go/hook_provisioning.sh
-      - sudo ./lxc-to-go-provisioning.sh -n dockerlxc -t deb8 -h yes -p 60014 -s yes
+        #- echo "<  Travis CI - stage 16  >"
+        #- echo "Template - com.docker_lxcdriver"
+        #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker_lxcdriver /etc/lxc-to-go/hook_provisioning.sh
+        #- sudo ./lxc-to-go-provisioning.sh -n dockerlxc -t deb8 -h yes -p 60014 -s yes
 
-      - echo "<  Travis CI - stage 17  >"
-      - echo "Template - com.docker_x11gui"
-      - sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker_x11gui /etc/lxc-to-go/hook_provisioning.sh
-      - sudo ./lxc-to-go-provisioning.sh -n dockerx11gui -t deb8 -h yes -p 60015 -s yes
+        #- echo "<  Travis CI - stage 17  >"
+        #- echo "Template - com.docker_x11gui"
+        #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker_x11gui /etc/lxc-to-go/hook_provisioning.sh
+        #- sudo ./lxc-to-go-provisioning.sh -n dockerx11gui -t deb8 -h yes -p 60015 -s yes
+
+      - echo "<  Travis CI - stage 18  >"
+      - (echo "yes"; echo "yes") | sudo ./lxc-to-go.sh security
 
 
 

@@ -4080,7 +4080,7 @@ if [ -z "$CHECKLXCINSTALL4" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go environment - stage 1
+checkhiddenhard lxc-to-go environment - stage 1
 
 DIALOG=$(/usr/bin/which dialog)
 if [ -z "$DIALOG" ]; then
@@ -4091,7 +4091,7 @@ if [ -z "$DIALOG" ]; then
    apt-get -y install dialog
    echo "<--- --- --->"
 fi
-checkhard lxc-to-go environment - stage 2
+checkhiddenhard lxc-to-go environment - stage 2
 #
 ### stage4 // ###
 #
@@ -4105,13 +4105,68 @@ else
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-checkhard lxc-to-go environment - stage 3
+checkhiddenhard lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
 ### ### ###
 
-echo "coming soon"; return 1
+#// feature: unprivileged containers
+#// Unprivileged Containers
+printf "\033[1;33m Unprivileged Containers \033[0m\n"
+echo "" # dummy
+echo "I mention that LXC should be considered unsafe because while running in a separate namespace, uid 0 in your container is still equal to uid 0 outside of the container, meaning that if you somehow get access to any host resource through proc, sys or some random syscalls, you can potentially escape the container and then you’ll be root on the host."
+echo "" # dummy
+echo "We try now to configure a safe unprivileged containers environment"
+read -p "continue: (yes/no) ? " UNPRIVILEGED
+if [ "$UNPRIVILEGED" = "no" ]
+then
+   echo "" # dummy
+   echo "[ABORT]"
+   exit 0
+fi
+if [ -z "$UNPRIVILEGED" ]
+then
+   echo "" # dummy
+   echo "[ABORT]"
+   exit 0
+fi
+if [ "$UNPRIVILEGED" = "yes" ]
+then
+### Unprivileged Containers //
+   CHECKUNPRIVILEGEDMANAGED=$(grep -sc "lxc.id_map" /var/lib/lxc/managed/config)
+   if [ "$CHECKUNPRIVILEGEDMANAGED" = "0" ]
+   then
+      : # dummy
+   else
+      echo "" # dummy
+      printf "\033[1;33m Unprivileged Containers appears to be correctly configured \033[0m\n"
+      echo "" # dummy
+      echo "Do you want reconfigure?"
+      read -p "reconfigure: (yes/no) ? " UNPRIVILEGEDRECONFIGURE
+      if [ "$UNPRIVILEGEDRECONFIGURE" = "no" ]
+      then
+         echo "" # dummy
+         echo "[ABORT]"
+         exit 0
+      fi
+      if [ -z "$UNPRIVILEGEDRECONFIGURE" ]
+      then
+         echo "" # dummy
+         echo "[ABORT]"
+         exit 0
+      fi
+      if [ "$UNPRIVILEGEDRECONFIGURE" = "yes" ]
+      then
+### Unprivileged Containers - stage 1 //
+         : # dummy
+### // Unprivileged Containers - stage 1
+      fi
+   fi
+fi
+checksoft LXC: Unprivileged Containers
+### // Unprivileged Containers
+
 checkhard lxc-to-go additional security
 
 ### ### ###
