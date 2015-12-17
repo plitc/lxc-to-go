@@ -3024,6 +3024,21 @@ fi
 ### // LXC-in-LXC Webpanel check // ###
 ### // LXC: managed Service State ###
 
+### Support for Unprivileged Containers // ##
+CHECKUCSUPPORT=$(grep -scw "lxc.id_map" /var/lib/lxc/*/config | egrep -cv ":0")
+if [ "$CHECKUCSUPPORT" != "0" ]
+then
+   echo 1 > /proc/sys/kernel/unprivileged_userns_clone
+fi
+checkhard optional: sysctl for unprivileged containers
+CHECKFUSE=$(/usr/bin/dpkg -l | grep -sc "ii  fuse ")
+if [ "$CHECKFUSE" = "1" ]
+then
+   modprobe fuse
+fi
+checkhard optional: load fuse module for unprivileged containers
+### // Support for Unprivileged Containers ###
+
 cleanup
 checkhard clean up tmp files
 ### ### ### ### ### ### ### ### ###
@@ -4232,6 +4247,18 @@ then
             echo "<--- --- --->"
          fi
          checkhard look over libpam-systemd package
+         #// installing fuse
+         FUSE=$(/usr/bin/dpkg -l | grep -sc " fuse ")
+         if [ "$FUSE" = "0" ]
+         then
+            echo "<--- --- --->"
+            echo "need fuse"
+            echo "<--- --- --->"
+            apt-get update
+            apt-get -y install fuse
+           echo "<--- --- --->"
+         fi
+         checkhard look over fuse package
          #// create user & group lxcmanaged
          CHECKUCGROUP=$(grep -scw "lxcmanaged" /etc/group)
          if [ "$CHECKUCGROUP" = "0" ]
@@ -4278,7 +4305,7 @@ then
          checkhard create directory home/lxcmanaged/.local/share
          mkdir -p /home/lxcmanaged/.cache
          checkhard create directory home/lxcmanaged/.cache
-         chown -R lxcmanaged:lxcmanaged /home/lxcmanaged
+         chown lxcmanaged:lxcmanaged /home/lxcmanaged
          checkhard set permissions on home/lxcmanaged
             #// lxc configs
             ln -sf /etc/lxc/lxc.conf /home/lxcmanaged/.config/lxc/lxc.conf
@@ -4290,7 +4317,13 @@ then
             ln -sf /etc/lxc/lxc-usernet /home/lxcmanaged/.config/lxc/lxc-usernet
             checkhard create symbolic link for etc/lxc/lxc-usernet
             #// lxc share
-            ln -sf /var/lib/lxc /home/lxcmanaged/.local/share/lxc
+            LOCALSHARELXC="/home/lxcmanaged/.local/share/lxc"
+            if [ -e "$LOCALSHARELXC" ]
+            then
+               : # dummy
+            else
+               ln -sf /var/lib/lxc /home/lxcmanaged/.local/share/lxc
+            fi
             checkhard create symbolic link for var/lib/lxc
             #// lxc snaps
             #/ln -sf /var/lib/lxcsnaps /home/lxcmanaged/.local/share/lxcsnaps
@@ -4300,12 +4333,72 @@ then
             checkhard create symbolic link for var/cache/lxc
          mkdir -p /home/lxcmanaged/.cache/lxc/run
          checkhard create directory home/lxcmanaged/.cache/lxc/run
-         chown -R lxcmanaged:lxcmanaged /home/lxcmanaged/.cache/lxc/run
+         chown lxcmanaged:lxcmanaged /home/lxcmanaged/.cache/lxc/run
          checkhard set permissions on home/lxcmanaged/.cache/lxc/run
 ### debug selftest //
-CHECKUCCGROUPCOUNTER=$(/usr/bin/sudo /bin/su -s /bin/sh -c ' grep -sc "user" /proc/self/cgroup ' lxcmanaged)
+#CHECKUCCGROUPCOUNTER=$(/usr/bin/sudo /bin/su -s /bin/sh -c ' grep -sc "user" /proc/self/cgroup ' lxcmanaged)
 ### // debug selftest
+         #// reorder lxc container permissions
+         chown lxcmanaged:lxcmanaged /var/lib/lxc/*
+         checkhard HOST: rearrange var/lib/lxc/containers file permissions - stage 1
+         chown lxcmanaged:lxcmanaged /var/lib/lxc/*/config
+         checkhard HOST: rearrange var/lib/lxc/containers file permissions - stage 2
+         chown lxcmanaged:lxcmanaged /var/lib/lxc/*/fstab
+         checkhard HOST: rearrange var/lib/lxc/containers file permissions - stage 3
+         chown lxcmanaged:lxcmanaged /var/lib/lxc/*/*.log
+         checkhard HOST: rearrange var/lib/lxc/containers file permissions - stage 4
+#
+### it's getting worse :(
+#
+            ### build environment for lxcfs //
+            #// create the build container
+            echo "$(echo "buildlxcfs"; echo "2"; echo "y"; echo "n")" | lxc-to-go create
+            checksoft HOST: create the build container for lxcfs
+            (sleep 15) & spinner $!
+            #// lxc system upgrade
+            lxc-attach -n buildlxcfs -- apt-get autoclean
+            checkhard LXC: apt-get autoclean
+            lxc-attach -n buildlxcfs -- apt-get clean
+            checkhard LXC: apt-get clean
+            lxc-attach -n buildlxcfs -- apt-get update
+            checkhard LXC: apt-get update
+            lxc-attach -n buildlxcfs -- apt-get -y upgrade
+            checkhard LXC: apt-get -y upgrade
+            #// HOST Testing Environment
+            if [ "$DEBTESTVERSION" = "1" ]
+            then
+               #// change apt sources to testing
+/bin/cat << "BUILDLXCFSAPTLIST" > /var/lib/lxc/buildlxcfs/rootfs/etc/apt/sources.list
+### ### ### PLITC ### ### ###
 
+deb http://ftp.de.debian.org/debian/ testing main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ testing main contrib non-free
+
+deb http://security.debian.org/ testing/updates main contrib non-free
+deb-src http://security.debian.org/ testing/updates main contrib non-free
+
+# testing-updates, previously known as 'volatile'
+deb http://ftp.de.debian.org/debian/ testing-updates main contrib non-free
+deb-src http://ftp.de.debian.org/debian/ testing-updates main contrib non-free
+
+### ### ### PLITC ### ### ###
+# EOF
+BUILDLXCFSAPTLIST
+               checkhard LXC: change apt sources to testing
+               #// apt-get update
+               lxc-attach -n buildlxcfs -- apt-get -y update
+               checkhard LXC: apt-get update
+               #// apt-get upgrade
+               lxc-attach -n buildlxcfs -- apt-get -y upgrade
+               checkhard LXC: apt-get upgrade
+               #// apt-get dist-upgrade
+               lxc-attach -n buildlxcfs -- apt-get -y dist-upgrade
+               checkhard LXC: apt-get dist-upgrade
+               #
+            fi
+            #
+
+         ### // build environment for lxcfs
 
 echo "" # fuubar
 echo "" # fuubar
