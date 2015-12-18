@@ -1,0 +1,265 @@
+#!/bin/sh
+### ### ### PLITC ### ### ###
+
+FWV4="/sbin/iptables"
+FWV6="/sbin/ip6tables"
+IF="wlp3s0"
+
+### ACCEPT // ###
+allow_all()
+{
+   ###/ v4
+   "$FWV4" -P INPUT ACCEPT
+   "$FWV4" -P FORWARD ACCEPT
+   "$FWV4" -P OUTPUT ACCEPT
+   ##/ v6
+   "$FWV6" -P INPUT ACCEPT
+   "$FWV6" -P FORWARD ACCEPT
+   "$FWV6" -P OUTPUT ACCEPT
+}
+### // ACCEPT ###
+
+
+### flush // ###
+flush_all()
+{
+   ##/ v4
+   "$FWV4" -F INPUT
+   "$FWV4" -F FORWARD
+   "$FWV4" -F OUTPUT
+   "$FWV4" -t nat -F PREROUTING
+   "$FWV4" -t nat -F POSTROUTING
+   ##/ v6
+   "$FWV6" -F INPUT
+   "$FWV6" -F FORWARD
+   "$FWV6" -F OUTPUT
+   "$FWV6" -t nat -F PREROUTING
+   "$FWV6" -t nat -F POSTROUTING
+}
+### // flush ###
+
+
+### ALLOW: loopback interface // ###
+allow_loopback()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -i lo -j ACCEPT
+   "$FWV4" -A OUTPUT -o lo -j ACCEPT
+   ##/ v6
+   "$FWV6" -A INPUT -i lo -j ACCEPT
+   "$FWV6" -A OUTPUT -o lo -j ACCEPT
+}
+### // ALLOW: loopback interface ###
+
+
+### ALLOW: from any to me DHCP // ###
+allow_dhcp()
+{
+   "$FWV4" -A INPUT -i "$IF" -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+   "$FWV4" -A OUTPUT -o "$IF" -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+}
+### // ALLOW: from any to me DHCP ###
+
+
+### ALLOW: Internet Protocol v6 ICMP // ###
+allow_icmpv6()
+{
+   "$FWV6" -N ICMPv6 > /dev/null 2>&1
+   "$FWV6" -A INPUT -i "$IF" -p icmpv6 -j ICMPv6
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type echo-request -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type destination-unreachable -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type packet-too-big -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type time-exceeded -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type parameter-problem -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type router-solicitation -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type router-advertisement -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type neighbour-solicitation -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type neighbour-advertisement -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type redirect -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 141 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 142 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 148 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 149 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 130 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 131 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 132 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 143 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 151 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 152 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -p icmpv6 --icmpv6-type 153 -s fe80::/10 -j ACCEPT
+   "$FWV6" -A ICMPv6 -j RETURN
+   "$FWV6" -A OUTPUT -o "$IF" -p icmpv6 -j ACCEPT
+}
+### // ALLOW: Internet Protocol v6 ICMP ###
+
+
+### ALLOW: from me to any SSH // ###
+allow_me_to_any_ssh()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -p tcp --sport 22 -m state --state ESTABLISHED,RELATED -j ACCEPT
+   "$FWV4" -A OUTPUT -p tcp --dport 22 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+   ##/ v6
+   "$FWV6" -A INPUT -p tcp --sport 22 -m state --state ESTABLISHED,RELATED -j ACCEPT
+   "$FWV6" -A OUTPUT -p tcp --dport 22 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+}
+### // ALLOW: from me to any SSH ###
+
+
+### ALLOW: from me to any SMB/CIFS // ###
+allow_smb_cifs()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -p tcp --sport 445 -m state --state ESTABLISHED,RELATED -j ACCEPT
+   "$FWV4" -A OUTPUT -p tcp --dport 445 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+   ##/ v6
+   "$FWV6" -A INPUT -p tcp --sport 445 -m state --state ESTABLISHED,RELATED -j ACCEPT
+   "$FWV6" -A OUTPUT -p tcp --dport 445 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+}
+### // ALLOW: from me to any SMB/CIFS ###
+
+
+### ALLOW: from any to any ICMP // ###
+allow_icmp()
+{
+   "$FWV4" -A INPUT -p icmp --icmp-type 0 -s 0/0 -d 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+   "$FWV4" -A INPUT -p icmp --icmp-type 8 -s 0/0 -d 0/0 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+   "$FWV4" -A OUTPUT -p icmp --icmp-type 0 -s 0/0 -d 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+   "$FWV4" -A OUTPUT -p icmp --icmp-type 8 -s 0/0 -d 0/0 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+   "$FWV4" -A OUTPUT -p icmp --icmp-type echo-request -j DROP
+}
+### // ALLOW: from any to any ICMP ###
+
+
+### ALLOW: ipsec encapsulation // ###
+allow_ipsec_encap()
+{
+   ##/ v4
+   ##/ IKE negotiations
+   "$FWV4" -A INPUT  -p udp --sport 500 --dport 500 -j ACCEPT
+   "$FWV4" -A OUTPUT -p udp --sport 500 --dport 500 -j ACCEPT
+   ##/ IKE negotiations over nat
+   "$FWV4" -A INPUT  -p udp --sport 4500 --dport 4500 -j ACCEPT
+   "$FWV4" -A OUTPUT -p udp --sport 4500 --dport 4500 -j ACCEPT
+   ##/ ESP encrypton and authentication
+   "$FWV4" -A INPUT  -p 50 -j ACCEPT
+   "$FWV4" -A OUTPUT -p 50 -j ACCEPT
+   ##/ uncomment for AH authentication header
+   #/ "$FWV4" -A INPUT  -p 51 -j ACCEPT
+   #/ "$FWV4" -A OUTPUT -p 51 -j ACCEPT
+   ##/ v6
+   ##/ IKE negotiations
+   "$FWV6" -A INPUT  -p udp --sport 500 --dport 500 -j ACCEPT
+   "$FWV6" -A OUTPUT -p udp --sport 500 --dport 500 -j ACCEPT
+   ##/ IKE negotiations over nat
+   #/ "$FWV4" -A INPUT  -p udp --sport 4500 --dport 4500 -j ACCEPT
+   #/ "$FWV4" -A OUTPUT -p udp --sport 4500 --dport 4500 -j ACCEPT
+   ##/ ESP encrypton and authentication
+   "$FWV6" -A INPUT  -p 50 -j ACCEPT
+   "$FWV6" -A OUTPUT -p 50 -j ACCEPT
+   ##/ uncomment for AH authentication header
+   #/ "$FWV4" -A INPUT  -p 51 -j ACCEPT
+   #/ "$FWV4" -A OUTPUT -p 51 -j ACCEPT
+}
+### // ALLOW: ipsec encapsulation ###
+
+### ALLOW: through ipsec // ###
+allow_ipsec()
+{
+   "$FWV4" -A INPUT -m policy --pol ipsec --dir in -j ACCEPT
+   "$FWV4" -A OUTPUT -m policy --pol ipsec --dir out -j ACCEPT
+}
+### // ALLOW: through ipsec ###
+
+### ALLOW: lxc-to-go traffic // ###
+allow_lxc_to_go()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -m state --state RELATED,ESTABLISHED -i "$IF" -d 192.168.253.0/24 -j ACCEPT
+   "$FWV4" -A INPUT -i vswitch0 -j ACCEPT
+   "$FWV4" -A INPUT -i vswitch1 -j ACCEPT
+   "$FWV4" -A FORWARD -m state --state RELATED,ESTABLISHED -i "$IF" -d 192.168.253.0/24 -j ACCEPT
+   "$FWV4" -A FORWARD -i vswitch0 -j ACCEPT
+   "$FWV4" -A FORWARD -i vswitch1 -j ACCEPT
+   "$FWV4" -A OUTPUT -m state --state NEW,RELATED,ESTABLISHED -o "$IF" -s 192.168.253.0/24 -j ACCEPT
+   "$FWV4" -A OUTPUT -o vswitch0 -j ACCEPT
+   "$FWV4" -A OUTPUT -o vswitch1 -j ACCEPT
+   ##/ v6
+   "$FWV6" -A INPUT -m state --state RELATED,ESTABLISHED -i "$IF" -d fd00:aaaa:253::253/64 -j ACCEPT
+   "$FWV6" -A INPUT -i vswitch0 -j ACCEPT
+   "$FWV6" -A INPUT -i vswitch1 -j ACCEPT
+   "$FWV6" -A FORWARD -m state --state RELATED,ESTABLISHED -i "$IF" -d fd00:aaaa:253::253/64 -j ACCEPT
+   "$FWV6" -A FORWARD -i vswitch0 -j ACCEPT
+   "$FWV6" -A FORWARD -i vswitch1 -j ACCEPT
+   "$FWV6" -A OUTPUT -m state --state NEW,RELATED,ESTABLISHED -o "$IF" -s fd00:aaaa:253::253/64 -j ACCEPT
+   "$FWV6" -A OUTPUT -o vswitch0 -j ACCEPT
+   "$FWV6" -A OUTPUT -o vswitch1 -j ACCEPT
+}
+### // ALLOW: lxc-to-go traffic ###
+
+### DROP: igmp // ###
+drop_igmp()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -p igmp -j DROP
+   "$FWV4" -A OUTPUT -p igmp -j DROP
+   ##/ v6
+   "$FWV6" -A INPUT -p igmp -j DROP
+   "$FWV6" -A OUTPUT -p igmp -j DROP
+}
+### // DROP: igmp ###
+
+### DROP: broadcast/multicast // ###
+drop_broadcast_multicast()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -s 224.0.0.0/4 -j DROP
+   "$FWV4" -A INPUT -d 224.0.0.0/4 -j DROP
+   "$FWV4" -A INPUT -s 240.0.0.0/5 -j DROP
+   "$FWV4" -A INPUT -m pkttype --pkt-type multicast -j DROP
+   "$FWV4" -A INPUT -m pkttype --pkt-type broadcast -j DROP
+   "$FWV4" -A OUTPUT -s 224.0.0.0/4 -j DROP
+   "$FWV4" -A OUTPUT -d 224.0.0.0/4 -j DROP
+   "$FWV4" -A OUTPUT -s 240.0.0.0/5 -j DROP
+   "$FWV4" -A OUTPUT -m pkttype --pkt-type multicast -j DROP
+   "$FWV4" -A OUTPUT -m pkttype --pkt-type broadcast -j DROP
+   ##/ v6
+   "$FWV6" -A INPUT -m pkttype --pkt-type multicast -j DROP
+   "$FWV6" -A OUTPUT -m pkttype --pkt-type multicast -j DROP
+}
+### // DROP: broadcast/multicast ###
+
+### DROP // ###
+drop_policy()
+{
+   ##/ v4
+   "$FWV4" -P INPUT DROP
+   "$FWV4" -P FORWARD DROP
+   "$FWV4" -P OUTPUT DROP
+   ##/ v6
+   "$FWV6" -P INPUT DROP
+   "$FWV6" -P FORWARD DROP
+   "$FWV6" -P OUTPUT DROP
+}
+### // DROP ###
+
+### ### ### ##### ### ### ###
+
+allow_all
+flush_all
+
+allow_loopback
+allow_dhcp
+allow_icmpv6
+allow_me_to_any_ssh
+allow_smb_cifs
+allow_icmp
+allow_ipsec_encap
+allow_ipsec
+allow_lxc_to_go
+drop_igmp
+drop_broadcast_multicast
+drop_policy
+
+### ### ### PLITC ### ### ###
+# EOF
