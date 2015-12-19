@@ -2421,8 +2421,8 @@ option domain-name-servers 192.168.254.254;                    # name servers is
 #/ do-forward-updates on;
 #/ ddns-rev-domainname "in-addr.arpa.";
 
-default-lease-time 86400;
-max-lease-time 604800;
+default-lease-time 3600;
+max-lease-time 3600;
 
 #/ key dhcp.domain.tld {
 #/     algorithm hmac-md5;
