@@ -47,9 +47,9 @@ LOL 3
 
 #// Users
 RUN apt-get -y install zsh; CHECK
-RUN useradd -m -c "lxc-to-go" lxctogo; CHECK
-RUN /bin/sh -c ' echo lxctogo:lxctogo | chpasswd '; CHECK
-RUN chsh -s /usr/bin/zsh lxctogo; CHECK
+RUN useradd -m -c "lxc-to-go" lxc-to-go; CHECK
+RUN /bin/sh -c ' echo lxc-to-go:lxc-to-go | chpasswd '; CHECK
+RUN chsh -s /usr/bin/zsh lxc-to-go; CHECK
 
 LOL 4
 
@@ -61,7 +61,7 @@ echo "lxc.hook.pre-start = /var/lib/lxc/$LXCCREATENAME/pulseaudio-helper.sh" >> 
 #!/bin/sh
 ### ### ### lxc-to-go // ### ### ###
 
-PULSE_PATH=/var/lib/lxc/CHANGEME/rootfs/home/lxctogo/.pulse_socket
+PULSE_PATH=/var/lib/lxc/CHANGEME/rootfs/home/lxc-to-go/.pulse_socket
 
 if [ ! -e "$PULSE_PATH" ] || [ -z "$(lsof -n $PULSE_PATH 2>&1)" ]; then
    pactl load-module module-native-protocol-unix auth-anonymous=1 \
@@ -76,9 +76,9 @@ CHECK
 
 sed -i 's/CHANGEME/'"$LXCCREATENAME"'/g' /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; CHECK
 chmod 0755 /var/lib/lxc/"$LXCCREATENAME"/pulseaudio-helper.sh; CHECK
-touch /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; CHECK
-chown 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxctogo/.pulse_socket; CHECK
-RUN /bin/sh -c ' usermod -a -G audio lxctogo '; CHECK
+touch /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxc-to-go/.pulse_socket; CHECK
+chown 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxc-to-go/.pulse_socket; CHECK
+RUN /bin/sh -c ' usermod -a -G audio lxc-to-go '; CHECK
 
 LOL 5
 

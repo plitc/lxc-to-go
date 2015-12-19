@@ -36,9 +36,9 @@ LOL 2
 
 #// Users
 RUN apt-get -y install zsh; CHECK
-RUN useradd -m -c "lxc-to-go" lxctogo; CHECK
-RUN /bin/sh -c ' echo lxctogo:lxctogo | chpasswd '; CHECK
-RUN chsh -s /usr/bin/zsh lxctogo; CHECK
+RUN useradd -m -c "lxc-to-go" lxc-to-go; CHECK
+RUN /bin/sh -c ' echo lxc-to-go:lxc-to-go | chpasswd '; CHECK
+RUN chsh -s /usr/bin/zsh lxc-to-go; CHECK
 
 LOL 3
 

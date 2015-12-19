@@ -433,6 +433,8 @@ Screencast
 
 Errata
 ======
+* 19.12.2015: [lxc-to-go < 0.40.8.8]: lxc-to-go start / delete [FAILED] 'lxc: set up nat rules' --- OPEN
+
 * 12.12.2015: [lxc-to-go < 0.40.8.8]: lxc-to-go start / delete [FAILED] 'lxc: set up nat rules' --- OPEN
 
 ```
@@ -474,7 +476,7 @@ Errata
      Choose your Interface: (eth0/wlan0) ? "MY_NEW_INTERFACE"
 ```
 
-* 13.11.2015: [lxc-to-go < 0.38.9.9]: lxc-to-go "proxy mode" issue with [easy_ipsec](https://github.com/plitc/easy_ipsec) --- OPEN
+* 13.11.2015: [lxc-to-go < 0.41.2.7.travis29]: lxc-to-go X11 Video & Audio Support: Unix Domain Socket sharing works only in the same Environment (HOST: deb8 - LXC: deb8) --- OPEN
 
 * 09.11.2015: [lxc-to-go < 0.38.8.8]: lxc-to-go-provisioning can't set host iptables rules --- OPEN
 

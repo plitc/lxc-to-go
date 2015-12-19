@@ -8,15 +8,13 @@
 echo "<--- --- --- provisioning hooks // --- --- --->"
 #// version: 1.0
 
-### EXAMPLE // ###
-#
+### LXC Config // ###
+### // LXC Config ###
 
-LOL
-
-RUN echo example
-
-#
-### // EXAMPLE ###
+#// Users
+RUN useradd -m -c "lxc-to-go" lxc-to-go; CHECK LXC: useradd lxc-to-go
+RUN /bin/sh -c ' echo lxc-to-go:lxc-to-go | chpasswd '; CHECK LXC: set default password for user lxc-to-go
+RUN chsh -s /bin/bash lxc-to-go; CHECK LXC: set default shell bash for user lxc-to-go
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
 ### ### ### // lxc-to-go ### ### ###

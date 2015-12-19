@@ -171,7 +171,7 @@ run /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/elasticsear
 
 lull 8
 
-run useradd -m -c "lxc-to-go" lxctogo; check
+run useradd -m -c "lxc-to-go" lxc-to-go; check
 
 lull 9
 
