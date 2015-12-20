@@ -1,0 +1,56 @@
+#!/bin/sh
+### ### ### PLITC ### ### ###
+
+#// browser
+chrome()
+{
+   sudo lxc-attach -n x11browser -- /bin/sh -c ' sudo -u lxc-to-go PULSE_SERVER=192.168.253.253 chromium & '
+}
+
+#// tor browser
+torchrome()
+{
+   sudo lxc-attach -n torbrowser -- /bin/sh -c ' sudo -u lxc-to-go PULSE_SERVER=192.168.253.253 chromium --proxy-server="socks://127.0.0.1:9050" & '
+}
+
+#// red browser
+pubchrome()
+{
+   sudo lxc-attach -n redbrowser -- /bin/sh -c ' sudo -u lxc-to-go PULSE_SERVER=192.168.253.253 chromium & '
+}
+
+#// red browser
+pubfirefox()
+{
+   sudo lxc-attach -n redbrowser -- /bin/sh -c ' sudo -u lxc-to-go PULSE_SERVER=192.168.253.253 iceweasel & '
+}
+
+#// thunderbird / icedove
+thunderbird()
+{
+   sudo lxc-attach -n thunderbird -- /bin/sh -c ' sudo -u lxc-to-go PULSE_SERVER=192.168.253.253 icedove & '
+}
+
+#// gajim
+gajim()
+{
+   sudo lxc-attach -n gajim -- /bin/sh -c ' sudo -u lxc-to-go PULSE_SERVER=192.168.253.253 gajim & '
+}
+
+#// transmission-gtk
+transmission(){
+   sudo lxc-attach -n transmission -- /bin/sh -c ' sudo -u lxc-to-go transmission-gtk & '
+}
+
+#// games - gorge
+gorge()
+{
+   sudo lxc-attach -n gorge -- /bin/sh -c ' sudo -u lxc-to-go /bin/sh -c "cd /github/gorge; PULSE_SERVER=192.168.253.253 love . &" '
+}
+
+
+
+#// ssh connections
+
+### ### ### PLITC ### ### ###
+# EOF
