@@ -29,15 +29,54 @@ flush_all()
    "$FWV4" -F OUTPUT
    "$FWV4" -t nat -F PREROUTING
    "$FWV4" -t nat -F POSTROUTING
+   "$FWV4" -F LXCtoGO > /dev/null 2>&1
    ##/ v6
    "$FWV6" -F INPUT
    "$FWV6" -F FORWARD
    "$FWV6" -F OUTPUT
    "$FWV6" -t nat -F PREROUTING
    "$FWV6" -t nat -F POSTROUTING
+   "$FWV6" -F ICMPv6 > /dev/null 2>&1
+   "$FWV6" -F LXCtoGO > /dev/null 2>&1
 }
 ### // flush ###
 
+### DROP: broken packages // ###
+drop_broken()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -i "$IF" -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+   "$FWV4" -A INPUT -i "$IF" -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
+   "$FWV4" -A INPUT -i "$IF" -p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j DROP
+   ##/ v6
+   "$FWV6" -A INPUT -i "$IF" -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+   "$FWV6" -A INPUT -i "$IF" -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
+   "$FWV6" -A INPUT -i "$IF" -p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -m state --state NEW -j DROP
+}
+### // DROP: broken packages ###
+
+### DROP: RFC1918 // ###
+drop_rfc1918()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -s 10.0.0.0/8 -i "$IF" -j DROP
+   "$FWV4" -A INPUT -s 172.16.0.0/12 -i "$IF" -j DROP
+   "$FWV4" -A INPUT -s 192.168.0.0/16 -i "$IF" -j DROP
+   ##/ v6
+}
+### // DROP: RFC1918 ###
+
+### Rate Limit SSH // ###
+limit_ssh()
+{
+   ##/ v4
+   "$FWV4" -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name SSH --rsource
+   "$FWV4" -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 10 --rttl --name SSH --rsource -j DROP
+   ##/ v6
+   "$FWV6" -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name SSH --rsource
+   "$FWV6" -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 10 --rttl --name SSH --rsource -j DROP
+}
+### // Rate Limit SSH ###
 
 ### ALLOW: loopback interface // ###
 allow_loopback()
@@ -197,6 +236,16 @@ allow_lxc_to_go()
 }
 ### // ALLOW: lxc-to-go traffic ###
 
+### RULE: lxc-to-go // ###
+rule_lxc_to_go()
+{
+   ##/ v4
+   "$FWV4" -N LXCtoGO > /dev/null 2>&1
+   ##/ v6
+   "$FWV6" -N LXCtoGo > /dev/null 2>&1
+}
+### // RULE: lxc-to-go ###
+
 ### DROP: igmp // ###
 drop_igmp()
 {
@@ -248,6 +297,8 @@ drop_policy()
 allow_all
 flush_all
 
+drop_broken
+#/drop_rfc1918 # for public servers
 allow_loopback
 allow_dhcp
 allow_icmpv6
@@ -257,6 +308,7 @@ allow_icmp
 allow_ipsec_encap
 allow_ipsec
 allow_lxc_to_go
+rule_lxc_to_go
 drop_igmp
 drop_broadcast_multicast
 drop_policy
