@@ -3,7 +3,7 @@
 
 FWV4="/sbin/iptables"
 FWV6="/sbin/ip6tables"
-IF="wlp3s0"
+IF="bond0"
 
 ### ACCEPT // ###
 allow_all()
@@ -94,8 +94,10 @@ allow_loopback()
 ### ALLOW: from any to me DHCP // ###
 allow_dhcp()
 {
-   "$FWV4" -A INPUT -i "$IF" -p udp --dport 67:68 --sport 67:68 -j ACCEPT
-   "$FWV4" -A OUTPUT -o "$IF" -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+   "$FWV4" -A INPUT -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+   "$FWV4" -A INPUT -m pkttype --pkt-type broadcast -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+   "$FWV4" -A OUTPUT -p udp --dport 67:68 --sport 67:68 -j ACCEPT
+   "$FWV4" -A OUTPUT -m pkttype --pkt-type broadcast -p udp --dport 67:68 --sport 67:68 -j ACCEPT
 }
 ### // ALLOW: from any to me DHCP ###
 
