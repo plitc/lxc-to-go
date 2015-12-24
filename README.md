@@ -436,6 +436,11 @@ Screencast
 
 [![github plitc lxc-to-go-0.41.3.2.travis29](https://img.youtube.com/vi/tERKMfnBKsY/0.jpg)](https://www.youtube.com/watch?v=tERKMfnBKsY)
 
+* github plitc lxc-to-go version: 0.41.3.5.travis29 [VERSION: 24.12.2015]
+   * X11 Video & Audio OpenJDK arch: i386 for legacy KVM
+
+[![github plitc lxc-to-go-0.41.3.5.travis29](https://img.youtube.com/vi/bN2FBibMUP8/0.jpg)](https://www.youtube.com/watch?v=bN2FBibMUP8)
+
 Errata
 ======
 * 19.12.2015: [lxc-to-go < 0.40.8.8]: lxc-to-go start / delete [FAILED] 'lxc: set up nat rules' --- OPEN
