@@ -519,6 +519,8 @@ Errata
 
 TODO
 ====
+* 24.12.2015: support for multiarch (amd64/i386) --- OPEN (lxc-create -n i386vm -t debian --dir /var/lib/lxc/i386vm -- -a i386)
+
 * 02.12.2015: unprivileged containers support --- OPEN
 
 * 27.11.2015: source based routing support --- OPEN
