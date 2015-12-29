@@ -925,6 +925,11 @@ else
    checkhard look over cgmanager
 fi
 
+#// enable cgmanager
+systemctl enable cgmanager
+systemctl start cgmanager
+checksoft look over cgmanager
+
 SCREEN=$(/usr/bin/which screen)
 if [ -z "$SCREEN" ]; then
    echo "<--- --- --->"
