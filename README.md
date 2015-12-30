@@ -6,7 +6,7 @@ Presentation
 
 LICENSE
 =======
-![README.LICENSE](/content/README.LICENSE.md)
+[README.LICENSE](/content/README.LICENSE.md)
 
 Background
 ==========
