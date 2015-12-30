@@ -3474,6 +3474,10 @@ checkhard lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
+### BTRFS SUPPORT // ###
+GETBTRFS=$(grep -s "BTRFS" /etc/lxc-to-go/lxc-to-go.conf | sed 's/BTRFS=//')
+### // BTRFS SUPPORT ###
+
 echo "Please enter the new LXC Container name:"
 read LXCNAME;
 if [ -z "$LXCNAME" ]; then
@@ -3505,6 +3509,7 @@ case $LXCCREATETEMPLATE in
       if [ "$GETBTRFS" = "yes" ]
       then
          (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$LXCNAME") & spinner $!
+         checksoft create new btrfs subvolume snapshot: "$LXCNAME"
       else
          (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
       fi
@@ -3531,6 +3536,7 @@ case $LXCCREATETEMPLATE in
       if [ "$GETBTRFS" = "yes" ]
       then
          (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$LXCNAME") & spinner $!
+         checksoft create new btrfs subvolume snapshot: "$LXCNAME"
       else
          (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
       fi
