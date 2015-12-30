@@ -536,5 +536,5 @@ TODO
 
 * 17.04.2015: useful ipv6 routing (ra/proxy_ndp) --- FIXED in [0.28.4] --- FIXED again in [0.39.9.7]
 
-* 16.04.2015: support for zfs/btrfs lxc-clone templates --- OPEN
+* 16.04.2015: support for zfs/btrfs lxc-clone templates --- OPEN --- FIRST SUPPORT in [0.41.4.6.travis29]
 
