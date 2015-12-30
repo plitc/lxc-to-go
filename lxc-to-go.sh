@@ -963,7 +963,7 @@ if [ -z "$IP6TABLES" ]; then
 fi
 checkhard look over ip6tables
 
-LXC=$(/usr/bin/dpkg -l | grep lxc | awk '{print $2}')
+LXC=$(/usr/bin/dpkg -l | grep " lxc " | awk '{print $2}')
 if [ -z "$LXC" ]; then
    echo "<--- --- --->"
    echo "need lxc"
@@ -1014,7 +1014,7 @@ else
    sed -i 's/release=${release:-${current_release}}/release=$(echo "wheezy")/g' /usr/share/lxc/templates/lxc-debian-wheezy
    #// BUG: E: Invalid Release file, no entry for main/binary-ppc/Packages
    #// FIX: for PowerPC Environment
-   CHECKYABOOT0=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   CHECKYABOOT0=$(/usr/bin/dpkg -l | grep " yaboot " | awk '{print $2}')
    if [ -z "$CHECKYABOOT0" ]
    then
       : # dummy
@@ -1025,7 +1025,7 @@ fi
 checkhard lxc template - wheezy configcheck
 ### // LXC TEMPLATE - WHEEZY ###
 
-BRIDGEUTILS=$(/usr/bin/dpkg -l | grep bridge-utils | awk '{print $2}')
+BRIDGEUTILS=$(/usr/bin/dpkg -l | grep " bridge-utils " | awk '{print $2}')
 if [ -z "$BRIDGEUTILS" ]; then
    echo "<--- --- --->"
    echo "need bridge-utils"
@@ -1036,7 +1036,7 @@ if [ -z "$BRIDGEUTILS" ]; then
 fi
 checkhard look over bridge-utils
 
-NETTOOLS=$(/usr/bin/dpkg -l | grep net-tools | awk '{print $2}')
+NETTOOLS=$(/usr/bin/dpkg -l | grep " net-tools " | awk '{print $2}')
 if [ -z "$NETTOOLS" ]; then
    echo "<--- --- --->"
    echo "need net-tools"
@@ -1085,7 +1085,7 @@ sleep 1
 if [ "$DEBVERSION" = "7" ]; then
    CHECKDEB7KERNEL=$(grep -c "3.2" /proc/sys/kernel/osrelease)
    if [ "$CHECKDEB7KERNEL" = "1" ]; then
-      CHECKDEB7KERNEL316=$(dpkg -l | grep -c "linux-headers-3.16")
+      CHECKDEB7KERNEL316=$(dpkg -l | grep -c " linux-headers-3.16 ")
       if [ "$CHECKDEB7KERNEL316" = "0" ]; then
          CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
          if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
@@ -1113,7 +1113,7 @@ CHECKDEB7WHEEZYBACKPORTSFILE
             apt-get -y install initramfs-tools=0.115*
             apt-get -y install linux-image-3.16.0-0.bpo.4-686-pae linux-headers-3.16.0-0.bpo.4-686-pae
             apt-get -y install firmware-linux-nonfree
-            CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+            CHECKDEB7VBOX=$(dpkg -l | grep -c " virtualbox-guest-dkms ")
             if [ "$CHECKDEB7VBOX" = "1" ]; then
                apt-get -y install build-essential module-assistant
                m-a prepare
@@ -1126,7 +1126,7 @@ CHECKDEB7WHEEZYBACKPORTSFILE
             apt-get -y install initramfs-tools=0.115*
             apt-get -y install linux-image-3.16.0-0.bpo.4-amd64 linux-headers-3.16.0-0.bpo.4-amd64
             apt-get -y install firmware-linux-nonfree
-            CHECKDEB7VBOX=$(dpkg -l | grep -c "virtualbox-guest-dkms")
+            CHECKDEB7VBOX=$(dpkg -l | grep -c " virtualbox-guest-dkms ")
             if [ "$CHECKDEB7VBOX" = "1" ]; then
                apt-get -y install build-essential module-assistant
                m-a prepare
@@ -1233,7 +1233,7 @@ if [ "$CHECKLXCINSIDELXC" = "1" ]; then
    : ### LXC inside LXC ###
 else
    #// ignore PowerPC Environment
-   CHECKYABOOT1=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   CHECKYABOOT1=$(/usr/bin/dpkg -l | grep " yaboot " | awk '{print $2}')
    if [ -z "$CHECKYABOOT1" ]
    then
       CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
@@ -1283,7 +1283,7 @@ fi
 checkhard grub configcheck
 
 #// ignore PowerPC / Travis-CI Environment
-CHECKYABOOT2=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+CHECKYABOOT2=$(/usr/bin/dpkg -l | grep " yaboot " | awk '{print $2}')
 if [ -z "$CHECKYABOOT2" ]
 then
    CHECKGRUB2=$(grep "cgroup_enable=memory" /proc/cmdline | grep -c "swapaccount=1")
@@ -2215,7 +2215,7 @@ else
 fi
 checkhard lxc: managed upgrade - stage 2
 
-CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c "iptables")
+CHECKMANAGEDIPTABLES1=$(lxc-attach -n managed -- dpkg -l | grep -c " iptables ")
 if [ "$CHECKMANAGEDIPTABLES1" = "1" ]; then
    : # dummy
 else
@@ -2399,7 +2399,7 @@ fi
 checkhard lxc: managed network settings
 
 ##/ less for systemd
-CHECKMANAGEDLESS=$(lxc-attach -n managed -- dpkg -l | grep -c "less")
+CHECKMANAGEDLESS=$(lxc-attach -n managed -- dpkg -l | grep -c " less ")
 if [ "$CHECKMANAGEDLESS" = "1" ]; then
    : # dummy
 else
@@ -2409,7 +2409,7 @@ checkhard lxc: managed look over less
 
 ##/ DHCP-Service
 
-CHECKMANAGEDDHCP=$(lxc-attach -n managed -- dpkg -l | grep -c "isc-dhcp-server")
+CHECKMANAGEDDHCP=$(lxc-attach -n managed -- dpkg -l | grep -c " isc-dhcp-server ")
 if [ "$CHECKMANAGEDDHCP" = "1" ]; then
    : # dummy
 else
@@ -3941,7 +3941,7 @@ then
       exit 1
    fi
    #// for AMD64 or PowerPC Environment
-   CHECKYABOOT3=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   CHECKYABOOT3=$(/usr/bin/dpkg -l | grep " yaboot " | awk '{print $2}')
    if [ -z "$CHECKYABOOT3" ]
    then
       #// for amd64
@@ -4009,7 +4009,7 @@ MANAGEDLXCINLXC
 
    # DEFAULT: lxc-debian
    #// for PowerPC Environment
-   CHECKYABOOT4=$(/usr/bin/dpkg -l | grep yaboot | awk '{print $2}')
+   CHECKYABOOT4=$(/usr/bin/dpkg -l | grep " yaboot " | awk '{print $2}')
    if [ -z "$CHECKYABOOT4" ]
    then
       : # dummy
@@ -4237,7 +4237,7 @@ then
          echo "lxcmanaged veth vswitch1 99" >> /etc/lxc/lxc-usernet
          checkhard allow up to 99 veth bridge connections for user: lxcmanaged - stage 2
          #// installing uidmap
-         UIDMAP=$(/usr/bin/dpkg -l | grep -sc " uidmap")
+         UIDMAP=$(/usr/bin/dpkg -l | grep -sc " uidmap ")
          if [ "$UIDMAP" = "0" ]
          then
             echo "<--- --- --->"
@@ -4249,7 +4249,7 @@ then
          fi
          checkhard look over uidmap package
          #// installing cgroup-bin
-         CGROUPBIN=$(/usr/bin/dpkg -l | grep -sc " cgroup-bin")
+         CGROUPBIN=$(/usr/bin/dpkg -l | grep -sc " cgroup-bin ")
          if [ "$CGROUPBIN" = "0" ]
          then
             echo "<--- --- --->"
@@ -4261,7 +4261,7 @@ then
          fi
          checkhard look over cgroup-bin package
          #// installing libpam-systemd
-         LIBPAMSYSTEMD=$(/usr/bin/dpkg -l | grep -sc " libpam-systemd")
+         LIBPAMSYSTEMD=$(/usr/bin/dpkg -l | grep -sc " libpam-systemd ")
          if [ "$LIBPAMSYSTEMD" = "0" ]
          then
             echo "<--- --- --->"
