@@ -971,6 +971,26 @@ if [ -z "$LXC" ]; then
    apt-get update
    DEBIAN_FRONTEND=noninteractive apt-get -y install lxc
    echo "<--- --- --->"
+   ### BTRFS SUPPORT // ###
+   #// check root btrfs
+   CHECKBTRFSROOT=$(mount | grep -sc "on / type btrfs")
+   if [ "$CHECKBTRFSROOT" = "1" ]
+   then
+      #// check lxc btrfs
+      btrfs subvolume show /var/lib/lxc > /dev/null 2>&1
+      if [ $? -eq 0 ]
+      then
+         : # dummy
+      else
+         #// create btrfs structure
+         mv -f /var/lib/lxc /var/lib/lxc.OLD
+         checksoft move old lxc structure
+         btrfs subvolume create /var/lib/lxc
+         checksoft create new btrfs lxc structure
+      fi
+   fi
+   checksoft look for btrfs root
+   ### // BTRFS SUPPORT ###
 fi
 checkhard look over lxc
 
