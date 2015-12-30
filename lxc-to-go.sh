@@ -928,8 +928,9 @@ then
       fi
    fi
    checkhard lxc-to-go btrfs configcheck
-GETBTRFS=$(grep -s "BTRFS" /etc/lxc-to-go/lxc-to-go.conf | sed 's/BTRFS=//')
 fi
+
+GETBTRFS=$(grep -s "BTRFS" /etc/lxc-to-go/lxc-to-go.conf | sed 's/BTRFS=//')
 ### // BTRFS SUPPORT ###
 
 #// fix: cgmanager dependency with systemd breaks devuan cgroups
