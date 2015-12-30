@@ -973,8 +973,8 @@ if [ -z "$LXC" ]; then
    echo "<--- --- --->"
    ### BTRFS SUPPORT // ###
    #// check root btrfs
-   CHECKBTRFSROOT=$(mount | grep -sc "on / type btrfs")
-   if [ "$CHECKBTRFSROOT" = "1" ]
+   CHECKBTRFSROOT0=$(mount | grep -sc "on / type btrfs")
+   if [ "$CHECKBTRFSROOT0" = "1" ]
    then
       #// check lxc btrfs
       btrfs subvolume show /var/lib/lxc > /dev/null 2>&1
@@ -1654,6 +1654,22 @@ CHECKLXCMANAGED=$(lxc-ls | grep -c "managed")
 if [ "$CHECKLXCMANAGED" = "1" ]; then
     : # dummy
 else
+   ### BTRFS SUPPORT // ###
+   #// check root btrfs
+   CHECKBTRFSROOT1=$(mount | grep -sc "on / type btrfs")
+   if [ "$CHECKBTRFSROOT1" = "1" ]
+   then
+      #// check lxc btrfs
+      btrfs subvolume show /var/lib/lxc > /dev/null 2>&1
+      if [ $? -eq 0 ]
+      then
+         btrfs subvolume create /var/lib/lxc/managed
+         checksoft create new btrfs lxc: managed subvolume
+      else
+         : # dummy
+      fi
+   fi
+   ### // BTRFS SUPPORT ###
    lxc-create -n managed -t /usr/share/lxc/templates/lxc-debian-wheezy
    if [ "$?" != "0" ]; then
       : # dummy
