@@ -908,6 +908,30 @@ checkhard lxc-to-go interface configcheck
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
 
+### BTRFS SUPPORT // ###
+#// check root btrfs
+CHECKBTRFSROOT=$(mount | grep -sc "on / type btrfs")
+if [ "$CHECKBTRFSROOT" = "1" ]
+then
+   CHECKBTRFS=$(grep -s "BTRFS" /etc/lxc-to-go/lxc-to-go.conf | sed 's/BTRFS=//')
+   if [ -z "$CHECKBTRFS" ]; then
+      read -p "We detect your ROOT filesystem as btrfs, do you want to use btrfs subvolume snapshot support: (yes/no) ? " BTRFSVALUE
+      if [ "$BTRFSVALUE" = "yes" ]; then
+         echo "BTRFS=yes" >> /etc/lxc-to-go/lxc-to-go.conf
+      fi
+      if [ "$BTRFSVALUE" = "no" ]; then
+         echo "BTRFS=no" >> /etc/lxc-to-go/lxc-to-go.conf
+      fi
+      if [ -z "$BTRFSVALUE" ]; then
+         echo "[ERROR] choose an btrfs choise"
+         exit 1
+      fi
+   fi
+   checkhard lxc-to-go btrfs configcheck
+GETBTRFS=$(grep -s "BTRFS" /etc/lxc-to-go/lxc-to-go.conf | sed 's/BTRFS=//')
+fi
+### // BTRFS SUPPORT ###
+
 #// fix: cgmanager dependency with systemd breaks devuan cgroups
 if [ "$DEBIAN" = "devuan" ]
 then
@@ -3476,7 +3500,14 @@ read LXCCREATETEMPLATE;
    fi
 case $LXCCREATETEMPLATE in
    1) echo "select: wheezy"
-      (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
+      ### BTRFS SUPPORT // ###
+      if [ "$GETBTRFS" = "yes" ]
+      then
+         (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$LXCNAME") & spinner $!
+      else
+         (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
+      fi
+      ### // BTRFS SUPPORT ###
       if [ $? -eq 0 ]
       then
          : # dummy
@@ -3495,7 +3526,14 @@ case $LXCCREATETEMPLATE in
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
    2) echo "select: jessie"
-      (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
+      ### BTRFS SUPPORT // ###
+      if [ "$GETBTRFS" = "yes" ]
+      then
+         (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$LXCNAME") & spinner $!
+      else
+         (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
+      fi
+      ### // BTRFS SUPPORT ###
       if [ $? -eq 0 ]
       then
          : # dummy
