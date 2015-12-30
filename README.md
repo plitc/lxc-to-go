@@ -6,7 +6,7 @@ Presentation
 
 LICENSE
 =======
-* BSD 2-Clause
+![README.LICENSE](/content/README.LICENSE.md)
 
 Background
 ==========
