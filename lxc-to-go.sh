@@ -1989,6 +1989,22 @@ if [ "$CHECKTEMPLATEDEB7" = "1" ]; then
    : # dummy
 else
    echo "" # dummy
+   ### BTRFS SUPPORT // ###
+   #// check root btrfs
+   CHECKBTRFSROOT2=$(mount | grep -sc "on / type btrfs")
+   if [ "$CHECKBTRFSROOT2" = "1" ]
+   then
+      #// check lxc btrfs
+      btrfs subvolume show /var/lib/lxc > /dev/null 2>&1
+      if [ $? -eq 0 ]
+      then
+         btrfs subvolume create /var/lib/lxc/deb7template
+         checksoft create new btrfs lxc: deb7template subvolume
+      else
+         : # dummy
+      fi
+   fi
+   ### // BTRFS SUPPORT ###
    if [ "$DEBVERSION" = "7" ]; then
       (lxc-clone -o managed -n deb7template) & spinner $!
    else
@@ -2189,6 +2205,22 @@ else
       : # dummy
    else
       echo "" # dummy
+      ### BTRFS SUPPORT // ###
+      #// check root btrfs
+      CHECKBTRFSROOT3=$(mount | grep -sc "on / type btrfs")
+      if [ "$CHECKBTRFSROOT3" = "1" ]
+      then
+         #// check lxc btrfs
+         btrfs subvolume show /var/lib/lxc > /dev/null 2>&1
+         if [ $? -eq 0 ]
+         then
+            btrfs subvolume create /var/lib/lxc/deb8template
+            checksoft create new btrfs lxc: deb8template subvolume
+         else
+            : # dummy
+         fi
+      fi
+      ### // BTRFS SUPPORT ###
       if [ "$DEBVERSION" = "7" ]; then
          (lxc-clone -o managed -n deb8template) & spinner $!
       else
