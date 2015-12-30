@@ -1638,7 +1638,7 @@ else
       read -p "Do you wish to remove and cleanup the corrupt lxc-to-go environment and start again ? (y/n) " BOOTSTRAPCLEAN
       if [ "$BOOTSTRAPCLEAN" = "y" ]; then
          rm -f /etc/lxc-to-go/INSTALLED
-         lxc-stop -n managed -k
+         lxc-stop -n managed -k -o /tmp/lxc-to-go.fail1
          lxc-destroy -n managed
          lxc-destroy -n deb7template
          lxc-destroy -n deb8template
