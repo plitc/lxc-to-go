@@ -3,7 +3,7 @@
 
 FWV4="/sbin/iptables"
 FWV6="/sbin/ip6tables"
-IF="bond0"
+IF="wlp3s0"
 
 ### ACCEPT // ###
 allow_all()
