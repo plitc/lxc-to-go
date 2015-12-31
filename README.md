@@ -6,19 +6,19 @@ Presentation
 
 LICENSE
 =======
-[README.LICENSE](/content/README.LICENSE.md)
+* [README.LICENSE](/content/README.LICENSE.md)
 
 Background
 ==========
-* create an lxc environment for mobile devices and servers
+* [README.BACKGROUND](/content/README.BACKGROUND.md)
 
 Benefits of Goal Setting
 ========================
-* rapid lxc deployment for mobile devices and servers
+* [README.GOAL](/content/README.GOAL.md)
 
 WARNING
 =======
-* lxc-to-go is experimental and its not ready for production. Do it at your own risk.
+* [README.WARNING](/content/README.WARNING.md)
 
 Security Conditions
 ===================
