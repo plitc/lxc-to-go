@@ -795,7 +795,7 @@ if [ -z "$CHECKLXCINSTALL" ]; then
    printf "\033[1;31mLXC 'managed' doesn't run, execute the 'bootstrap' command at first\033[0m\n"
    exit 1
 fi
-check lxc-to-go environment - stage 1
+checkhiddenhard lxc-to-go environment - stage 1
 #
 ### stage4 // ###
 #
@@ -809,7 +809,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
-check lxc-to-go environment - stage 2
+checkhiddenhard lxc-to-go environment - stage 2
 
 CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCCONTAINER" = "3" ]; then
@@ -821,9 +821,13 @@ else
    exit 1
    ### ### ### ### ### ### ### ### ###
 fi
-check lxc-to-go environment - stage 3
+checkhiddenhard lxc-to-go environment - stage 3
 
 GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+
+### BTRFS SUPPORT // ###
+GETBTRFS=$(grep -s "BTRFS" /etc/lxc-to-go/lxc-to-go.conf | sed 's/BTRFS=//')
+### // BTRFS SUPPORT ###
 
 ### PROVISIONING // ###
 
@@ -979,7 +983,15 @@ check lxc-to-go environment - stage 17
 ###
 
 if [ "$template" = "deb7" ]; then
-   (lxc-clone -o deb7template -n "$name") & spinner $!
+   ### BTRFS SUPPORT // ###
+   if [ "$GETBTRFS" = "yes" ]
+   then
+      (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$name") & spinner $!
+      checksoft create new btrfs subvolume snapshot: "$name"
+   else
+      (lxc-clone -o deb7template -n "$name") & spinner $!
+   fi
+   ### // BTRFS SUPPORT ###
    if [ $? -eq 0 ]
    then
       : # dummy
@@ -990,6 +1002,7 @@ if [ "$template" = "deb7" ]; then
          lxc-destroy -n "$name"
       exit 1
    fi
+   sed -i 's/deb7template/'"$name"'/g' /var/lib/lxc/"$name"/config
    sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
    sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$name"'/' /var/lib/lxc/"$name"/config
    sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
@@ -999,7 +1012,15 @@ fi
 check lxc-to-go provisioning - stage 1
 
 if [ "$template" = "deb8" ]; then
-   (lxc-clone -o deb8template -n "$name")& spinner $!
+   ### BTRFS SUPPORT // ###
+   if [ "$GETBTRFS" = "yes" ]
+   then
+      (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$name") & spinner $!
+      checksoft create new btrfs subvolume snapshot: "$name"
+   else
+      (lxc-clone -o deb8template -n "$name") & spinner $!
+   fi
+   ### // BTRFS SUPPORT ###
    if [ $? -eq 0 ]
    then
       : # dummy
@@ -1009,6 +1030,7 @@ if [ "$template" = "deb8" ]; then
          lxc-destroy -n "$name"
       exit 1
    fi
+   sed -i 's/deb8template/'"$name"'/g' /var/lib/lxc/"$name"/config
    sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$name"/config
    sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = '"$name"'/' /var/lib/lxc/"$name"/config
    sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
