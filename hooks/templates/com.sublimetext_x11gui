@@ -100,12 +100,12 @@ LOL 8
 CHECKMACHINETYPE=$(uname -m)
 if [ "$CHECKMACHINETYPE" = "x86_64" ]
 then
-   RUN wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3083_amd64.deb; CHECK LXC: get package
+   RUN wget --output-document=/root/sublime-text_build-3083_amd64.deb http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3083_amd64.deb; CHECK LXC: get package
    RUN dpkg -i /root/sublime-text_build-3083_amd64.deb; CHECK LXC: installing sublimetext
 fi
 if [ "$CHECKMACHINETYPE" = "i686" ]
 then
-   RUN wget http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3083_i386.deb; CHECK LXC: get package
+   RUN wget --output-document=/root/sublime-text_build-3083_i386.deb http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3083_i386.deb; CHECK LXC: get package
    RUN dpkg -i /root/sublime-text_build-3083_i386.deb; CHECK LXC: installing sublimetext
 fi
 
