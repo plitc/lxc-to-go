@@ -83,14 +83,19 @@ RUN /bin/sh -c ' usermod -a -G audio lxc-to-go '; CHECK LXC: configure pulseaudi
 
 LOL 5
 
-#// wget
-RUN apt-get -y install wget; CHECK LXC: installing wget
+#// sudo
+RUN apt-get -y install sudo; CHECK LXC: installing sudo
 
 LOL 6
 
-RUN apt-get -y install bzip2 libgtk2.0-0; CHECK LXC: installing dependencies
+#// wget
+RUN apt-get -y install wget; CHECK LXC: installing wget
 
 LOL 7
+
+RUN apt-get -y install bzip2 libgtk2.0-0; CHECK LXC: installing dependencies
+
+LOL 8
 
 CHECKMACHINETYPE=$(uname -m)
 if [ "$CHECKMACHINETYPE" = "x86_64" ]
@@ -104,7 +109,7 @@ then
    RUN dpkg -i /root/sublime-text_build-3083_i386.deb; CHECK LXC: installing sublimetext
 fi
 
-LOL 8
+LOL 9
 
 #/ force reboot for lxc.mount changes
 #/RUN poweroff
