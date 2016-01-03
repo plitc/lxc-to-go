@@ -104,7 +104,11 @@ LOL 5
 #// Driver Packages
 if [ -e "/dev/nvidia0" ]
 then
-   RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nvidia-driver mesa-utils"; CHECK LXC: installing driver packages
+   RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nvidia-driver mesa-utils"; CHECK LXC: installing driver packages - stage 1.0
+fi
+if [ -e "/usr/sbin/bumblebeed" ]
+then
+   RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install bumblebee-nvidia nvidia-driver mesa-utils"; CHECK LXC: installing driver packages - stage 1.1
 fi
 
 LOL 6
