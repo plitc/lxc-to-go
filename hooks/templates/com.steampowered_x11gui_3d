@@ -126,7 +126,8 @@ if [ "$CHECKMACHINETYPE" = "x86_64" ]
 then
    RUN dpkg --add-architecture i386; CHECK LXC: activate arch i386 support
    RUN aptitude update; CHECK LXC: aptitude update
-   RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive aptitude -y install steam"; CHECK LXC: installing steam
+   #/RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive aptitude -y install steam"; CHECK LXC: installing steam
+   RUN aptitude install steam; CHECK LXC: installing steam
    if [ -e "/dev/nvidia0" ]
    then
       RUN aptitude -y install libgl1-nvidia-glx:i386; CHECK LXC: installing 32-bit opengl library
@@ -135,7 +136,8 @@ fi
 if [ "$CHECKMACHINETYPE" = "i686" ]
 then
    RUN aptitude update; CHECK LXC: aptitude update
-   RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive aptitude -y install steam"; CHECK LXC: installing steam
+   #/RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive aptitude -y install steam"; CHECK LXC: installing steam
+   RUN aptitude install steam; CHECK LXC: installing steam
 fi
 
 LOL 8
