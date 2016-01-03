@@ -1087,6 +1087,18 @@ if [ "$start" = "yes" ]; then
             echo "$port" > /var/lib/lxc/"$name"/rootfs/root/PORT
             #/ $DIR/hooks/hook_provisioning.sh
             /etc/lxc-to-go/hook_provisioning.sh
+            if [ $? -eq 0 ]
+            then
+               printf "\033[1;32m OK \033[0m\n"
+               sleep 2
+            else
+               printf "\033[1;31m FAILED \033[0m\n"
+               echo "... cleaning up and destroy the corrupt container!"
+               lxc-stop -n "$name" -k
+               sleep 1
+               lxc-destroy -n "$name"
+               exit 1
+            fi
          echo "" # dummy
       ###
       unset LXCCREATENAME
@@ -1127,7 +1139,10 @@ if [ "$start" = "no" ]; then
                sleep 2
             else
                printf "\033[1;31m FAILED \033[0m\n"
+               echo "... cleaning up and destroy the corrupt container!"
+               lxc-stop -n "$name" -k
                sleep 1
+               lxc-destroy -n "$name"
                exit 1
             fi
          echo "" # dummy
