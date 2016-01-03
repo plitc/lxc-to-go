@@ -115,6 +115,11 @@ fi
 
 LOL 6
 
+#// Aptitude
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install aptitude"; CHECK LXC: installing aptitude
+
+LOL 7
+
 #// Steam
 CHECKMACHINETYPE=$(uname -m)
 if [ "$CHECKMACHINETYPE" = "x86_64" ]
@@ -133,7 +138,7 @@ then
    RUN aptitude install steam; CHECK LXC: installing steam
 fi
 
-LOL 7
+LOL 8
 
 #/ force reboot for lxc.mount changes
 #/RUN poweroff
