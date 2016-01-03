@@ -18,19 +18,19 @@ echo "lxc.mount.entry = /dev/fb0 dev/fb0 none bind,optional,create=file" >> /var
 #
 if [ -e "/dev/video0" ]
 then
-   echo "lxc.mount.entry = /dev/video0 dev/video0 none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4
+   echo "lxc.mount.entry = /dev/video0 dev/video0 none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4.1
 fi
 if [ -e "/dev/agpgart" ]
 then
-   echo "lxc.mount.entry = /dev/agpgart dev/agpgart none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4
+   echo "lxc.mount.entry = /dev/agpgart dev/agpgart none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4.2
 fi
 if [ -e "/dev/nvidia0" ]
 then
-   echo "lxc.mount.entry = /dev/nvidia0 dev/nvidia0 none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4
+   echo "lxc.mount.entry = /dev/nvidia0 dev/nvidia0 none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4.3
 fi
 if [ -e "/dev/nvidiactl" ]
 then
-   echo "lxc.mount.entry = /dev/nvidiactl dev/nvidiactl none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4
+   echo "lxc.mount.entry = /dev/nvidiactl dev/nvidiactl none bind,optional,create=file" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 4.4
 fi
 echo "#/lxc.mount.entry = /tmp/.X11-unix tmp/.X11-unix none bind,optional,create=dir" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 5
 echo "# WORKAROUND: against systemd-tmpfiles-clean and X clean" >> /var/lib/lxc/"$LXCCREATENAME"/config; CHECK LXC: set up lxc audio and video support - stage 6
@@ -100,6 +100,14 @@ chown 1000:1000 /var/lib/lxc/"$LXCCREATENAME"/rootfs/home/lxc-to-go/.pulse_socke
 RUN /bin/sh -c ' usermod -a -G audio lxc-to-go '; CHECK LXC: configure pulseaudio-helper.sh - stage 6
 
 LOL 5
+
+#// Driver Packages
+if [ -e "/dev/nvidia0" ]
+then
+   RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install nvidia-driver mesa-utils"; CHECK LXC: installing driver packages
+fi
+
+LOL 6
 
 #/ force reboot for lxc.mount changes
 #/RUN poweroff
