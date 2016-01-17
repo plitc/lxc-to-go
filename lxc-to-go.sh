@@ -1269,30 +1269,34 @@ else
       if [ "$CHECKGRUB1" = "1" ]; then
          : # dummy
       else
-         cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
-         sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
-         sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
-
-         ### grub update
-
-         : # dummy
-         sleep 2
-         grub-mkconfig
-         : # dummy
-         sleep 2
-         update-grub
-         if [ "$?" != "0" ]; then
+         if [ "$DEBIAN" = "raspbian" ]; then
             : # dummy
-            sleep 5
-            echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
-            cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
+         else
+            cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
+            sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
+            sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+
+            ### grub update
+
             : # dummy
             sleep 2
             grub-mkconfig
             : # dummy
             sleep 2
             update-grub
-            exit 1
+            if [ "$?" != "0" ]; then
+               : # dummy
+               sleep 5
+               echo "[ERROR] something goes wrong let's restore the old configuration!" 1>&2
+               cp -prfv /etc/default/grub_lxc-to-go_BK /etc/default/grub
+               : # dummy
+               sleep 2
+               grub-mkconfig
+               : # dummy
+               sleep 2
+               update-grub
+               exit 1
+            fi
          fi
 ### travis continuous integration support // ###
          CHECKTRAVISCI1=$(hostname | grep -sc "testing-gce-")
