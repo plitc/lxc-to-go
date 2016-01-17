@@ -1265,11 +1265,11 @@ else
    CHECKYABOOT1=$(/usr/bin/dpkg -l | grep " yaboot " | awk '{print $2}')
    if [ -z "$CHECKYABOOT1" ]
    then
-      CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
-      if [ "$CHECKGRUB1" = "1" ]; then
+      if [ "$DEBIAN" = "raspbian" ]; then
          : # dummy
       else
-         if [ "$DEBIAN" = "raspbian" ]; then
+         CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+         if [ "$CHECKGRUB1" = "1" ]; then
             : # dummy
          else
             cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
