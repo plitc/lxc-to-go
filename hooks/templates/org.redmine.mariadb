@@ -73,6 +73,7 @@ if [ "$DEBVERSIONX" = "8" ]; then
    #edit /etc/apache2/sites-available/redmine.conf
    RUN a2enmod passenger; CHECK LXC: enable apache2 passenger
    RUN a2ensite redmine.conf; CHECK LXC: enable apache2 redmine config
+   RUN a2dissite 000-default; CHECK LXC: disable apache2 default page
    RUN service apache2 reload; CHECK LXC: reload apache2 service
    ###
    #RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 1
