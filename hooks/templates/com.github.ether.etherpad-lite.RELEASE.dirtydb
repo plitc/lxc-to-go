@@ -99,6 +99,8 @@ GETIPV4PORTINSIDE=$(RUN cat /root/PORT)
 if [ "$GETIPV4PORTINSIDE" = "9001" ]
 then
    : # dummy
+   echo "Template doesn't support Debian 7"
+   return 1
 else
    ETHERPADCONFIG="/var/lib/lxc/"$LXCCREATENAME"/rootfs/lxc-to-go/etherpad-lite/settings.json"
    if [ -e "$ETHERPADCONFIG" ]

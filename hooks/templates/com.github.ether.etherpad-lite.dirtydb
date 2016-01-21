@@ -56,6 +56,8 @@ RUN chown -R etherpad-lite:etherpad-lite /lxc-to-go; CHECK LXC: change owner for
 DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
 if [ "$DEBVERSIONX" = "7" ]; then
    : # dummy
+   echo "Template doesn't support Debian 7"
+   return 1
 fi
 if [ "$DEBVERSIONX" = "8" ]; then
    #// systemd service file

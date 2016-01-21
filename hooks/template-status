@@ -18,6 +18,7 @@ com.docker
 com.docker_lxcdriver
 com.docker_x11gui
 com.sublimetext_x11gui
+org.redmine.mariadb
 
 WARNING
 

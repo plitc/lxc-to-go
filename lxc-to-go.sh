@@ -3145,6 +3145,11 @@ fi
 checkhard optional: load fuse module for unprivileged containers
 ### // Support for Unprivileged Containers ###
 
+### TUNABLE // ###
+sysctl -w fs.file-max=99000000
+checkhard optional: file-max support up to 99 lxc
+### // TUNABLE ###
+
 cleanup
 checkhard clean up tmp files
 ### ### ### ### ### ### ### ### ###

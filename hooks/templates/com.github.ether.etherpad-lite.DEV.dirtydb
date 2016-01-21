@@ -103,6 +103,8 @@ else
       if [ "$DEBVERSIONX" = "7" ]
       then
          : # dummy
+         echo "Template doesn't support Debian 7"
+         return 1
       fi
       if [ "$DEBVERSIONX" = "8" ]
       then
