@@ -18,6 +18,21 @@ RUN apt-get -y install vim; CHECK LXC: installing vim
 
 LOL 2
 
+#/ --- postfix --- #/
+
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
+
+LOL 3
+
+### FIX // ###
+RUN sed -i 's/privat.local./'"$DOMAINNAME"'/g' /etc/postfix/main.cf; CHECK
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
+### // FIX ###
+
+RUN apt-get -y autoremove; CHECK
+
+LOL 4
+
 #/ --- backend: mariadb --- #/
 
 #/RUN apt-get -y install debconf-utils; CHECK LXC: installing debconf-utils
@@ -50,14 +65,14 @@ RUN mysql -h localhost -uroot -plxc-to-go -e "grant CREATE,ALTER,SELECT,INSERT,U
 #// mariadb-server flush privileges
 RUN mysql -h localhost -uroot -plxc-to-go -e "FLUSH PRIVILEGES"; CHECK LXC: mariadb-server flush privileges
 
-LOL 3
+LOL 5
 
 #/ --- redmine --- #/
 RUN apt-get -y install redmine-mysql; CHECK LXC: installing redmine-mysql
 
 RUN apt-get -y install apache2 libapache2-mod-passenger; CHECK LXC: installing apache2
 
-LOL 4
+LOL 6
 
 #/ --- configuration --- #/
 
@@ -104,6 +119,8 @@ echo "IP: (internal)    192.168.253.254"
 echo "IP: (internal)    lxc-to-go"
 echo "Port: (bind on)   $GETIPV4PORTINSIDEFIRST"
 echo "Ports:            $GETIPV4PORTINSIDE"
+echo "Username:         admin"
+echo "Password:         admin"
 echo ""
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
