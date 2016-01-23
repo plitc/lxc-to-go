@@ -8,6 +8,10 @@
 echo "<--- --- --- provisioning hooks // --- --- --->"
 #// version: 1.2
 
+### ### ### CUSTOM // ### ### ###
+DOMAINNAME=$(echo "federation.network")
+### ### ### // CUSTOM ### ### ###
+
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
 
@@ -93,6 +97,28 @@ if [ "$DEBVERSIONX" = "8" ]; then
    ###
    #RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /lib/systemd/system/etherpad-lite.service '; CHECK LXC: create systemd service file for etherpad - stage 1
 fi
+
+#/ --- redmine postfix support --- #/
+
+RUN /bin/sh -c ' echo "### ### ### lxc-to-go // ### ### ###" > /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 1
+RUN /bin/sh -c ' echo "#" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 2
+RUN /bin/sh -c ' echo "# Outgoing email settings" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 3
+RUN /bin/sh -c ' echo "#" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 4
+RUN /bin/sh -c ' echo "production:" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 5
+RUN /bin/sh -c ' echo "  email_delivery:" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 6
+RUN /bin/sh -c ' echo "    delivery_method: :smtp" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 7
+RUN /bin/sh -c ' echo "    smtp_settings:" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 8
+RUN /bin/sh -c ' echo "      openssl_verify_mode: none" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 9
+RUN /bin/sh -c ' echo "      address: 127.0.0.1" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 10
+RUN /bin/sh -c ' echo "      port: 25" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 11
+RUN /bin/sh -c ' echo "      domain: privat.local" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 12
+RUN /bin/sh -c ' echo "      #authentication: :login" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 13
+RUN /bin/sh -c ' echo "      #user_name: redmine" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 14
+RUN /bin/sh -c ' echo "      #password: redmine" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 15
+RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 16
+RUN /bin/sh -c ' echo "#EOF" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage END
+
+RUN service apache2 reload; CHECK LXC: reload apache2 service
 
 #/ --- restart for port change --- #/
 
