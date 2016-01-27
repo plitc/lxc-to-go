@@ -29,11 +29,11 @@ RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 LOL 3
 
 ### FIX // ###
-RUN sed -i 's/privat.local./'"$DOMAINNAME"'/g' /etc/postfix/main.cf; CHECK
+RUN sed -i 's/privat.local./'"$DOMAINNAME"'/g' /etc/postfix/main.cf; CHECK LXC: change postfix config
 RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install postfix"
 ### // FIX ###
 
-RUN apt-get -y autoremove; CHECK
+RUN apt-get -y autoremove; CHECK LXC: apt-get autoremove
 
 LOL 4
 
@@ -117,6 +117,12 @@ RUN /bin/sh -c ' echo "      #user_name: redmine" >> /etc/redmine/default/config
 RUN /bin/sh -c ' echo "      #password: redmine" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 15
 RUN /bin/sh -c ' echo "### ### ### // lxc-to-go ### ### ###" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage 16
 RUN /bin/sh -c ' echo "#EOF" >> /etc/redmine/default/configuration.yml '; CHECK LXC: create configuration.yml for postfix support - stage END
+
+#/ --- imagemagick --- #/
+
+RUN apt-get -y install imagemagick; CHECK LXC: installing imagemagick
+
+LOL 7
 
 RUN service apache2 reload; CHECK LXC: reload apache2 service
 
