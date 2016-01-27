@@ -18,7 +18,7 @@ RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: a
 LOL 1
 
 RUN apt-get -y install screen; CHECK LXC: installing screen
-RUN apt-get -y install vim; CHECK LXC: installing vim
+RUN apt-get -y install vim zip; CHECK LXC: installing vim zip
 
 LOL 2
 
