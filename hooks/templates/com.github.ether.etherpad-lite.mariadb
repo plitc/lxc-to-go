@@ -25,8 +25,8 @@ then
    RUN apt-get -y install nodejs npm; CHECK LXC: installing nodejs npm
 else
    #// powerpc
-   RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/v8ppc.git; cd /root/v8ppc; ./configure; make install '; CHECK
-   RUN /bin/sh -c ' cd /root; git clone git://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; CHECK
+   RUN /bin/sh -c ' cd /root; git clone https://github.com/andrewlow/v8ppc.git; cd /root/v8ppc; ./configure; make install '; CHECK
+   RUN /bin/sh -c ' cd /root; git clone https://github.com/andrewlow/node.git; cd /root/node; ./configure; make install '; CHECK
    RUN apt-get -y install npm; CHECK
 fi
 CHECK LXC: configure amd64 or powerpc environment dependencies
@@ -39,7 +39,7 @@ LOL 2
 
 #/ --- etherpad-lite --- #/
 
-RUN /bin/sh -c ' cd /root; git clone git://github.com/ether/etherpad-lite.git '; CHECK LXC: git clone etherpad-lite
+RUN /bin/sh -c ' cd /root; git clone https://github.com/ether/etherpad-lite.git '; CHECK LXC: git clone etherpad-lite
 
 LOL 3
 
