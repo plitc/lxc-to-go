@@ -3078,7 +3078,7 @@ then
                echo "<--- --- --->"
             fi
             /usr/bin/sudo /bin/su -s /bin/sh -c ' pactl load-module module-native-protocol-tcp auth-ip-acl=192.168.253.0/24 auth-anonymous=1 ' "$GETLASTUSER"
-            checkhiddenhard PulseAudio Access denied!
+            checkhiddensoft PulseAudio Access denied!
             printf "\033[1;33m WARNING: PulseAudio listen on (vswitch0) Port 4713 now! \033[0m\n"
          else
             : # dummy
