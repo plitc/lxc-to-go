@@ -74,6 +74,10 @@ RUN systemctl status mysql; CHECK LXC: status mariadb
 
 LOL 6
 
+RUN apt-get -y install owncloud; CHECK LXC: installing owncloud
+
+LOL 7
+
 #/ --- configuration --- #/
 
 DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
