@@ -1,0 +1,109 @@
+#!/bin/sh
+### ### ### lxc-to-go // ### ### ###
+#// version: 1.0
+
+# include functions
+. /etc/lxc-to-go/template.func.sh
+
+echo "<--- --- --- provisioning hooks // --- --- --->"
+#// version: 1.2
+
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y upgrade"; CHECK LXC: apt-get upgrade
+
+LOL 1
+
+RUN apt-get -y install screen; CHECK LXC: installing screen
+RUN apt-get -y install vim; CHECK LXC: installing vim
+RUN apt-get -y install wget; CHECK LXC: installing wget
+
+LOL 2
+
+#/ --- owncloud --- #/
+
+RUN /bin/sh -c "wget -nv https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key -O /root/Release.key"; CHECK LXC: get owncloud Release.key
+RUN /bin/sh -c "apt-key add - < /root/Release.key"; CHECK LXC: import owncloud Release.key
+RUN /bin/sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' >> /etc/apt/sources.list.d/owncloud.list"; CHECK LXC: activate owncloud source.list
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN apt-get -y install owncloud-files; CHECK LXC: installing owncloud-files
+
+LOL 3
+
+#// prepare owncloud installation
+#/ --- backend: mysql --- #/
+
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install owncloud"; CHECK LXC: installing unattended owncloud
+RUN systemctl enable mysql; CHECK LXC: enable mysql-server
+RUN /etc/init.d/mysql start; CHECK LXC: starting mysql-server
+
+#// prepare unattended mysql-server root password
+RUN mysqladmin -u root password lxc-to-go; CHECK LXC: define default root password for mysql-server
+
+#// create database user: lxc-to-go
+RUN mysql -h localhost -uroot -plxc-to-go -e "CREATE USER 'lxc-to-go'@'localhost' IDENTIFIED BY 'lxc-to-go'"; CHECK LXC: create mysql-server database user
+
+#// create database: store
+RUN mysql -h localhost -uroot -plxc-to-go -e "create database store"; CHECK LXC: create mysql-server database store
+
+#// prepare database user: lxc-to-go permissions
+RUN mysql -h localhost -uroot -plxc-to-go -e "grant CREATE,ALTER,SELECT,INSERT,UPDATE,DELETE on store.* to 'lxc-to-go'@'localhost' identified by 'lxc-to-go'"; CHECK LXC: prepare mysql-server database user permissions
+
+#// mysql-server flush privileges
+RUN mysql -h localhost -uroot -plxc-to-go -e "FLUSH PRIVILEGES"; CHECK LXC: mysql-server flush privileges
+
+LOL 4
+
+#// postconfigure mysql binlog_format=mixed
+RUN /bin/sh -c "echo '### lxc-to-go // ###' >> /etc/mysql/my.cnf"; CHECK LXC: prepare mysql for binlog_format=mixed support - stage 1
+RUN /bin/sh -c "echo 'log-bin=mysql-bin' >> /etc/mysql/my.cnf"; CHECK LXC: prepare mysql for binlog_format=mixed support - stage 2
+RUN /bin/sh -c "echo 'binlog_format=mixed' >> /etc/mysql/my.cnf"; CHECK LXC: prepare mysql for binlog_format=mixed support - stage 3
+RUN /bin/sh -c "echo '### // lxc-to-go ###' >> /etc/mysql/my.cnf"; CHECK LXC: prepare mysql for binlog_format=mixed support - stage 4
+RUN systemctl stop mysql; CHECK LXC: shutdown mysql
+
+LOL 5
+
+RUN systemctl start mysql; CHECK LXC: starting mysql
+
+LOL 6
+
+RUN systemctl status mysql; CHECK LXC: status mysql
+
+LOL 7
+
+#/ --- configuration --- #/
+
+DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
+if [ "$DEBVERSIONX" = "7" ]; then
+   : # dummy
+fi
+if [ "$DEBVERSIONX" = "8" ]; then
+   : # dummy
+fi
+
+#/ --- restart for port change --- #/
+
+#/ --- info --- #/
+
+GETENVIRONMENT=$(grep -s "ENVIRONMENT" /etc/lxc-to-go/lxc-to-go.conf | sed 's/ENVIRONMENT=//')
+GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERFACE=//')
+GETHOSTBRIDGEIP4=$(ip addr show vswitch0 | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+GETHOSTPROXYIP4=$(ip addr show "$GETINTERFACE" | grep 'inet ' | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -n 1)
+
+echo ""
+if [ "$GETENVIRONMENT" = "bridge" ]
+then
+   echo "IP: (external)    $GETHOSTBRIDGEIP4"
+fi
+if [ "$GETENVIRONMENT" = "proxy" ]
+then
+   echo "IP: (external)    $GETHOSTPROXYIP4"
+fi
+echo "IP: (internal)    192.168.253.254"
+echo "IP: (internal)    lxc-to-go"
+echo "Port: (bind on)   $GETIPV4PORTINSIDEFIRST"
+echo "Ports:            $GETIPV4PORTINSIDE"
+echo ""
+
+echo "<--- --- --- // provisioning hooks --- --- --->"
+### ### ### // lxc-to-go ### ### ###
+# EOF
