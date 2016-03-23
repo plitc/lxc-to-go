@@ -55,9 +55,9 @@ LOL 3
 
 #/ --- owncloud --- #/
 
-RUN wget -nv https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key -O /root/Release.key; CHECK LXC: get owncloud Release.key
-RUN apt-key add - < /root/Release.key; CHECK LXC: import owncloud Release.key
-RUN sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' >> /etc/apt/sources.list.d/owncloud.list"; CHECK LXC: activate owncloud source.list
+RUN /bin/sh -c "wget -nv https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key -O /root/Release.key"; CHECK LXC: get owncloud Release.key
+RUN /bin/sh -c "apt-key add - < /root/Release.key"; CHECK LXC: import owncloud Release.key
+RUN /bin/sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' >> /etc/apt/sources.list.d/owncloud.list"; CHECK LXC: activate owncloud source.list
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN apt-get -y install owncloud-files; CHECK LXC: installing owncloud-files
 
