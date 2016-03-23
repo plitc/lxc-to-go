@@ -61,6 +61,19 @@ RUN /bin/sh -c "echo 'deb http://download.owncloud.org/download/repositories/sta
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN apt-get -y install owncloud-files; CHECK LXC: installing owncloud-files
 
+#// prepare mariadb binlog_format=mixed
+RUN /bin/sh -c "echo '### lxc-to-go // ###' >> /etc/mysql/conf.d/mariadb.cnf"; CHECK LXC: prepare mariadb for binlog_format=mixed support - stage 1
+RUN /bin/sh -c "echo 'log-bin=mysql-bin' >> /etc/mysql/conf.d/mariadb.cnf"; CHECK LXC: prepare mariadb for binlog_format=mixed support - stage 2
+RUN /bin/sh -c "echo 'binlog_format=mixed' >> /etc/mysql/conf.d/mariadb.cnf"; CHECK LXC: prepare mariadb for binlog_format=mixed support - stage 3
+RUN /bin/sh -c "echo '### // lxc-to-go ###' >> /etc/mysql/conf.d/mariadb.cnf"; CHECK LXC: prepare mariadb for binlog_format=mixed support - stage 4
+RUN systemctl stop mysql; CHECK LXC: shutdown mariadb
+LOL 4
+RUN systemctl start mysql; CHECK LXC: starting mariadb
+LOL 5
+RUN systemctl status mysql; CHECK LXC: status mariadb
+
+LOL 6
+
 #/ --- configuration --- #/
 
 DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
