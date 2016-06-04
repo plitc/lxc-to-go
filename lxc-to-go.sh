@@ -3513,6 +3513,7 @@ echo ""
 echo "Choose the LXC template:"
 echo "1) wheezy"
 echo "2) jessie"
+ls /var/lib/lxc/ | grep 'template$' | sed 's/template$//' | grep -v -e '^deb7$' -e '^deb8$'
 read LXCCREATETEMPLATE;
    if [ -z "$LXCCREATETEMPLATE" ]; then
       echo "[ERROR] nothing selected"
@@ -3520,62 +3521,46 @@ read LXCCREATETEMPLATE;
    fi
 case $LXCCREATETEMPLATE in
    1) echo "select: wheezy"
-      ### BTRFS SUPPORT // ###
-      if [ "$GETBTRFS" = "yes" ]
-      then
-         (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$LXCNAME") & spinner $!
-         checksoft create new btrfs subvolume snapshot: "$LXCNAME"
-      else
-         (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
-      fi
-      ### // BTRFS SUPPORT ###
-      if [ $? -eq 0 ]
-      then
-         : # dummy
-      else
-         echo "" # dummy
-         echo "[ERROR] lxc-clone failed!"
-         read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
-         if [ "$LXCCREATEFAILED" = "y" ]; then
-            lxc-destroy -n "$LXCNAME"
-         fi
-         exit 1
-      fi
-      sed -i 's/deb7template/'"$LXCNAME"'/g' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
-      sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
+      LXCCREATETEMPLATENAME=deb7
    ;;
    2) echo "select: jessie"
-      ### BTRFS SUPPORT // ###
-      if [ "$GETBTRFS" = "yes" ]
-      then
-         (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$LXCNAME") & spinner $!
-         checksoft create new btrfs subvolume snapshot: "$LXCNAME"
-      else
-         (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
-      fi
-      ### // BTRFS SUPPORT ###
-      if [ $? -eq 0 ]
-      then
-         : # dummy
-      else
-         echo "" # dummy
-         echo "[ERROR] lxc-clone failed!"
-         read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
-         if [ "$LXCCREATEFAILED" = "y" ]; then
-            lxc-destroy -n "$LXCNAME"
-         fi
-         exit 1
-      fi
-      sed -i 's/deb8template/'"$LXCNAME"'/g' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
-      sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
+      LXCCREATETEMPLATENAME=deb8
+   ;;
+   *) echo "select: $LXCCREATETEMPLATE"
+      LXCCREATETEMPLATENAME=$LXCCREATETEMPLATE
+
+      [ -d /var/lib/lxc/${LXCCREATETEMPLATENAME}template ]
+      checkhiddenhard "Selected template does not exist!"
    ;;
 esac
+
+### BTRFS SUPPORT // ###
+if [ "$GETBTRFS" = "yes" ]
+then
+   (btrfs subvolume snapshot /var/lib/lxc/${LXCCREATETEMPLATENAME}template /var/lib/lxc/"$LXCNAME") & spinner $!
+   checksoft create new btrfs subvolume snapshot: "$LXCNAME"
+else
+   (lxc-clone -o ${LXCCREATETEMPLATENAME}template -n "$LXCNAME") & spinner $!
+fi
+### // BTRFS SUPPORT ###
+if [ $? -eq 0 ]
+then
+   : # dummy
+else
+   echo "" # dummy
+   echo "[ERROR] lxc-clone failed!"
+   read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
+   if [ "$LXCCREATEFAILED" = "y" ]; then
+      lxc-destroy -n "$LXCNAME"
+   fi
+   exit 1
+fi
+sed -i 's/'"$LXCCREATETEMPLATENAME"'template/'"$LXCNAME"'/g' /var/lib/lxc/"$LXCNAME"/config
+sed -i 's/'"$LXCCREATETEMPLATENAME"'temp/'"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
+sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
+sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
+sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
+
 checkhard lxc-to-go create - stage 1
 
 ### randomized MAC address // ###
@@ -3816,7 +3801,7 @@ GETINTERFACE=$(grep -s "INTERFACE" /etc/lxc-to-go/lxc-to-go.conf | sed 's/INTERF
 
 echo "" # dummy
 printf "\033[1;33m LXC-to-Go HOST: \033[0m\n"
-lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,pid,memory,ram,swap | egrep -v "deb7template|deb8template"
+lxc-ls --fancy --fancy-format name,state,ipv4,ipv6,pid,memory,ram,swap | egrep -v "template "
 
 CHECKMANAGEDLXC=$(lxc-ls --active | grep -c "managed")
 if [ "$CHECKMANAGEDLXC" = "1" ]
