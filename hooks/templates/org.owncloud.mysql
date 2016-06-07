@@ -68,6 +68,23 @@ RUN /bin/sh -c "echo 'deb http://download.owncloud.org/download/repositories/sta
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN apt-get -y install owncloud owncloud-files; CHECK LXC: installing owncloud owncloud-files
 
+LOL 7
+
+#/ --- owncloud with active directory --- #/
+
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN apt-get -y install php5-ldap; CHECK LXC: installing php5-ldap
+
+RUN systemctl stop apache2; CHECK LXC: shutdown apache2
+
+LOL 8
+
+RUN systemctl start apache2; CHECK LXC: starting apache2
+
+LOL 5
+
+RUN systemctl status apache2; CHECK LXC: status apache2
+
 #/ --- configuration --- #/
 
 DEBVERSIONX=$(RUN grep -s "VERSION_ID" /etc/os-release | sed 's/VERSION_ID=//g' | sed 's/"//g')
@@ -96,10 +113,16 @@ if [ "$GETENVIRONMENT" = "proxy" ]
 then
    echo "IP: (external)    $GETHOSTPROXYIP4"
 fi
-echo "IP: (internal)    192.168.253.254"
-echo "IP: (internal)    lxc-to-go"
-echo "Port: (bind on)   $GETIPV4PORTINSIDEFIRST"
-echo "Ports:            $GETIPV4PORTINSIDE"
+echo "IP: (internal)         192.168.253.254"
+echo "IP: (internal)         lxc-to-go"
+echo "Port: (bind on)        $GETIPV4PORTINSIDEFIRST"
+echo "Ports:                 $GETIPV4PORTINSIDE"
+echo ""
+echo "MySQL Root Password:   lxc-to-go"
+echo ""
+echo "MySQL Database:        store"
+echo "MySQL User:            lxc-to-go"
+echo "MySQL Password:        lxc-to-go"
 echo ""
 
 echo "<--- --- --- // provisioning hooks --- --- --->"
