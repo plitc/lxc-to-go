@@ -19,20 +19,10 @@ RUN apt-get -y install wget; CHECK LXC: installing wget
 
 LOL 2
 
-#/ --- owncloud --- #/
-
-RUN /bin/sh -c "wget -nv https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key -O /root/Release.key"; CHECK LXC: get owncloud Release.key
-RUN /bin/sh -c "apt-key add - < /root/Release.key"; CHECK LXC: import owncloud Release.key
-RUN /bin/sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' >> /etc/apt/sources.list.d/owncloud.list"; CHECK LXC: activate owncloud source.list
-RUN apt-get -y update; CHECK LXC: apt-get update
-RUN apt-get -y install owncloud owncloud-files; CHECK LXC: installing owncloud owncloud-files
-
-LOL 3
-
 #// prepare owncloud installation
 #/ --- backend: mysql --- #/
 
-RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install owncloud"; CHECK LXC: installing unattended owncloud
+RUN /bin/sh -c "DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-server"; CHECK LXC: installing mysql-server
 RUN systemctl enable mysql; CHECK LXC: enable mysql-server
 RUN /etc/init.d/mysql start; CHECK LXC: starting mysql-server
 
@@ -51,7 +41,7 @@ RUN mysql -h localhost -uroot -plxc-to-go -e "grant CREATE,ALTER,SELECT,INSERT,U
 #// mysql-server flush privileges
 RUN mysql -h localhost -uroot -plxc-to-go -e "FLUSH PRIVILEGES"; CHECK LXC: mysql-server flush privileges
 
-LOL 4
+LOL 3
 
 #// postconfigure mysql binlog_format=mixed
 RUN /bin/sh -c "echo '### lxc-to-go // ###' >> /etc/mysql/my.cnf"; CHECK LXC: prepare mysql for binlog_format=mixed support - stage 1
@@ -60,15 +50,23 @@ RUN /bin/sh -c "echo 'binlog_format=mixed' >> /etc/mysql/my.cnf"; CHECK LXC: pre
 RUN /bin/sh -c "echo '### // lxc-to-go ###' >> /etc/mysql/my.cnf"; CHECK LXC: prepare mysql for binlog_format=mixed support - stage 4
 RUN systemctl stop mysql; CHECK LXC: shutdown mysql
 
-LOL 5
+LOL 4
 
 RUN systemctl start mysql; CHECK LXC: starting mysql
 
-LOL 6
+LOL 5
 
 RUN systemctl status mysql; CHECK LXC: status mysql
 
-LOL 7
+LOL 6
+
+#/ --- owncloud --- #/
+
+RUN /bin/sh -c "wget -nv https://download.owncloud.org/download/repositories/stable/Debian_8.0/Release.key -O /root/Release.key"; CHECK LXC: get owncloud Release.key
+RUN /bin/sh -c "apt-key add - < /root/Release.key"; CHECK LXC: import owncloud Release.key
+RUN /bin/sh -c "echo 'deb http://download.owncloud.org/download/repositories/stable/Debian_8.0/ /' >> /etc/apt/sources.list.d/owncloud.list"; CHECK LXC: activate owncloud source.list
+RUN apt-get -y update; CHECK LXC: apt-get update
+RUN apt-get -y install owncloud owncloud-files; CHECK LXC: installing owncloud owncloud-files
 
 #/ --- configuration --- #/
 
