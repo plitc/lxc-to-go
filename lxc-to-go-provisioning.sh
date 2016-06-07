@@ -1003,7 +1003,14 @@ if [ "$template" = "deb7" ]; then
       exit 1
    fi
    sed -i 's/deb7template/'"$name"'/g' /var/lib/lxc/"$name"/config
-   sed -i 's/lxc.network.name=eth1/lxc.network.name=eth0/' /var/lib/lxc/"$name"/config
+### FIX //
+   sed -i '0,/lxc.network.type=veth/s/lxc.network.type=veth//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.link=vswitch0/s/lxc.network.link=vswitch0//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.name=eth0/s/lxc.network.name=eth0//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.veth.pair=managed/s/lxc.network.veth.pair=managed//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.flags=up/s/lxc.network.flags=up//' /var/lib/lxc/"$name"/config
+### // FIX
+   #/ sed -i 's/lxc.network.name=eth1/lxc.network.name=eth0/' /var/lib/lxc/"$name"/config
    sed -i 's/lxc.network.veth.pair=deb7temp/lxc.network.veth.pair='"$name"'/' /var/lib/lxc/"$name"/config
    sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
    sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
@@ -1031,7 +1038,14 @@ if [ "$template" = "deb8" ]; then
       exit 1
    fi
    sed -i 's/deb8template/'"$name"'/g' /var/lib/lxc/"$name"/config
-   sed -i 's/lxc.network.name=eth1/lxc.network.name=eth0/' /var/lib/lxc/"$name"/config
+### FIX //
+   sed -i '0,/lxc.network.type=veth/s/lxc.network.type=veth//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.link=vswitch0/s/lxc.network.link=vswitch0//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.name=eth0/s/lxc.network.name=eth0//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.veth.pair=managed/s/lxc.network.veth.pair=managed//' /var/lib/lxc/"$name"/config
+   sed -i '0,/lxc.network.flags=up/s/lxc.network.flags=up//' /var/lib/lxc/"$name"/config
+### // FIX
+   #/ sed -i 's/lxc.network.name=eth1/lxc.network.name=eth0/' /var/lib/lxc/"$name"/config
    sed -i 's/lxc.network.veth.pair=deb8temp/lxc.network.veth.pair='"$name"'/' /var/lib/lxc/"$name"/config
    sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
    sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$name"/rootfs/etc/network/interfaces
