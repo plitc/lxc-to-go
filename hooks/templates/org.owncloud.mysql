@@ -75,6 +75,8 @@ LOL 7
 RUN apt-get -y update; CHECK LXC: apt-get update
 RUN apt-get -y install php5-ldap; CHECK LXC: installing php5-ldap
 
+RUN sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/var\/www\/owncloud/' /var/lib/lxc/"$LXCCREATENAME"/rootfs/etc/apache2/sites-enabled/000-default.conf; CHECK LXC: change DocumentRoot for apache2 owncloud
+
 RUN systemctl stop apache2; CHECK LXC: shutdown apache2
 
 LOL 8
