@@ -93,8 +93,8 @@ script:
         #- sudo cp -prfv /home/travis/build/plitc/lxc-to-go/hooks/templates/com.docker_x11gui /etc/lxc-to-go/hook_provisioning.sh
         #- sudo ./lxc-to-go-provisioning.sh -n dockerx11gui -t deb8 -h yes -p 60015 -s yes
 
-      - echo "<  Travis CI - stage 18  >"
-      - (echo "yes"; echo "yes") | sudo ./lxc-to-go.sh security
+        #- echo "<  Travis CI - stage 18  >"
+        #- (echo "yes"; echo "yes") | sudo ./lxc-to-go.sh security
 
 
 
