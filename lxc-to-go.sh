@@ -1647,6 +1647,14 @@ else
          lxc-destroy -n managed
          lxc-destroy -n deb7template
          lxc-destroy -n deb8template
+         ### BTRFS SUPPORT // ###
+         if [ "$GETBTRFS" = "yes" ]
+         then
+            btrfs subvolume delete /var/lib/lxc/managed
+            btrfs subvolume delete /var/lib/lxc/deb7template
+            btrfs subvolume delete /var/lib/lxc/deb8template
+         fi
+         ### // BTRFS SUPPORT ###
       fi
       sleep 1
       echo "" # dummy
@@ -1683,6 +1691,12 @@ else
          read -p "Do you wish to remove this corrupt LXC Container: managed ? (y/n) " LXCMANAGEDREMOVE
          if [ "$LXCMANAGEDREMOVE" = "y" ]; then
             lxc-destroy -n managed
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/managed
+            fi
+            ### // BTRFS SUPPORT ###
          fi
       exit 1
    fi
@@ -2144,6 +2158,13 @@ else
             lxc-stop -n managed -k
             lxc-destroy -n managed
             lxc-destroy -n deb7template
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/managed
+               btrfs subvolume delete /var/lib/lxc/deb7template
+            fi
+            ### // BTRFS SUPPORT ###
          fi
          exit 1
       fi
@@ -2160,6 +2181,13 @@ else
             lxc-stop -n managed -k
             lxc-destroy -n managed
             lxc-destroy -n deb7template
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/managed
+               btrfs subvolume delete /var/lib/lxc/deb7template
+            fi
+            ### // BTRFS SUPPORT ###
          fi
          exit 1
       fi
@@ -2174,6 +2202,13 @@ else
             lxc-stop -n managed -k
             lxc-destroy -n managed
             lxc-destroy -n deb7template
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/managed
+               btrfs subvolume delete /var/lib/lxc/deb7template
+            fi
+            ### // BTRFS SUPPORT ###
          fi
       exit 1
    fi
@@ -2187,6 +2222,13 @@ else
             lxc-stop -n managed -k
             lxc-destroy -n managed
             lxc-destroy -n deb7template
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/managed
+               btrfs subvolume delete /var/lib/lxc/deb7template
+            fi
+            ### // BTRFS SUPPORT ###
          fi
       exit 1
    fi
@@ -3442,6 +3484,12 @@ case $LXCCREATETEMPLATE in
          read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
          if [ "$LXCCREATEFAILED" = "y" ]; then
             lxc-destroy -n "$LXCNAME"
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/"$LXCNAME"
+            fi
+            ### // BTRFS SUPPORT ###
          fi
          exit 1
       fi
@@ -3476,6 +3524,12 @@ case $LXCCREATETEMPLATE in
          read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
          if [ "$LXCCREATEFAILED" = "y" ]; then
             lxc-destroy -n "$LXCNAME"
+            ### BTRFS SUPPORT // ###
+            if [ "$GETBTRFS" = "yes" ]
+            then
+               btrfs subvolume delete /var/lib/lxc/"$LXCNAME"
+            fi
+            ### // BTRFS SUPPORT ###
          fi
          exit 1
       fi
