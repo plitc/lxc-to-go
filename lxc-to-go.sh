@@ -2001,9 +2001,21 @@ else
    fi
    ### // BTRFS SUPPORT ###
    if [ "$DEBVERSION" = "7" ]; then
-      (lxc-clone -o managed -n deb7template) & spinner $!
+      CHECKLXC2A=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+      if [ "$CHECKLXC2A" = "1" ]
+      then
+         (lxc-copy -o managed -n deb7template) & spinner $!
+      else
+         (lxc-clone -o managed -n deb7template) & spinner $!
+      fi
    else
-      (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
+      CHECKLXC2B=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+      if [ "$CHECKLXC2B" = "1" ]
+      then
+         (lxc-copy -M -B dir -o managed -n deb7template) & spinner $!
+      else
+         (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
+      fi
    fi
    sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
    sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
@@ -2207,9 +2219,21 @@ else
       fi
       ### // BTRFS SUPPORT ###
       if [ "$DEBVERSION" = "7" ]; then
-         (lxc-clone -o managed -n deb8template) & spinner $!
+         CHECKLXC2C=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         if [ "$CHECKLXC2C" = "1" ]
+         then
+            (lxc-copy -o managed -n deb8template) & spinner $!
+         else
+            (lxc-clone -o managed -n deb8template) & spinner $!
+         fi
       else
-         (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
+         CHECKLXC2D=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         if [ "$CHECKLXC2D" = "1" ]
+         then
+            (lxc-copy -M -B dir -o managed -n deb8template) & spinner $!
+         else
+            (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
+         fi
       fi
       sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
       sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
@@ -3400,7 +3424,13 @@ case $LXCCREATETEMPLATE in
          (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$LXCNAME") & spinner $!
          checksoft create new btrfs subvolume snapshot: "$LXCNAME"
       else
-         (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
+         CHECKLXC2E=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         if [ "$CHECKLXC2E" = "1" ]
+         then
+            (lxc-copy -o deb7template -n "$LXCNAME") & spinner $!
+         else
+            (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
+         fi
       fi
       ### // BTRFS SUPPORT ###
       if [ $? -eq 0 ]
@@ -3408,7 +3438,7 @@ case $LXCCREATETEMPLATE in
          : # dummy
       else
          echo "" # dummy
-         echo "[ERROR] lxc-clone failed!"
+         echo "[ERROR] lxc- copy or clone failed!"
          read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
          if [ "$LXCCREATEFAILED" = "y" ]; then
             lxc-destroy -n "$LXCNAME"
@@ -3428,7 +3458,13 @@ case $LXCCREATETEMPLATE in
          (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$LXCNAME") & spinner $!
          checksoft create new btrfs subvolume snapshot: "$LXCNAME"
       else
-         (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
+         CHECKLXC2F=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         if [ "$CHECKLXC2F" = "1" ]
+         then
+            (lxc-copy -o deb8template -n "$LXCNAME") & spinner $!
+         else
+            (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
+         fi
       fi
       ### // BTRFS SUPPORT ###
       if [ $? -eq 0 ]
@@ -3436,7 +3472,7 @@ case $LXCCREATETEMPLATE in
          : # dummy
       else
          echo "" # dummy
-         echo "[ERROR] lxc-clone failed!"
+         echo "[ERROR] lxc- copy or clone failed!"
          read -p "Do you wish to remove this corrupt LXC Container: '"$LXCNAME"' ? (y/n)" LXCCREATEFAILED
          if [ "$LXCCREATEFAILED" = "y" ]; then
             lxc-destroy -n "$LXCNAME"
