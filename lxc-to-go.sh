@@ -2004,7 +2004,7 @@ else
       CHECKLXC2A=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
       if [ "$CHECKLXC2A" = "1" ]
       then
-         (lxc-copy -o managed -n deb7template) & spinner $!
+         (lxc-copy -N managed -n deb7template) & spinner $!
       else
          (lxc-clone -o managed -n deb7template) & spinner $!
       fi
@@ -2012,7 +2012,7 @@ else
       CHECKLXC2B=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
       if [ "$CHECKLXC2B" = "1" ]
       then
-         (lxc-copy -M -B dir -o managed -n deb7template) & spinner $!
+         (lxc-copy -M -B dir -N managed -n deb7template) & spinner $!
       else
          (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
       fi
@@ -2222,7 +2222,7 @@ else
          CHECKLXC2C=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
          if [ "$CHECKLXC2C" = "1" ]
          then
-            (lxc-copy -o managed -n deb8template) & spinner $!
+            (lxc-copy -N managed -n deb8template) & spinner $!
          else
             (lxc-clone -o managed -n deb8template) & spinner $!
          fi
@@ -2230,7 +2230,7 @@ else
          CHECKLXC2D=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
          if [ "$CHECKLXC2D" = "1" ]
          then
-            (lxc-copy -M -B dir -o managed -n deb8template) & spinner $!
+            (lxc-copy -M -B dir -N managed -n deb8template) & spinner $!
          else
             (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
          fi
@@ -3427,7 +3427,7 @@ case $LXCCREATETEMPLATE in
          CHECKLXC2E=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
          if [ "$CHECKLXC2E" = "1" ]
          then
-            (lxc-copy -o deb7template -n "$LXCNAME") & spinner $!
+            (lxc-copy -N deb7template -n "$LXCNAME") & spinner $!
          else
             (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
          fi
@@ -3461,7 +3461,7 @@ case $LXCCREATETEMPLATE in
          CHECKLXC2F=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
          if [ "$CHECKLXC2F" = "1" ]
          then
-            (lxc-copy -o deb8template -n "$LXCNAME") & spinner $!
+            (lxc-copy -N deb8template -n "$LXCNAME") & spinner $!
          else
             (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
          fi
