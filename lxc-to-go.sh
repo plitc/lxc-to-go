@@ -137,7 +137,6 @@ if [ $? -eq 0 ]
 then
    return 0
 else
-   #/return 1
    checkhard "$@"
    return 1
 fi
@@ -149,7 +148,6 @@ if [ $? -eq 0 ]
 then
    return 0
 else
-   #/return 1
    checksoft "$@"
    return 1
 fi
@@ -157,7 +155,7 @@ fi
 
 #// FUNCTION: starting all lxc vms (Version 1.0)
 lxcstartall() {
-   for i in $(lxc-ls --stopped | egrep -v "managed|deb7template|deb8template")
+   for i in $(lxc-ls --stopped | tr ' ' '\n' | egrep -v "managed|deb7template|deb8template" | sed '/^\s*$/d' | tr '\n' ' ')
    do
       if [ "$DEBIAN" = "ubuntu" ]
       then
@@ -174,7 +172,7 @@ lxcstartall() {
 
 #// FUNCTION: stopping lxc managed vm (Version 1.0)
 lxcstopmanaged() {
-   for i in $(lxc-ls --active | grep "managed")
+   for i in $(lxc-ls --active | tr ' ' '\n' | grep "managed" | sed '/^\s*$/d' | tr '\n' ' ')
    do
       (lxc-stop -n "$i") & spinner $!
       checksoft LXC-Stop: "$i"
@@ -184,11 +182,10 @@ lxcstopmanaged() {
 
 #// FUNCTION: stopping all lxc vms (Version 1.0)
 lxcstopall() {
-   for i in $(lxc-ls --active | egrep -v "managed|deb7template|deb8template")
+   for i in $(lxc-ls --active | tr ' ' '\n' | egrep -v "managed|deb7template|deb8template" | sed '/^\s*$/d' | tr '\n' ' ')
    do
       (lxc-stop -t 60 -n "$i") & spinner $!
       checkhiddensoft LXC killed: "$i"
-      #/lxc-ls --stopped | grep -sc "$i" > /dev/null 2>&1
       checksoft LXC-Stop: "$i"
       (sleep 5) & spinner $!
    done
@@ -237,7 +234,6 @@ lxcportforwarding() {
          ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
       fi
 # ipv4 //
-      #/lxc-ls --active --fancy -F name,state,ipv4 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "192.168.254" | awk 'BEGIN{ORS=" "}{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^192.168.254/) != 0){print $1,$2,$fields;break}fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
       #// get ip list
       lxc-ls --active --fancy -F name,state,ipv4,ipv6 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "192.168.254" | awk '{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^192.168.254/) != 0 || match($fields,/fd00:aaaa:254/) != 0){print $1,$2,$fields;break};fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv4.running.tmp
       #// merge ipv4 list
@@ -245,7 +241,6 @@ lxcportforwarding() {
       #// convert ipv4 list
       cat /etc/lxc-to-go/tmp/lxc.ipv4.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp
       #// set ipv4 iptables rules inside lxc: managed
-      #/(
       while read -r line
       do
          set -- $line
@@ -495,11 +490,9 @@ lxcportforwarding() {
          fi
          ### // set iptable rules on HOST ###
       done < "/etc/lxc-to-go/tmp/lxc.ipv4.running.list.conv.tmp"
-      #/)
       ### // set iptable rules ###
 # // ipv4
 # ipv6 //
-      #/lxc-ls --active --fancy -F name,state,ipv6 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "fd00:aaaa:254" | awk 'BEGIN{ORS=" "}{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^fd00:aaaa:254/) != 0){print $1,$2,$fields;break}fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp
       #// get ip list
       lxc-ls --active --fancy -F name,state,ipv6,ipv4 | grep "RUNNING" | egrep -v "managed|deb7template|deb8template" | grep "fd00:aaaa:254" | awk '{if($2 == "RUNNING"){fields=3;while(fields < NF){sub(/,$/,"",$fields);if(match($fields,/^fd00:aaaa:254/) != 0 || match($fields,/192.168.254/) != 0){print $1,$2,$fields;break};fields=fields+1}}}' | awk '{print $1,$3}' | sed 's/,//' | egrep -v "-" > /etc/lxc-to-go/tmp/lxc.ipv6.running.tmp
       #// merge ipv6 list
@@ -507,7 +500,6 @@ lxcportforwarding() {
       #// convert ipv6 list
       cat /etc/lxc-to-go/tmp/lxc.ipv6.running.list.tmp | awk '{print $3,$2}' | sed 's/,/ /g' > /etc/lxc-to-go/tmp/lxc.ipv6.running.list.conv.tmp
       #// set ipv6 iptables rules inside lxc: managed
-      #/(
       while read -r line
       do
          set -- $line
@@ -757,7 +749,6 @@ lxcportforwarding() {
          fi
          ### // set iptable rules on HOST ###
       done < "/etc/lxc-to-go/tmp/lxc.ipv6.running.list.conv.tmp"
-      #/)
       ### // set iptable rules ###
 # // ipv6
    fi
@@ -1118,8 +1109,6 @@ if [ "$DEBVERSION" = "7" ]; then
       if [ "$CHECKDEB7KERNEL316" = "0" ]; then
          CHECKDEB7BACKPORTS=$(grep -r "wheezy-backports" /etc/apt/ | grep -c "wheezy-backports")
          if [ "$CHECKDEB7BACKPORTS" = "0" ]; then
-            #/ echo "deb http://ftp.debian.org/debian wheezy-backports main contrib non-free" > /etc/apt/sources.list.d/wheezy-backports.list
-            #/ echo "deb-src http://ftp.debian.org/debian wheezy-backports main contrib non-free" >> /etc/apt/sources.list.d/wheezy-backports.list
 /bin/cat << CHECKDEB7WHEEZYBACKPORTSFILE > /etc/apt/sources.list.d/wheezy-backports.list
 ### ### ### lxc-to-go // ### ### ###
 
@@ -1376,12 +1365,6 @@ if [ "$CREATEBRIDGE0" = "1" ]; then
     : # dummy
 else
    brctl addbr vswitch0
-
-   #/if [ "$GETENVIRONMENT" = "bridge" ]; then
-   #/ip link add dummy0 type dummy >/dev/null 2>&1
-   #/brctl addif vswitch0 dummy0
-   #/fi
-
    ##/ check lxc-to-go-ci
    CHECKLXCTOGOCI=$(basename $0)
    if [ "$CHECKLXCTOGOCI" = "lxc-to-go-ci.sh" ];then
@@ -1441,14 +1424,9 @@ else
       ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
       ip6tables -t nat -A POSTROUTING -o "$GETINTERFACE" -j MASQUERADE
-      #/iptables -A FORWARD -i vswitch0 -j ACCEPT
-      #/sysctl -w net.ipv4.conf.all.forwarding=1 >/dev/null 2>&1
       ### NDP // ###
       sysctl -w net.ipv6.conf.all.forwarding=1 >/dev/null 2>&1
       ### // NDP ###
-      ### # EXAMPLE #/ lxc1
-      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
-      ### # EXAMPLE #/ iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport 10001 -j DNAT --to-destination 192.168.253.254:10001
    ### // NAT ###
    fi
 fi
@@ -1457,11 +1435,7 @@ checkhard prepare bridge zones - stage 1
 ### NEW IP - Bridge Environment // ###
 if [ "$GETENVIRONMENT" = "bridge" ]; then
    : # dummy
-   ##/ ipv4
-   #/killall dhclient
    if [ -e "$UDEVNET" ]; then
-      #/dhclient "$GETBRIDGEPORT0" >/dev/null 2>&1
-      #/route del default dev "$GETBRIDGEPORT0" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
          pgrep -f "[dhclient] '"$GETBRIDGEPORT0"'" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
@@ -1478,8 +1452,6 @@ if [ "$GETENVIRONMENT" = "bridge" ]; then
       echo "" # dummy
       echo "WARNING: if you want to change the default gateway on the HOST please use 'via vswitch0' and NOT $GETBRIDGEPORT0"
    else
-      #/dhclient "$GETINTERFACE" >/dev/null 2>&1
-      #/route del default dev "$GETINTERFACE" >/dev/null 2>&1
       if [ "$DEBVERSION" = "7" ]; then
          pgrep -f "[dhclient] $GETINTERFACE" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
          pgrep -f "[dhclient] vswitch0" | awk '{print $1}' | xargs -L1 -I % kill -9 % > /dev/null 2>&1
@@ -1756,17 +1728,17 @@ lxc.network.name=eth1
 lxc.network.veth.pair=managed1
 lxc.network.flags=up
 ###
-lxc.network.ipv4 = 192.168.254.254/24
-#/ lxc.network.ipv4.gateway = auto
-lxc.network.ipv6 = fd00:aaaa:0254::254/64
+lxc.network.ipv4=192.168.254.254/24
+#/ lxc.network.ipv4.gateway=auto
+lxc.network.ipv6=fd00:aaaa:0254::254/64
 ###
 
 lxc.mount=/etc/lxc/fstab.empty
 lxc.rootfs=/var/lib/lxc/managed/rootfs
 
 # mounts point
-lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
-lxc.mount.entry = sysfs sys sysfs defaults  0 0
+lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry=sysfs sys sysfs defaults  0 0
 
 #/ lxc.cgroup.memory.limit_in_bytes=268435456
 #/ lxc.cgroup.memory.memsw.limit_in_bytes=268435456
@@ -1776,66 +1748,61 @@ lxc.mount.entry = sysfs sys sysfs defaults  0 0
 
 #
 ### LXC - jessie/systemd hacks // ###
-lxc.autodev = 1
-lxc.kmsg = 0
+lxc.autodev=1
+lxc.kmsg=0
 
-#!# lxc.cap.drop = sys_admin
-#!# lxc.cap.drop = mknod
-#!# lxc.cap.drop = audit_control
-#!# lxc.cap.drop = audit_write
-#!# lxc.cap.drop = setfcap
-#!# lxc.cap.drop = setpcap
-#!# lxc.cap.drop = sys_resource
+#!# lxc.cap.drop=sys_admin
+#!# lxc.cap.drop=mknod
+#!# lxc.cap.drop=audit_control
+#!# lxc.cap.drop=audit_write
+#!# lxc.cap.drop=setfcap
+#!# lxc.cap.drop=setpcap
+#!# lxc.cap.drop=sys_resource
 #
-lxc.cap.drop = sys_module
-lxc.cap.drop = mac_admin
-lxc.cap.drop = mac_override
-lxc.cap.drop = sys_time
-lxc.cap.drop = sys_boot
-lxc.cap.drop = sys_pacct
-lxc.cap.drop = sys_rawio
-lxc.cap.drop = sys_tty_config
+lxc.cap.drop=sys_module
+lxc.cap.drop=mac_admin
+lxc.cap.drop=mac_override
+lxc.cap.drop=sys_time
+lxc.cap.drop=sys_boot
+lxc.cap.drop=sys_pacct
+lxc.cap.drop=sys_rawio
+lxc.cap.drop=sys_tty_config
 
 lxc.tty=2
-lxc.pts = 1024
-#/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
+lxc.pts=1024
+#/ lxc.mount.entry=/run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
 ### // LXC - jessie/systemd hacks ###
 #
 
-lxc.cgroup.devices.deny = a
+lxc.cgroup.devices.deny=a
 # tty
-lxc.cgroup.devices.allow = c 5:0 rwm
-lxc.cgroup.devices.allow = c 4:0 rwm
-lxc.cgroup.devices.allow = c 4:1 rwm
+lxc.cgroup.devices.allow=c 5:0 rwm
+lxc.cgroup.devices.allow=c 4:0 rwm
+lxc.cgroup.devices.allow=c 4:1 rwm
 # console
-lxc.cgroup.devices.allow = c 5:1 rwm
+lxc.cgroup.devices.allow=c 5:1 rwm
 # ptmx
-lxc.cgroup.devices.allow = c 5:2 rwm
+lxc.cgroup.devices.allow=c 5:2 rwm
 # pts/*
-lxc.cgroup.devices.allow = c 136:* rwm
+lxc.cgroup.devices.allow=c 136:* rwm
 # null
-lxc.cgroup.devices.allow = c 1:3 rwm
+lxc.cgroup.devices.allow=c 1:3 rwm
 # zero
-lxc.cgroup.devices.allow = c 1:5 rwm
+lxc.cgroup.devices.allow=c 1:5 rwm
 # full
-lxc.cgroup.devices.allow = c 1:7 rwm
+lxc.cgroup.devices.allow=c 1:7 rwm
 # random
-lxc.cgroup.devices.allow = c 1:8 rwm
+lxc.cgroup.devices.allow=c 1:8 rwm
 # urandom
-lxc.cgroup.devices.allow = c 1:9 rwm
+lxc.cgroup.devices.allow=c 1:9 rwm
 # fuse
-lxc.cgroup.devices.allow = c 10:229 rwm
+lxc.cgroup.devices.allow=c 10:229 rwm
 # tun
-lxc.cgroup.devices.allow = c 10:200 rwm
+lxc.cgroup.devices.allow=c 10:200 rwm
 
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGED1
-
-      #/if [ "$DEBVERSION" = "7" ]; then
-      #/   sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
-      #/   sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
-      #/fi
 
       ### randomized MAC address // ###
       RANDOM1=$(shuf -i 10-99 -n 1)
@@ -1881,10 +1848,10 @@ lxc.network.hwaddr=aa:bb:c0:0c:bb:aa
 lxc.network.veth.pair=managed
 lxc.network.flags=up
 ###
-lxc.network.ipv4 = 192.168.253.254/24
-lxc.network.ipv4.gateway = 192.168.253.253
-lxc.network.ipv6 = fd00:aaaa:0253::254/64
-lxc.network.ipv6.gateway = fd00:aaaa:0253::253
+lxc.network.ipv4=192.168.253.254/24
+lxc.network.ipv4.gateway=192.168.253.253
+lxc.network.ipv6=fd00:aaaa:0253::254/64
+lxc.network.ipv6.gateway=fd00:aaaa:0253::253
 ###
 
 # vswitch1 / intern
@@ -1894,17 +1861,17 @@ lxc.network.name=eth1
 lxc.network.veth.pair=managed1
 lxc.network.flags=up
 ###
-lxc.network.ipv4 = 192.168.254.254/24
-#/ lxc.network.ipv4.gateway = auto
-lxc.network.ipv6 = fd00:aaaa:0254::254/64
+lxc.network.ipv4=192.168.254.254/24
+#/ lxc.network.ipv4.gateway=auto
+lxc.network.ipv6=fd00:aaaa:0254::254/64
 ###
 
 lxc.mount=/etc/lxc/fstab.empty
 lxc.rootfs=/var/lib/lxc/managed/rootfs
 
 # mounts point
-lxc.mount.entry = proc proc proc nodev,noexec,nosuid 0 0
-lxc.mount.entry = sysfs sys sysfs defaults  0 0
+lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry=sysfs sys sysfs defaults  0 0
 
 #/ lxc.cgroup.memory.limit_in_bytes=268435456
 #/ lxc.cgroup.memory.memsw.limit_in_bytes=268435456
@@ -1914,57 +1881,57 @@ lxc.mount.entry = sysfs sys sysfs defaults  0 0
 
 #
 ### LXC - jessie/systemd hacks // ###
-lxc.autodev = 1
-lxc.kmsg = 0
+lxc.autodev=1
+lxc.kmsg=0
 
-#!# lxc.cap.drop = sys_admin
-#!# lxc.cap.drop = mknod
-#!# lxc.cap.drop = audit_control
-#!# lxc.cap.drop = audit_write
-#!# lxc.cap.drop = setfcap
-#!# lxc.cap.drop = setpcap
-#!# lxc.cap.drop = sys_resource
+#!# lxc.cap.drop=sys_admin
+#!# lxc.cap.drop=mknod
+#!# lxc.cap.drop=audit_control
+#!# lxc.cap.drop=audit_write
+#!# lxc.cap.drop=setfcap
+#!# lxc.cap.drop=setpcap
+#!# lxc.cap.drop=sys_resource
 #
-lxc.cap.drop = sys_module
-lxc.cap.drop = mac_admin
-lxc.cap.drop = mac_override
-lxc.cap.drop = sys_time
-lxc.cap.drop = sys_boot
-lxc.cap.drop = sys_pacct
-lxc.cap.drop = sys_rawio
-lxc.cap.drop = sys_tty_config
+lxc.cap.drop=sys_module
+lxc.cap.drop=mac_admin
+lxc.cap.drop=mac_override
+lxc.cap.drop=sys_time
+lxc.cap.drop=sys_boot
+lxc.cap.drop=sys_pacct
+lxc.cap.drop=sys_rawio
+lxc.cap.drop=sys_tty_config
 
 lxc.tty=2
-lxc.pts = 1024
-#/ lxc.mount.entry = /run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
+lxc.pts=1024
+#/ lxc.mount.entry=/run/systemd/journal mnt/journal none bind,ro,create=dir 0 0
 ### // LXC - jessie/systemd hacks ###
 #
 
-lxc.cgroup.devices.deny = a
+lxc.cgroup.devices.deny=a
 # tty
-lxc.cgroup.devices.allow = c 5:0 rwm
-lxc.cgroup.devices.allow = c 4:0 rwm
-lxc.cgroup.devices.allow = c 4:1 rwm
+lxc.cgroup.devices.allow=c 5:0 rwm
+lxc.cgroup.devices.allow=c 4:0 rwm
+lxc.cgroup.devices.allow=c 4:1 rwm
 # console
-lxc.cgroup.devices.allow = c 5:1 rwm
+lxc.cgroup.devices.allow=c 5:1 rwm
 # ptmx
-lxc.cgroup.devices.allow = c 5:2 rwm
+lxc.cgroup.devices.allow=c 5:2 rwm
 # pts/*
-lxc.cgroup.devices.allow = c 136:* rwm
+lxc.cgroup.devices.allow=c 136:* rwm
 # null
-lxc.cgroup.devices.allow = c 1:3 rwm
+lxc.cgroup.devices.allow=c 1:3 rwm
 # zero
-lxc.cgroup.devices.allow = c 1:5 rwm
+lxc.cgroup.devices.allow=c 1:5 rwm
 # full
-lxc.cgroup.devices.allow = c 1:7 rwm
+lxc.cgroup.devices.allow=c 1:7 rwm
 # random
-lxc.cgroup.devices.allow = c 1:8 rwm
+lxc.cgroup.devices.allow=c 1:8 rwm
 # urandom
-lxc.cgroup.devices.allow = c 1:9 rwm
+lxc.cgroup.devices.allow=c 1:9 rwm
 # fuse
-lxc.cgroup.devices.allow = c 10:229 rwm
+lxc.cgroup.devices.allow=c 10:229 rwm
 # tun
-lxc.cgroup.devices.allow = c 10:200 rwm
+lxc.cgroup.devices.allow=c 10:200 rwm
 
 ### ### ### // lxc-to-go ### ### ###
 # EOF
@@ -1978,11 +1945,6 @@ nameserver 74.82.42.42
 ### ### ### // lxc-to-go ### ### ###
 # EOF
 LXCCONFIGMANAGEDRESOLV
-
-      #/ if [ "$DEBVERSION" = "7" ]; then
-      #/    sed -i '/lxc.autodev/d' /var/lib/lxc/managed/config
-      #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/managed/config
-      #/ fi
 
 /bin/cat << CHECKMANAGEDNETFILE2 > /var/lib/lxc/managed/rootfs/etc/network/interfaces
 ### ### ### lxc-to-go // ### ### ###
@@ -2045,21 +2007,14 @@ else
    fi
    sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
    sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb7template/config
-   sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb7template/config
-   sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb7template/config
-   sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb7template/config
-   sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb7template/config
-   sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb7template/config
-   #/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.type=veth/s/lxc.network.type=veth//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.flags=up/s/lxc.network.flags=up//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.link=vswitch0/s/lxc.network.link=vswitch0//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.name=eth0/s/lxc.network.name=eth0//' /var/lib/lxc/deb7template/config
+   sed -i '0,/lxc.network.veth.pair=managed/s/lxc.network.veth.pair=managed//' /var/lib/lxc/deb7template/config
    sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb7template/config
    sed -i 's/managed1/deb7temp/g' /var/lib/lxc/deb7template/config
    sed -i '/^\s*$/d' /var/lib/lxc/deb7template/config
-
-   #/ if [ "$DEBVERSION" = "7" ]; then
-   #/    sed -i '/lxc.autodev/d' /var/lib/lxc/deb7template/config
-   #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/deb7template/config
-   #/ fi
-
    echo "" # dummy
       "$DIR"/hooks/hook_deb7.sh
    echo "" # dummy
@@ -2101,14 +2056,11 @@ if [ "$DEBVERSION" = "7" ]; then
       fi
    fi
 else
-   #/if [ "$DEBVERSION" = "8" ]; then
-   #/if [ "$DEBTESTVERSION" = "1" ]; then
    CHECKMANAGED2=$(lxc-ls --active | grep -c "managed")
    if [ "$CHECKMANAGED2" = "1" ]; then
       echo "... LXC Container (screen session: $CHECKMANAGED1STATUS): always running ..."
    else
       echo "... LXC Container (screen session): managed starting ..."
-      #/screen -d -m -S managed -- lxc-start -n managed
 ### fix //
       if [ "$DEBIAN" = "ubuntu" ]
       then
@@ -2261,27 +2213,19 @@ else
       fi
       sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
       sed -i '/lxc.network.ipv6/d' /var/lib/lxc/deb8template/config
-      sed -i '0,/lxc.network.type = veth/s/lxc.network.type = veth//' /var/lib/lxc/deb8template/config
-      sed -i '0,/lxc.network.flags = up/s/lxc.network.flags = up//' /var/lib/lxc/deb8template/config
-      sed -i '0,/lxc.network.link = vswitch0/s/lxc.network.link = vswitch0//' /var/lib/lxc/deb8template/config
-      sed -i '0,/lxc.network.name = eth0/s/lxc.network.name = eth0//' /var/lib/lxc/deb8template/config
-      sed -i '0,/lxc.network.veth.pair = managed/s/lxc.network.veth.pair = managed//' /var/lib/lxc/deb8template/config
-      #/ sed -i '0,/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa/s/lxc.network.hwaddr = aa:bb:c0:0c:bb:aa//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.type=veth/s/lxc.network.type=veth//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.flags=up/s/lxc.network.flags=up//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.link=vswitch0/s/lxc.network.link=vswitch0//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.name=eth0/s/lxc.network.name=eth0//' /var/lib/lxc/deb8template/config
+      sed -i '0,/lxc.network.veth.pair=managed/s/lxc.network.veth.pair=managed//' /var/lib/lxc/deb8template/config
       sed -i '/lxc.network.hwaddr/d' /var/lib/lxc/deb8template/config
       sed -i 's/managed1/deb8temp/g' /var/lib/lxc/deb8template/config
       sed -i '/^\s*$/d' /var/lib/lxc/deb8template/config
-
-      #/ if [ "$DEBVERSION" = "8" ]; then
-      #/    sed -i '/lxc.autodev/d' /var/lib/lxc/deb8template/config
-      #/    sed -i '/lxc.kmsg/d' /var/lib/lxc/deb8template/config
-      #/ fi
-
       echo "" # dummy
          "$DIR"/hooks/hook_deb8.sh
       echo "" # dummy
    fi
    echo "... LXC Container (screen session): managed restarting ..."
-   #/screen -d -m -S managed -- lxc-start -n managed
 ### fix //
    if [ "$DEBIAN" = "ubuntu" ]
    then
@@ -2382,57 +2326,9 @@ sysctl net.ipv6.conf.all.forwarding=1     # LXC
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE    # LXC
 ##/ ipv6 nat
 ip6tables -t nat -A POSTROUTING -o eth0 -j MASQUERADE   # LXC
-#/
-# lxc1
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10001 -j DNAT --to-destination 192.168.254.101:10001
-# lxc2
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10002 -j DNAT --to-destination 192.168.254.102:10002
-# lxc3
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10003 -j DNAT --to-destination 192.168.254.103:10003
-# lxc4
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10004 -j DNAT --to-destination 192.168.254.104:10004
-# lxc5
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10005 -j DNAT --to-destination 192.168.254.105:10005
-# lxc6
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10006 -j DNAT --to-destination 192.168.254.106:10006
-# lxc7
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10007 -j DNAT --to-destination 192.168.254.107:10007
-# lxc8
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10008 -j DNAT --to-destination 192.168.254.108:10008
-# lxc9
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10009 -j DNAT --to-destination 192.168.254.109:10009
-# lxc10
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
-### # EXAMPLE #/ iptables -t nat -A PREROUTING -i eth0 -p udp --dport 10010 -j DNAT --to-destination 192.168.254.110:10010
-#/
 
-##/ echo "stage2"
-# ip -6 rule add from 2001::/64 table 100
-# ip r a 2000::/3 dev eth0 via fe80:: table 100
-
-##/ echo "stage3"
-### IPredator // ###
-# route add -net 46.246.38.0 netmask 255.255.255.0 gw 192.168.254.254
-#
-# mkdir -p /dev/net
-# mknod /dev/net/tun c 10 200
-# chmod 666 /dev/net/tun
-#
-# systemctl restart openvpn
-### // IPredator ###
-
-exit 0
-#
 ### ### ### // lxc-to-go ### ### ###
+exit 0
 # EOF
 RCLOCALFILEMANAGED
 fi
@@ -2932,8 +2828,6 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### fix //
          if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" -o "$DEBIAN" = "raspbian" ]
          then
-            #// need link local!
-            #/ip -6 addr del "$GETIPV6UDEVLL2"/64 dev vswitch0 >/dev/null 2>&1
             : # dummy
          fi
    ### // fix
@@ -2957,8 +2851,6 @@ if [ "$GETENVIRONMENT" = "proxy" ]; then
    ### fix //
          if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "linuxmint" -o "$DEBIAN" = "ubuntu" -o "$DEBIAN" = "devuan" -o "$DEBIAN" = "raspbian" ]
          then
-            #// need link local!
-            #/ip -6 addr del "$GETIPV6LL2"/64 dev vswitch0 >/dev/null 2>&1
             : # dummy
          fi
    ### // fix
@@ -3009,8 +2901,6 @@ checkhard configure lxc-to-go symlinks - stage 1
 CHECKSYMLINK2=$(basename $0)
 if [ "$CHECKSYMLINK2" = "lxc-to-go-ci.sh" ]
 then
-   #/ln -sf "$ADIR"/lxc-to-go-ci.sh /usr/sbin/lxc-to-go-ci
-   #/ln -sf "$ADIR"/lxc-to-go-ci-provisioning.sh /usr/sbin/lxc-to-go-ci-provisioning
    : # dummy
 else
    : # dummy
@@ -3024,16 +2914,6 @@ then
    echo "192.168.253.254   lxc-to-go" >> /etc/hosts
 fi
 checkhard configure lxc-to-go etc/hosts entry
-
-### LXC-inside-LXC // ###
-## echo "" # dummy
-## echo "... prepare LXC-inside-LXC (if necessary) ..."
-## #/lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; brctl addif lxc-in-lxc eth1 >/dev/null 2>&1; ifconfig lxc-in-lxc up; else :; fi'
-## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then brctl addbr lxc-in-lxc >/dev/null 2>&1; ip link set dev lxc-in-lxc up; else :; fi'
-## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then ip addr add 192.168.252.254/24 dev lxc-in-lxc >/dev/null 2>&1; else :; fi'
-## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv4.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
-## lxc-attach -n managed -- /bin/sh -c 'if [ -e "/srv/lwp" ]; then sysctl -w net.ipv6.conf.lxc-in-lxc.forwarding=1 >/dev/null 2>&1; else :; fi'
-### // LXC-inside-LXC ###
 
 ### restricting container view of dmesg // ###
 echo 1 > /proc/sys/kernel/dmesg_restrict
@@ -3395,12 +3275,6 @@ ip6tables -t nat -D POSTROUTING -o "$GETINTERFACE" -j MASQUERADE >/dev/null 2>&1
 sysctl -w net.ipv4.conf.all.rp_filter=0 >/dev/null 2>&1
 sysctl -w net.ipv4.conf.default.rp_filter=0 >/dev/null 2>&1
 sysctl -w net.ipv4.conf."$GETINTERFACE".rp_filter=0 >/dev/null 2>&1
-#/ sysctl -w net.ipv4.conf.managed.rp_filter=0 >/dev/null 2>&1
-#/ sysctl -w net.ipv4.conf.managed1.rp_filter=0 >/dev/null 2>&1
-#/ sysctl -w net.ipv4.conf.vswitch0.rp_filter=0 >/dev/null 2>&1
-#/ sysctl -w net.ipv4.conf.vswitch1.rp_filter=0 >/dev/null 2>&1
-#
-# checkhard lxc-to-go-ci
 CHECKLXCTOGOCI=$(basename $0)
 if [ "$CHECKLXCTOGOCI" = "lxc-to-go-ci.sh" ];then
    : # dummy
@@ -3542,8 +3416,8 @@ case $LXCCREATETEMPLATE in
          exit 1
       fi
       sed -i 's/deb7template/'"$LXCNAME"'/g' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.veth.pair = deb7temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.name=eth1/lxc.network.name=eth0/' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.veth.pair=deb7temp/lxc.network.veth.pair='"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
       sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
@@ -3570,28 +3444,13 @@ case $LXCCREATETEMPLATE in
          exit 1
       fi
       sed -i 's/deb8template/'"$LXCNAME"'/g' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.name = eth1/lxc.network.name = eth0/' /var/lib/lxc/"$LXCNAME"/config
-      sed -i 's/lxc.network.veth.pair = deb8temp/lxc.network.veth.pair = '"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.name=eth1/lxc.network.name=eth0/' /var/lib/lxc/"$LXCNAME"/config
+      sed -i 's/lxc.network.veth.pair=deb8temp/lxc.network.veth.pair='"$LXCNAME"'/' /var/lib/lxc/"$LXCNAME"/config
       sed -i 's/iface eth0 inet manual/iface eth0 inet dhcp/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
       sed -i 's/iface eth0 inet6 manual/iface eth0 inet6 auto/' /var/lib/lxc/"$LXCNAME"/rootfs/etc/network/interfaces
    ;;
 esac
 checkhard lxc-to-go create - stage 1
-
-### randomized MAC address // ###
-#/ RANDOMMAC1=$(shuf -i 10-99 -n 1)
-#/ RANDOMMAC2=$(shuf -i 10-99 -n 1)
-#/ sed -i 's/aa:bb:01:01:bb:aa/aa:bb:'"$RANDOMMAC1"':'"$RANDOMMAC2"':bb:aa/' /var/lib/lxc/"$LXCNAME"/config
-#
-#/ CHECKMAC1=$(grep "aa:bb" /var/lib/lxc/"$LXCNAME"/config | sed 's/lxc.network.hwaddr=//')
-#/ CHECKMAC2=$(grep -c "$CHECKMAC1" /var/lib/lxc/*/config | egrep -v ":0")
-#/ if [ -z "$CHECKMAC2" ]; then
-#/    : # dummy
-#/ else
-#/    sed -i 's/aa:bb:01:01:bb:aa/aa:bb:'"$RANDOMMAC1"':'"$RANDOMMAC2"':bb:aa/' /var/lib/lxc/"$LXCNAME"/config
-#/    echo "try random mac for the second time"
-#/ fi
-### // randomized MAC address ###
 
 echo "$LXCNAME" > /var/lib/lxc/"$LXCNAME"/rootfs/etc/hostname
 
@@ -3751,18 +3610,7 @@ then
    fi
 fi
 checkhard lxc-to-go remove portforwarding rule
-
-### #// dirty but: The weakest goes to the wall (can't run lxcportforwarding without new lxc vm)
-### CHECKNEWLXC=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
-### if [ "$CHECKNEWLXC" = "0" ]
-### then
-###    : # dummy
-### else
-###    lxcportforwarding
-### fi
-
 lxcportforwarding
-
 cleanup
 checkhard clean up tmp files
 ### ### ###
@@ -4176,10 +4024,6 @@ MANAGEDLXCINLXC
    printf "\033[1;32m Password:        admin \033[0m\n"
    printf "\033[1;32m default gateway: 192.168.252.254 \033[0m\n"
 else
-   #/iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
-   #/iptables -t nat -D PREROUTING -i "$GETINTERFACE" -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 > /dev/null 2>&1 # HOST
-   #/iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p tcp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
-   #/iptables -t nat -A PREROUTING -i "$GETINTERFACE" -p udp --dport 5000 -j DNAT --to-destination 192.168.253.254:5000 # HOST
    echo "" # dummy
    printf "\033[1;32m LXC-Web-Panel:   http://192.168.253.254:5000 \033[0m\n"
    printf "\033[1;32m Username:        admin \033[0m\n"
@@ -4302,11 +4146,6 @@ fi
 if [ "$UNPRIVILEGED" = "yes" ]
 then
 ### Unprivileged Containers //
-###   CHECKUNPRIVILEGEDMANAGED=$(grep -sc "lxc.id_map" /var/lib/lxc/managed/config)
-###   if [ "$CHECKUNPRIVILEGEDMANAGED" != "0" ]
-###   then
-###      : # dummy
-###   else
       echo "" # dummy
       printf "\033[1;33m Unprivileged Containers appears to be correctly configured \033[0m\n"
       echo "" # dummy
