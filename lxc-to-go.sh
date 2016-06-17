@@ -2019,16 +2019,20 @@ else
       if [ "$CHECKLXC2A" = "1" ]
       then
          (lxc-copy -N managed -n deb7template) & spinner $!
+         sleep 1; sync
       else
          (lxc-clone -o managed -n deb7template) & spinner $!
+         sleep 1; sync
       fi
    else
       CHECKLXC2B=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
       if [ "$CHECKLXC2B" = "1" ]
       then
          (lxc-copy -M -B dir -N managed -n deb7template) & spinner $!
+         sleep 1; sync
       else
          (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
+         sleep 1; sync
       fi
    fi
    sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb7template/config
@@ -2265,16 +2269,20 @@ else
          if [ "$CHECKLXC2C" = "1" ]
          then
             (lxc-copy -N managed -n deb8template) & spinner $!
+            sleep 1; sync
          else
             (lxc-clone -o managed -n deb8template) & spinner $!
+            sleep 1; sync
          fi
       else
          CHECKLXC2D=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
          if [ "$CHECKLXC2D" = "1" ]
          then
             (lxc-copy -M -B dir -N managed -n deb8template) & spinner $!
+            sleep 1; sync
          else
             (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
+            sleep 1; sync
          fi
       fi
       sed -i '/lxc.network.ipv4/d' /var/lib/lxc/deb8template/config
@@ -3470,8 +3478,10 @@ case $LXCCREATETEMPLATE in
          if [ "$CHECKLXC2E" = "1" ]
          then
             (lxc-copy -N deb7template -n "$LXCNAME") & spinner $!
+            sleep 1; sync
          else
             (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
+            sleep 1; sync
          fi
       fi
       ### // BTRFS SUPPORT ###
@@ -3510,8 +3520,10 @@ case $LXCCREATETEMPLATE in
          if [ "$CHECKLXC2F" = "1" ]
          then
             (lxc-copy -N deb8template -n "$LXCNAME") & spinner $!
+            sleep 1; sync
          else
             (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
+            sleep 1; sync
          fi
       fi
       ### // BTRFS SUPPORT ###
