@@ -97,8 +97,12 @@ else
                   if [ "$DEBIAN" = "raspbian" ]; then
                      : # dummy
                   else
-                     echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) / Ubuntu Desktop 15.10+ / Devuan and rasPbIan"
+                     if [ "$DEBIAN" = "opensuse" ]; then
+                        : # dummy
+                     else
+                        echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) / Ubuntu Desktop 15.10+ / Devuan and rasPbIan"
                      exit 1
+                     fi
                   fi
                fi
             fi
@@ -761,7 +765,7 @@ case "$1" in
 'bootstrap')
 ### stage1 // ###
 case $DEBIAN in
-debian|linuxmint|ubuntu|devuan|raspbian)
+debian|linuxmint|ubuntu|devuan|raspbian|opensuse)
 ### stage2 // ###
 checkrootuser
 checkdebiandistribution
@@ -934,13 +938,17 @@ then
    printf "\033[1;33mWARNING: cgmanager dependency with systemd breaks devuan cgroups, so we ignore it!\033[0m\n"
 else
    CGMANAGER=$(/usr/bin/which cgmanager)
-   if [ -z "$CGMANAGER" ]; then
-      echo "<--- --- --->"
-      echo "need cgmanager"
-      echo "<--- --- --->"
-      apt-get update
-      apt-get -y install cgmanager
-      echo "<--- --- --->"
+   if [ "$DEBIAN" = "opensuse" ]; then
+      : # dummy
+   else
+      if [ -z "$CGMANAGER" ]; then
+         echo "<--- --- --->"
+         echo "need cgmanager"
+         echo "<--- --- --->"
+         apt-get update
+         apt-get -y install cgmanager
+         echo "<--- --- --->"
+      fi
    fi
    checkhard look over cgmanager
 fi
@@ -983,8 +991,12 @@ if [ -z "$IP6TABLES" ]; then
 fi
 checkhard look over ip6tables
 
-LXC=$(/usr/bin/dpkg -l | grep " lxc " | awk '{print $2}')
-if [ -z "$LXC" ]; then
+if [ "$DEBIAN" = "opensuse" ]; then
+   LXC=$(zypper se -i | grep -c " lxc ")
+else
+   LXC=$(/usr/bin/dpkg -l | grep -c " lxc " | awk '{print $2}')
+fi
+if [ "$LXC" = "0" ]; then
    echo "<--- --- --->"
    echo "need lxc"
    echo "<--- --- --->"
@@ -1045,8 +1057,12 @@ fi
 checkhard lxc template - wheezy configcheck
 ### // LXC TEMPLATE - WHEEZY ###
 
-BRIDGEUTILS=$(/usr/bin/dpkg -l | grep " bridge-utils " | awk '{print $2}')
-if [ -z "$BRIDGEUTILS" ]; then
+if [ "$DEBIAN" = "opensuse" ]; then
+   BRIDGEUTILS=$(zypper se -i | grep -c " bridge-utils ")
+else
+   BRIDGEUTILS=$(/usr/bin/dpkg -l | grep " bridge-utils " | awk '{print $2}')
+fi
+if [ "$BRIDGEUTILS" = "0" ]; then
    echo "<--- --- --->"
    echo "need bridge-utils"
    echo "<--- --- --->"
@@ -1056,8 +1072,12 @@ if [ -z "$BRIDGEUTILS" ]; then
 fi
 checkhard look over bridge-utils
 
-NETTOOLS=$(/usr/bin/dpkg -l | grep " net-tools " | awk '{print $2}')
-if [ -z "$NETTOOLS" ]; then
+if [ "$DEBIAN" = "opensuse" ]; then
+   NETTOOLS=$(zypper se -i | grep -c " net-tools ")
+else
+   NETTOOLS=$(/usr/bin/dpkg -l | grep " net-tools " | awk '{print $2}')
+fi
+if [ "$NETTOOLS" = "0" ]; then
    echo "<--- --- --->"
    echo "need net-tools"
    echo "<--- --- --->"
