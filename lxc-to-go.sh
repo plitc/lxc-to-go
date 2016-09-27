@@ -996,6 +996,7 @@ if [ "$DEBIAN" = "opensuse" ]; then
 else
    LXC=$(/usr/bin/dpkg -l | grep -c " lxc ")
 fi
+echo "$LXC"
 if [ "$LXC" = "0" ]; then
    echo "<--- --- --->"
    echo "need lxc"
