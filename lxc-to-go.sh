@@ -994,7 +994,7 @@ checkhard look over ip6tables
 if [ "$DEBIAN" = "opensuse" ]; then
    LXC=$(zypper se -i | grep -c " lxc ")
 else
-   LXC=$(/usr/bin/dpkg -l | grep -c " lxc " | awk '{print $2}')
+   LXC=$(/usr/bin/dpkg -l | grep -c " lxc ")
 fi
 if [ "$LXC" = "0" ]; then
    echo "<--- --- --->"
@@ -1060,7 +1060,7 @@ checkhard lxc template - wheezy configcheck
 if [ "$DEBIAN" = "opensuse" ]; then
    BRIDGEUTILS=$(zypper se -i | grep -c " bridge-utils ")
 else
-   BRIDGEUTILS=$(/usr/bin/dpkg -l | grep " bridge-utils " | awk '{print $2}')
+   BRIDGEUTILS=$(/usr/bin/dpkg -l | grep " bridge-utils ")
 fi
 if [ "$BRIDGEUTILS" = "0" ]; then
    echo "<--- --- --->"
@@ -1075,7 +1075,7 @@ checkhard look over bridge-utils
 if [ "$DEBIAN" = "opensuse" ]; then
    NETTOOLS=$(zypper se -i | grep -c " net-tools ")
 else
-   NETTOOLS=$(/usr/bin/dpkg -l | grep " net-tools " | awk '{print $2}')
+   NETTOOLS=$(/usr/bin/dpkg -l | grep " net-tools ")
 fi
 if [ "$NETTOOLS" = "0" ]; then
    echo "<--- --- --->"
