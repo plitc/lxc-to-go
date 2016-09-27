@@ -2048,7 +2048,7 @@ else
       CHECKLXC2B=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
       if [ "$CHECKLXC2B" = "1" ]
       then
-         (lxc-copy -M -B dir -N managed -n deb7template) & spinner $!
+         (lxc-copy -M -B dir -n managed -N deb7template) & spinner $!
          sleep 1; sync
       else
          (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
@@ -2298,7 +2298,7 @@ else
          CHECKLXC2D=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
          if [ "$CHECKLXC2D" = "1" ]
          then
-            (lxc-copy -M -B dir -N managed -n deb8template) & spinner $!
+            (lxc-copy -M -B dir -n managed -N deb8template) & spinner $!
             sleep 1; sync
          else
             (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
