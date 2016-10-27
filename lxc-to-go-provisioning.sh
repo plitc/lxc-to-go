@@ -989,7 +989,16 @@ if [ "$template" = "deb7" ]; then
       (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$name") & spinner $!
       checksoft create new btrfs subvolume snapshot: "$name"
    else
-      (lxc-clone -o deb7template -n "$name") & spinner $!
+      #// LXC v2 Support
+      CHECKLXCV2A=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+      if [ "$CHECKLXCV2A" = "1" ]
+      then
+         (lxc-copy -N deb7template -n "$name") & spinner $!
+         sleep 1; sync
+      else
+         (lxc-clone -o deb7template -n "$name") & spinner $!
+         sleep 1; sync
+      fi
    fi
    ### // BTRFS SUPPORT ###
    if [ $? -eq 0 ]
@@ -997,7 +1006,7 @@ if [ "$template" = "deb7" ]; then
       : # dummy
    else
       echo "" # dummy
-      echo "[ERROR] lxc-clone to "$name" failed!"
+      echo "[ERROR] lxc-clone/copy to "$name" failed!"
          lxc-stop -n "$name" -k
          lxc-destroy -n "$name"
       exit 1
@@ -1025,7 +1034,16 @@ if [ "$template" = "deb8" ]; then
       (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$name") & spinner $!
       checksoft create new btrfs subvolume snapshot: "$name"
    else
-      (lxc-clone -o deb8template -n "$name") & spinner $!
+      #// LXC v2 Support
+      CHECKLXCV2B=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+      if [ "$CHECKLXCV2B" = "1" ]
+      then
+         (lxc-copy -N deb8template -n "$name") & spinner $!
+         sleep 1; sync
+      else
+         (lxc-clone -o deb8template -n "$name") & spinner $!
+         sleep 1; sync
+      fi
    fi
    ### // BTRFS SUPPORT ###
    if [ $? -eq 0 ]
@@ -1033,7 +1051,7 @@ if [ "$template" = "deb8" ]; then
       : # dummy
    else
       echo "" # dummy
-      echo "[ERROR] lxc-clone to "$name" failed!"
+      echo "[ERROR] lxc-clone/copy to "$name" failed!"
          lxc-destroy -n "$name"
       exit 1
    fi
