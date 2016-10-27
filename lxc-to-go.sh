@@ -3443,7 +3443,7 @@ if [ "$CHECKBRIDGE1" = "0" ]; then
 fi
 checkhard lxc-to-go environment - stage 2
 
-CHECKLXCCONTAINER=$(lxc-ls | egrep -c "managed|deb7template|deb8template")
+CHECKLXCCONTAINER=$(lxc-ls | tr ' ' '\n' | egrep -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCCONTAINER" = "3" ]; then
    : # dummy
 else
