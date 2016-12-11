@@ -2,6 +2,57 @@
 
 Errata
 ======
+* 11.12.2016: [lxc-to-go 0.42.0.4]: Default Debian (Testing) Kernel 4.8 issue - (need bootoption: vsyscall=emulate) --- OPEN
+** https://github.com/docker/docker/issues/28705
+```
+Note : Before booting a new kernel, you can check its configuration
+usage : CONFIG=/path/to/config /usr/bin/lxc-checkconfig
+
+[  OK  ] 'optional: wheezy kernel upgrade'
+[  OK  ] 'optional: wheezy lxc upgrade'
+[  OK  ] 'grub configcheck'
+[  OK  ] 'optional: powerpc / travis-ci environment configcheck'
+[  OK  ] 'modprobe: iptables/nf_nat'
+[  OK  ] 'prepare bridge zones - stage 1'
+[  OK  ] 'prepare bridge zones - stage 2'
+[  OK  ] 'prepare bridge zones - stage 3'
+[ERROR] previous managed lxc container bootstrap goes wrong
+
+Do you wish to remove and cleanup the corrupt lxc-to-go environment and start again ? (y/n) y
+managed is not running
+Destroyed container managed
+Container is not defined
+Container is not defined
+
+[  OK  ] 'lxc: managed bootstrap - stage 1'
+Create subvolume '/var/lib/lxc/managed'
+[  OK  ] 'create new btrfs lxc: managed subvolume'
+debootstrap ist /usr/sbin/debootstrap
+Checking cache download in /var/cache/lxc/debian/rootfs-wheezy-amd64 ...
+Copying rootfs to /var/lib/lxc/managed/rootfs...Generating locales (this might take a while)...
+de_DE.UTF-8... done
+de_DE.UTF-8... done
+Generation complete.
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1129 Speicherzugriffsfehler  chroot "$rootfs" update-locale LANG="$LANG"
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1130 Speicherzugriffsfehler  chroot "$rootfs" /usr/sbin/update-rc.d -f checkroot.sh disable
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1131 Speicherzugriffsfehler  chroot "$rootfs" /usr/sbin/update-rc.d -f umountfs disable
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1132 Speicherzugriffsfehler  chroot "$rootfs" /usr/sbin/update-rc.d -f hwclock.sh disable
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1133 Speicherzugriffsfehler  chroot "$rootfs" /usr/sbin/update-rc.d -f hwclockfirst.sh disable
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1137 Speicherzugriffsfehler  DPKG_MAINTSCRIPT_PACKAGE=openssh DPKG_MAINTSCRIPT_NAME=postinst chroot "$rootfs" /var/lib/dpkg/info/openssh-server.postinst configure
+sed: kann /var/lib/lxc/managed/rootfs/etc/ssh/ssh_host_*.pub nicht lesen: Datei oder Verzeichnis nicht gefunden
+/usr/share/lxc/templates/lxc-debian-wheezy: Zeile 45:  1142 Speicherzugriffsfehler  chroot "$rootfs" dpkg-reconfigure -f noninteractive tzdata
+[  OK  ] 'lxc: managed bootstrap - stage 2'
+[  OK  ] 'configure host sysctl'
+[  OK  ] 'optional: fixes for ubuntu'
+
+ERROR: target path already exists: /var/lib/lxc/deb7template
+[FAILED] 'create new btrfs lxc: deb7template subvolume'
+./lxc-to-go.sh: 2054: ./lxc-to-go.sh: lxc-clone: not found
+^C
+
+root@root6:/github/lxc-to-go#
+```
+
 * 19.12.2015: [lxc-to-go < 0.40.8.8]: lxc-to-go start / delete [FAILED] 'lxc: set up nat rules' --- OPEN
 
 * 12.12.2015: [lxc-to-go < 0.40.8.8]: lxc-to-go start / delete [FAILED] 'lxc: set up nat rules' --- OPEN
