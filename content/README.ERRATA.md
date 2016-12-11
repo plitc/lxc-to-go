@@ -3,7 +3,26 @@
 Errata
 ======
 * 11.12.2016: [lxc-to-go 0.42.0.4]: Default Debian (Testing) Kernel 4.8 issue - (need bootoption: vsyscall=emulate) --- OPEN
-** https://github.com/docker/docker/issues/28705
+-> https://github.com/docker/docker/issues/28705
+```
+Dec 10 14:49:41 root6 kernel: [  135.380512] update-locale[1071] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7fff7acc87f8 ax:ffffffffff600400 si:0 di:846560
+Dec 10 14:49:41 root6 kernel: [  135.380602] update-locale[1071]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007fff7acc87f8 error 15
+Dec 10 14:49:41 root6 kernel: [  135.381826] update-rc.d[1072] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7ffdcee59418 ax:ffffffffff600400 si:0 di:1152560
+Dec 10 14:49:41 root6 kernel: [  135.381894] update-rc.d[1072]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007ffdcee59418 error 15
+Dec 10 14:49:41 root6 kernel: [  135.383069] update-rc.d[1073] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7ffffb219368 ax:ffffffffff600400 si:0 di:f1c560
+Dec 10 14:49:41 root6 kernel: [  135.383137] update-rc.d[1073]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007ffffb219368 error 15
+Dec 10 14:49:41 root6 kernel: [  135.384407] update-rc.d[1074] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7ffce797dd28 ax:ffffffffff600400 si:0 di:1184560
+Dec 10 14:49:41 root6 kernel: [  135.384472] update-rc.d[1074]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007ffce797dd28 error 15
+Dec 10 14:49:41 root6 kernel: [  135.385520] update-rc.d[1075] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7ffe21cb9338 ax:ffffffffff600400 si:0 di:1d15560
+Dec 10 14:49:41 root6 kernel: [  135.385587] update-rc.d[1075]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007ffe21cb9338 error 15
+Dec 10 14:49:41 root6 kernel: [  135.388736] frontend[1079] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7ffefda08cc8 ax:ffffffffff600400 si:0 di:14f4560
+Dec 10 14:49:41 root6 kernel: [  135.388802] frontend[1079]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007ffefda08cc8 error 15
+Dec 10 14:49:41 root6 kernel: [  135.392871] dpkg-reconfigur[1084] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7ffc032f8368 ax:ffffffffff600400 si:0 di:8de560
+Dec 10 14:49:41 root6 kernel: [  135.392941] dpkg-reconfigur[1084]: segfault at ffffffffff600400 ip ffffffffff600400 sp 00007ffc032f8368 error 15
+Dec 11 14:20:41 root6 kernel: [    0.000000] Linux version 4.8.0-1-amd64 (debian-kernel@lists.debian.org) (gcc version 5.4.1 20161019 (Debian 5.4.1-3) ) #1 SMP Debian 4.8.7-1 (2016-11-13)
+Dec 11 14:20:41 root6 kernel: [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-4.8.0-1-amd64 root=/dev/mapper/root6-system ro cgroup_enable=memory swapaccount=1
+```
+
 ```
 Note : Before booting a new kernel, you can check its configuration
 usage : CONFIG=/path/to/config /usr/bin/lxc-checkconfig
