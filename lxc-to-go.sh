@@ -2035,23 +2035,23 @@ else
    fi
    ### // BTRFS SUPPORT ###
    if [ "$DEBVERSION" = "7" ]; then
-      CHECKLXC2A=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+      CHECKLXC2A=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
       if [ "$CHECKLXC2A" = "1" ]
       then
-         (lxc-copy -N managed -n deb7template) & spinner $!
+         (lxc-clone -o managed -n deb7template) & spinner $!
          sleep 1; sync
       else
-         (lxc-clone -o managed -n deb7template) & spinner $!
+         (lxc-copy -N managed -n deb7template) & spinner $!
          sleep 1; sync
       fi
    else
-      CHECKLXC2B=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+      CHECKLXC2B=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
       if [ "$CHECKLXC2B" = "1" ]
       then
-         (lxc-copy -M -B dir -n managed -N deb7template) & spinner $!
+         (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
          sleep 1; sync
       else
-         (lxc-clone -M -B dir -o managed -n deb7template) & spinner $!
+         (lxc-copy -M -B dir -n managed -N deb7template) & spinner $!
          sleep 1; sync
       fi
    fi
@@ -2285,23 +2285,23 @@ else
       fi
       ### // BTRFS SUPPORT ###
       if [ "$DEBVERSION" = "7" ]; then
-         CHECKLXC2C=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         CHECKLXC2C=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2C" = "1" ]
          then
-            (lxc-copy -N managed -n deb8template) & spinner $!
+            (lxc-clone -o managed -n deb8template) & spinner $!
             sleep 1; sync
          else
-            (lxc-clone -o managed -n deb8template) & spinner $!
+            (lxc-copy -N managed -n deb8template) & spinner $!
             sleep 1; sync
          fi
       else
-         CHECKLXC2D=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         CHECKLXC2D=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2D" = "1" ]
          then
-            (lxc-copy -M -B dir -n managed -N deb8template) & spinner $!
+            (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
             sleep 1; sync
          else
-            (lxc-clone -M -B dir -o managed -n deb8template) & spinner $!
+            (lxc-copy -M -B dir -n managed -N deb8template) & spinner $!
             sleep 1; sync
          fi
       fi
@@ -3494,13 +3494,13 @@ case $LXCCREATETEMPLATE in
          (btrfs subvolume snapshot /var/lib/lxc/deb7template /var/lib/lxc/"$LXCNAME") & spinner $!
          checksoft create new btrfs subvolume snapshot: "$LXCNAME"
       else
-         CHECKLXC2E=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         CHECKLXC2E=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2E" = "1" ]
          then
-            (lxc-copy -N deb7template -n "$LXCNAME") & spinner $!
+            (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
             sleep 1; sync
          else
-            (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
+            (lxc-copy -N deb7template -n "$LXCNAME") & spinner $!
             sleep 1; sync
          fi
       fi
@@ -3536,13 +3536,13 @@ case $LXCCREATETEMPLATE in
          (btrfs subvolume snapshot /var/lib/lxc/deb8template /var/lib/lxc/"$LXCNAME") & spinner $!
          checksoft create new btrfs subvolume snapshot: "$LXCNAME"
       else
-         CHECKLXC2F=$(dpkg -l | grep -ws "lxc" | grep -c "1:2")
+         CHECKLXC2F=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2F" = "1" ]
          then
-            (lxc-copy -N deb8template -n "$LXCNAME") & spinner $!
+            (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
             sleep 1; sync
          else
-            (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
+            (lxc-copy -N deb8template -n "$LXCNAME") & spinner $!
             sleep 1; sync
          fi
       fi
