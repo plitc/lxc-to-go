@@ -1283,7 +1283,7 @@ else
          else
             cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
             sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
-            sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
+            sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1 vsyscall=emulate"/' /etc/default/grub
 
             ### grub update
 

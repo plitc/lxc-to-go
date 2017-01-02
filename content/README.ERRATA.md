@@ -2,7 +2,7 @@
 
 Errata
 ======
-* 11.12.2016: [lxc-to-go 0.42.0.4]: Default Debian (Testing) Kernel 4.8 issue - (need bootoption: vsyscall=emulate) --- OPEN
+* 11.12.2016: [lxc-to-go 0.42.0.4]: Default Debian (Testing) Kernel 4.8 issue - (need bootoption: vsyscall=emulate) --- FIXED in [Version: 0.42.0.8.travis32]
 -> https://github.com/docker/docker/issues/28705
 ```
 Dec 10 14:49:41 root6 kernel: [  135.380512] update-locale[1071] vsyscall attempted with vsyscall=none ip:ffffffffff600400 cs:33 sp:7fff7acc87f8 ax:ffffffffff600400 si:0 di:846560
