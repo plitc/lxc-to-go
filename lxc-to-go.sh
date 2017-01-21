@@ -76,40 +76,16 @@ fi
 
 #// FUNCTION: check debian based distributions (Version 1.0)
 checkdebiandistribution() {
-if [ "$DEBVERSION" = "7" ]; then
+case $DEBIAN in
+debian|linuxmint|ubuntu|devuan|raspbian|opensuse)
    : # dummy
-else
-   if [ "$DEBVERSION" = "8" ]; then
-      : # dummy
-   else
-      if [ "$DEBTESTVERSION" = "1" ]; then
-         : # dummy
-      else
-         if [ "$DEBIAN" = "linuxmint" ]; then
-            : # dummy
-         else
-            if [ "$DEBIAN" = "ubuntu" ]; then
-               : # dummy
-            else
-               if [ "$DEBIAN" = "devuan" ]; then
-                  : # dummy
-               else
-                  if [ "$DEBIAN" = "raspbian" ]; then
-                     : # dummy
-                  else
-                     if [ "$DEBIAN" = "opensuse" ]; then
-                        : # dummy
-                     else
-                        echo "[ERROR] We currently only support: Debian 7,8,9 (testing) / Linux Mint Debian Edition (LMDE 2 Betsy) / Ubuntu Desktop 15.10+ / Devuan and rasPbIan"
-                     exit 1
-                     fi
-                  fi
-               fi
-            fi
-         fi
-      fi
-   fi
-fi
+   ;;
+*)
+   : # dummy
+   echo "[ERROR] Plattform = unknown"
+   exit 1
+   ;;
+esac
 }
 
 #// FUNCTION: check state (Version 1.0)
