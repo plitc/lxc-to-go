@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 ### LICENSE - (BSD 2-Clause) // ###
 #
