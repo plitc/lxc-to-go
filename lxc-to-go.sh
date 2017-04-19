@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 ### LICENSE - (BSD 2-Clause) // ###
 #
@@ -3149,7 +3149,7 @@ checkhard lxc-to-go environment - stage 1
 #
 ### ### ### ### ### ### ### ### ###
 
-CHECKCONTAINER1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+CHECKCONTAINER1=$(lxc-ls --line | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKCONTAINER1" = "0" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
