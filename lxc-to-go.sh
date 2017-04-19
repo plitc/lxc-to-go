@@ -3167,7 +3167,7 @@ else
 fi
 checkhard lxc-to-go environment - stage 3
 
-CHECKLXCSTART1=$(lxc-ls | egrep -v -c "managed|deb7template|deb8template")
+CHECKLXCSTART1=$(lxc-ls --line | egrep -v -c "managed|deb7template|deb8template")
 if [ "$CHECKLXCSTART1" = "0" ]; then
    echo "" # dummy
    printf "\033[1;31mCan't find any additional LXC Container, execute the 'create' command at first\033[0m\n"
