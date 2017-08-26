@@ -2014,7 +2014,7 @@ else
       CHECKLXC2A=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
       if [ "$CHECKLXC2A" = "1" ]
       then
-         (lxc-copy -N managed -n deb7template) & spinner $!
+         (lxc-copy -n managed -N deb7template) & spinner $!
          sleep 1; sync
       else
          (lxc-clone -o managed -n deb7template) & spinner $!
@@ -2264,7 +2264,7 @@ else
          CHECKLXC2C=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2C" = "1" ]
          then
-            (lxc-copy -N managed -n deb8template) & spinner $!
+            (lxc-copy -n managed -N deb8template) & spinner $!
             sleep 1; sync
          else
             (lxc-clone -o managed -n deb8template) & spinner $!
@@ -3473,7 +3473,7 @@ case $LXCCREATETEMPLATE in
          CHECKLXC2E=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2E" = "1" ]
          then
-            (lxc-copy -N deb7template -n "$LXCNAME") & spinner $!
+            (lxc-copy -n deb7template -N "$LXCNAME") & spinner $!
             sleep 1; sync
          else
             (lxc-clone -o deb7template -n "$LXCNAME") & spinner $!
@@ -3515,7 +3515,7 @@ case $LXCCREATETEMPLATE in
          CHECKLXC2F=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2F" = "1" ]
          then
-            (lxc-copy -N deb8template -n "$LXCNAME") & spinner $!
+            (lxc-copy -n deb8template -N "$LXCNAME") & spinner $!
             sleep 1; sync
          else
             (lxc-clone -o deb8template -n "$LXCNAME") & spinner $!
