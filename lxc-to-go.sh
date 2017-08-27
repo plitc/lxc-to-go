@@ -2014,7 +2014,15 @@ else
       CHECKLXC2A=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
       if [ "$CHECKLXC2A" = "1" ]
       then
-         (lxc-copy -n managed -N deb7template) & spinner $!
+         #// check new lxc versions
+         lxc-copy --help > /tmp/lxc-to-go_lxc-copy_tdeb7 2>&1
+         CHECKLXCCOPY1=$(grep -c " -n, --name=NAME" /tmp/lxc-to-go_lxc-copy_tdeb7)
+         if [ "$CHECKLXCCOPY1" = "1" ]
+         then
+            (lxc-copy -n managed -N deb7template) & spinner $!
+         else
+            (lxc-copy -N managed -n deb7template) & spinner $!
+         fi
          sleep 1; sync
       else
          (lxc-clone -o managed -n deb7template) & spinner $!
@@ -2264,7 +2272,15 @@ else
          CHECKLXC2C=$(dpkg -l | grep -ws " lxc " | grep -c "1:2")
          if [ "$CHECKLXC2C" = "1" ]
          then
-            (lxc-copy -n managed -N deb8template) & spinner $!
+            #// check new lxc versions
+            lxc-copy --help > /tmp/lxc-to-go_lxc-copy_tdeb8 2>&1
+            CHECKLXCCOPY2=$(grep -c " -n, --name=NAME" /tmp/lxc-to-go_lxc-copy_tdeb8)
+            if [ "$CHECKLXCCOPY2" = "1" ]
+            then
+               (lxc-copy -n managed -N deb8template) & spinner $!
+            else
+               (lxc-copy -N managed -n deb8template) & spinner $!
+            fi
             sleep 1; sync
          else
             (lxc-clone -o managed -n deb8template) & spinner $!
