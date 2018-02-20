@@ -773,14 +773,14 @@ then
 fi
 checkhard optional: fixes for lmde
 #
-#/ fixes for ubuntu
-if [ "$DEBIAN" = "ubuntu" ]
+#/ fixes for debian & ubuntu with apparmor
+if [ "$DEBIAN" = "debian" -o "$DEBIAN" = "ubuntu" ]
 then
    /etc/init.d/apparmor stop >/dev/null 2>&1
    systemctl stop apparmor >/dev/null 2>&1
-   systemctl disabpe apparmor >/dev/null 2>&1
-   printf "\033[1;33mWARNING: disable AppArmor on Ubuntu!\033[0m\n"
-   sleep 6
+   systemctl disable apparmor >/dev/null 2>&1
+   printf "\033[1;33mWARNING: disable AppArmor on Debian & Ubuntu!\033[0m\n"
+   sleep 1
 fi
 checkhard optional: fixes for ubuntu
 #
