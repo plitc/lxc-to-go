@@ -780,7 +780,6 @@ then
    systemctl stop apparmor >/dev/null 2>&1
    systemctl disable apparmor >/dev/null 2>&1
    printf "\033[1;33mWARNING: disable AppArmor on Debian & Ubuntu!\033[0m\n"
-   sleep 1
 fi
 checkhard optional: fixes for ubuntu
 #
@@ -1063,8 +1062,6 @@ if [ "$NETTOOLS" = "0" ]; then
 fi
 checkhard look over net-tools
 
-sleep 1
-
 ### LXC inside LXC // ###
 CHECKLXCINSIDELXC=$(echo $container | grep -c "lxc")
 ### // LXC inside LXC ###
@@ -1094,8 +1091,6 @@ else
     fi
     exit 1
 fi
-
-sleep 1
 
 ### Wheezy KERNEL UPGRADE // ###
 if [ "$DEBVERSION" = "7" ]; then
@@ -1620,10 +1615,6 @@ fi
 checkhard prepare bridge zones - stage 3
 ### // NEW IP - Proxy Environment ###
 
-### ### ###
-sleep 1
-### ### ###
-
 ### NEW 'managed' lxc bootstrap // ###
 CHECKBOOTSTRAPINSTALL0="/etc/lxc-to-go/STAGE1"
 if [ -e "$CHECKBOOTSTRAPINSTALL0" ]; then
@@ -1652,7 +1643,6 @@ else
          fi
          ### // BTRFS SUPPORT ###
       fi
-      sleep 1
       echo "" # dummy
    fi
 fi
@@ -3066,7 +3056,6 @@ CHECKLXCMANAGEDDHCP=$(lxc-attach -n managed -- /bin/sh -c ' systemctl status isc
 if [ "$CHECKLXCMANAGEDDHCP" = "1" ]
 then
    lxc-attach -n managed -- systemctl restart isc-dhcp-server
-   sleep 2
    lxc-attach -n managed -- systemctl status isc-dhcp-server
    checksoft LXC Managed: isc-dhcp-server restart
    echo "" # dummy
@@ -3080,7 +3069,6 @@ CHECKLXCMANAGEDUNBOUND=$(lxc-attach -n managed -- /bin/sh -c ' systemctl status 
 if [ "$CHECKLXCMANAGEDUNBOUND" = "1" ]
 then
    lxc-attach -n managed -- systemctl restart unbound
-   sleep 2
    lxc-attach -n managed -- systemctl status unbound
    checksoft LXC Managed: unbound restart
    echo "" # dummy
