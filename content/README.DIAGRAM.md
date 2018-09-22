@@ -2,13 +2,14 @@
 
 Diagram
 =======
-* lxc-to-go LXC inside LXC Support
-  * (prototype > 0.31.5)
-![lxc-to-go_inside](/content/lxc-to-go_inside_.jpg)
 
 * lxc-to-go bootstrap
   * (prototype > 0.11)
 ![lxc-to-go_schema](/content/lxc-to-go_schema_.jpg)
+
+* lxc-to-go LXC inside LXC Support
+  * (prototype > 0.31.5)
+![lxc-to-go_inside](/content/lxc-to-go_inside_.jpg)
 
 * lxc-to-go for servers or mobile devices with wireless lan bridge
   * proxy mode (prototype > 0.9)
