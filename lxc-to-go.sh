@@ -1248,13 +1248,14 @@ else
       if [ "$DEBIAN" = "raspbian" ]; then
          : # dummy
       else
-         CHECKGRUB1=$(grep "GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
+         CHECKGRUB1=$(grep "^GRUB_CMDLINE_LINUX=" /etc/default/grub | grep "cgroup_enable=memory" | grep -c "swapaccount=1")
          if [ "$CHECKGRUB1" = "1" ]; then
             : # dummy
          else
             cp -prfv /etc/default/grub /etc/default/grub_lxc-to-go_BK
             sed -i '/GRUB_CMDLINE_LINUX=/s/.$//' /etc/default/grub
-            sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1 vsyscall=emulate"/' /etc/default/grub
+            #/sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1 vsyscall=emulate"/' /etc/default/grub
+            sed -i '/GRUB_CMDLINE_LINUX=/s/$/ cgroup_enable=memory swapaccount=1"/' /etc/default/grub
 
             ### grub update
 
